@@ -13,16 +13,20 @@ Android中的常用的工具类
 
 #### 使用说明
 1、在工程中的builder.gradle中添加
+
     allprojects {
 		repositories {
 			...
 			maven { url 'https://jitpack.io' }
 		}
 	}
+
 2、在单独项目中的builder.gradle中添加
+
     dependencies {
 	        implementation 'com.github.Henry-William-Code:CommonUtils:版本号'
 	}
+
 
 #### 参与贡献
 
