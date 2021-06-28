@@ -88,3 +88,5 @@ Android中的常用的工具类
 * getImageSrc ： 从HTML源码中提取图片路径，最后以一个 String 类型的 List 返回，如果不包含任何图片，则返回一个 size=0　的List
 * removeHtmlTag ： 删除Html标签
 ---
+
+### DecimalUtil 进制相关的计算类
