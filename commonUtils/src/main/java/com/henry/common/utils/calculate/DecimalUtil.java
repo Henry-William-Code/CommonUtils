@@ -7,7 +7,7 @@ package com.henry.common.utils.calculate;
  * 描述：进制相关的计算类
  * ============================================
  */
-public class Decimal {
+public class DecimalUtil {
 
 
     /**

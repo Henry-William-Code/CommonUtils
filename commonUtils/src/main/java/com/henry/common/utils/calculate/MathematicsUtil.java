@@ -3,11 +3,11 @@ package com.henry.common.utils.calculate;
 /**
  * =============================================
  * 时间：2021-06-28 19:21 </br>
- * 作者：码牛教育[Henry老师]</br>
+ * 作者：龚鹏</br>
  * 描述：数学相关的计算类
  * ============================================
  */
-public class Math {
+public class MathematicsUtil {
 
 
 
