@@ -1,4 +1,4 @@
-package com.henry.common.utils;
+package com.henry.common.utils.encryption;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

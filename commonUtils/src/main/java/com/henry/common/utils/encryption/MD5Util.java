@@ -1,4 +1,6 @@
-package com.henry.common.utils;
+package com.henry.common.utils.encryption;
+
+import com.henry.common.utils.string.StringUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

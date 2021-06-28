@@ -1,4 +1,4 @@
-package com.henry.common.utils;
+package com.henry.common.utils.system;
 
 import android.content.Context;
 import android.content.Intent;
