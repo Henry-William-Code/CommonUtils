@@ -90,4 +90,50 @@ public class WebUtil {
 
         return htmlStr;
     }
+
+    /**
+     * 判断字符串是否是 http 或 https 地址。
+     * 方案名忽略大小写。必须以 http:// 或 https:// 开头，并且 :// 后面至少有一个非空白字符。
+     * 不去掉首尾空白，字符串开头有空白时返回 false。
+     * 不检查主机是否存在，也不打开页面。
+     *
+     * @param url 待判断的文本，允许为 null
+     * @return 符合上述方案规则时返回 true
+     */
+    public static boolean isHttpUrl(String url) {
+        if (url == null) {
+            return false;
+        }
+        String scheme;
+        if (startsWithIgnoreCase(url, "https://")) {
+            scheme = "https://";
+        } else if (startsWithIgnoreCase(url, "http://")) {
+            scheme = "http://";
+        } else {
+            return false;
+        }
+        String rest = url.substring(scheme.length());
+        for (int i = 0; i < rest.length(); i++) {
+            if (!Character.isWhitespace(rest.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean startsWithIgnoreCase(String text, String prefix) {
+        if (text.length() < prefix.length()) {
+            return false;
+        }
+        for (int i = 0; i < prefix.length(); i++) {
+            char current = text.charAt(i);
+            if (current >= 'A' && current <= 'Z') {
+                current = (char) (current + ('a' - 'A'));
+            }
+            if (current != prefix.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

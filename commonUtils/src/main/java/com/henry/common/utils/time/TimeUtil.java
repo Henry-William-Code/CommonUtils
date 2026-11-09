@@ -111,4 +111,22 @@ public class TimeUtil {
         }
 
     }
+
+    /**
+     * 计算两个毫秒时间戳相差的整天数。
+     * 以 86400000 毫秒为 1 天做整数除法，向 0 截断，不按设备时区折算日历日期。
+     * endMillis 小于 startMillis 时结果为负数。
+     * 两个时间戳的差值无法用 long 表示时抛出 {@link ArithmeticException}。
+     *
+     * @param startMillis 开始时间，毫秒
+     * @param endMillis   结束时间，毫秒
+     * @return 相差的整天数
+     */
+    public static long daysBetween(long startMillis, long endMillis) {
+        long diff = endMillis - startMillis;
+        if (((endMillis ^ startMillis) & (endMillis ^ diff)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return diff / 86400000L;
+    }
 }
