@@ -73,5 +73,27 @@ public class DecimalUtil {
         }
     }
 
+    /**
+     * 把 int 的 32 个比特写成 8 位小写十六进制，高位用 0 补齐。
+     * 按无符号比特解释，不使用十进制正负号。-1 得到 {@code ffffffff}，{@link Integer#MIN_VALUE} 得到 {@code 80000000}。
+     * 不改变 {@link #toBinaryString(int)} 等已有方法。
+     *
+     * @param number 任意 int
+     * @return 长度为 8 的小写十六进制文本
+     */
+    public static String toHexString(int number) {
+        char[] out = new char[8];
+        for (int i = 7; i >= 0; i--) {
+            out[i] = HEX_DIGITS[number & 0xF];
+            number >>>= 4;
+        }
+        return new String(out);
+    }
+
+    private static final char[] HEX_DIGITS = {
+            '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    };
+
 
 }

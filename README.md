@@ -2,14 +2,14 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。已发布的 `1.0.2` 有 **8 个工具类**，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。
+工具按类组织。已发布的 `1.0.2` 有 **8 个工具类**，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。当前 `main` 源码里还有尚未发布的类和方法，不能通过 JitPack `1.0.2` 调用。
 
 ## 版本说明
 
 | 范围 | 怎么用 | 包含什么 |
 | --- | --- | --- |
 | 已发布 `1.0.2` | JitPack 依赖下面的 `1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
-| 当前分支新增 | 使用包含这些改动的源码自行构建 | 「当前分支新增、尚未发布」一节。**不能**通过 `CommonUtils:1.0.2` 调用 |
+| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.2` 调用 |
 
 `1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。两个 tag 的类名位置不同，不能混用。
 
@@ -35,7 +35,7 @@ dependencies {
 }
 ```
 
-调用前先看清方法属于哪一节。下面新增方法的示例只对当前分支源码有效。
+调用前先看清方法属于哪一节。下面「main 上尚未发布」的示例只对当前 `main` 源码有效，不能用于 JitPack `1.0.2`。
 
 ## 已发布 1.0.2 的工具类
 
@@ -121,9 +121,9 @@ dependencies {
 
 - `int power(int number, int times)`：计算整数次幂。`times` 小于 1 时返回 0。
 
-## 当前分支新增、尚未发布
+## main 上尚未发布
 
-下面的类和方法只存在于包含本次改动的源码中。JitPack `1.0.2` 没有它们。已有方法的行为没有改。
+下面的类和方法在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.2` 不能调用它们。已发布方法的签名和返回值没有改。
 
 ### 新类 CollectionUtil
 
@@ -193,6 +193,71 @@ CollectionUtil.size(Arrays.asList("a", null));       // 2
 
 ```java
 CollectionUtil.size((Map<?, ?>) null); // 0
+```
+
+#### `boolean isNotEmpty(Collection<?> data)`
+
+集合是否至少有一个元素。规则与 `isEmpty(Collection)` 相反。
+
+- `data`：允许为 null。null 或没有元素时返回 false。
+- 元素本身是 null 时仍然返回 true。
+
+```java
+CollectionUtil.isNotEmpty((Collection<?>) null);            // false
+CollectionUtil.isNotEmpty(Collections.singletonList(null)); // true
+```
+
+#### `boolean isNotEmpty(Map<?, ?> data)`
+
+Map 是否至少有一个元素。规则与 `isEmpty(Map)` 相反。
+
+- `data`：允许为 null。null 或没有条目时返回 false。
+- 值为 null 的条目仍然算有元素。
+
+```java
+CollectionUtil.isNotEmpty(Collections.emptyMap()); // false
+```
+
+#### `boolean isNotEmpty(Object[] data)`
+
+数组是否至少有一个元素。规则与 `isEmpty(Object[])` 相反。
+
+- `data`：允许为 null。null 或长度为 0 时返回 false。
+- 长度大于 0 时返回 true，即使元素是 null。
+
+```java
+CollectionUtil.isNotEmpty(new Object[]{null}); // true
+```
+
+#### `<T> T getOrNull(List<T> list, int index)`
+
+按下标读取列表元素。
+
+- `list`：允许为 null。null 时返回 null。
+- `index`：小于 0，或大于等于列表长度时返回 null。
+- 下标合法但元素本身是 null 时也返回 null。返回值无法区分“越界”和“元素是 null”。
+
+```java
+CollectionUtil.getOrNull(Arrays.asList("a", "b"), 1); // "b"
+CollectionUtil.getOrNull(Arrays.asList("a"), -1);     // null
+CollectionUtil.getOrNull(null, 0);                    // null
+```
+
+#### `<V> V getOrDefault(Map<?, V> map, Object key, V defaultValue)`
+
+读取 Map 的值。键不存在或 Map 为 null 时返回默认值。
+
+- `map`：允许为 null。null 时返回 `defaultValue`，不抛异常。
+- `key`：允许为 null。是否存在用 `containsKey` 判断。
+- 键存在且值是 null 时返回 null，不返回 `defaultValue`。
+- `defaultValue` 可以是 null。这时键不存在也会返回 null，无法和“键存在但值为 null”区分。
+
+```java
+Map<String, String> data = new HashMap<String, String>();
+data.put("present", null);
+CollectionUtil.getOrDefault(data, "missing", "fallback"); // "fallback"
+CollectionUtil.getOrDefault(data, "present", "fallback"); // null
+CollectionUtil.getOrDefault(null, "k", "fallback");       // "fallback"
 ```
 
 ### StringUtil 新增
@@ -324,6 +389,35 @@ TimeUtil.daysBetween(0L, -1L);        // 0
 TimeUtil.daysBetween(86400000L, 0L);  // -1
 ```
 
+#### `long addDays(long millis, int days)`
+
+在毫秒时间戳上增加或减少整天。
+
+- `millis`：起始毫秒。`days`：增加的天数，可以是负数或 0。
+- 一天固定为 86400000 毫秒，不使用设备时区，也不处理夏令时。
+- `days` 先提升为 long 再乘以一天的毫秒数，这个乘法不会溢出。
+- 相加结果放不进 long 时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.addDays(0L, 1);             // 86400000
+TimeUtil.addDays(86400000L, -1);     // 0
+TimeUtil.addDays(Long.MAX_VALUE, 1); // 抛出 ArithmeticException
+```
+
+#### `boolean isSameDay(long millisA, long millisB)`
+
+判断两个毫秒时间戳是否属于同一个 UTC 日。
+
+- 日界是 `floor(millis / 86400000)`，不是设备本地日历。
+- 不是 Java 整数除法的向 0 截断。纪元前不足一天的时间不会和 1970-01-01 算成同一天。
+- 不读取设备时区。
+
+```java
+TimeUtil.isSameDay(0L, 86399999L); // true
+TimeUtil.isSameDay(0L, 86400000L); // false
+TimeUtil.isSameDay(-1L, 0L);       // false
+```
+
 ### WebUtil 新增
 
 #### `boolean isHttpUrl(String url)`
@@ -343,4 +437,95 @@ WebUtil.isHttpUrl("HTTP://example.com");    // true
 WebUtil.isHttpUrl(" http://example.com");   // false
 WebUtil.isHttpUrl("javascript:alert(1)");   // false
 WebUtil.isHttpUrl(null);                    // false
+```
+
+### DecimalUtil 新增
+
+已发布的 `toBinaryString`、`binary2Decimal`、`scale2Decimal`、`checkNumber` 没有变化。
+
+#### `String toHexString(int number)`
+
+把 int 的 32 个比特写成 8 位小写十六进制，高位用 0 补齐。
+
+- `number`：任意 int，按无符号比特解释，不输出正负号。
+- 结果长度始终是 8。`-1` 得到 `ffffffff`，`Integer.MIN_VALUE` 得到 `80000000`。
+
+```java
+DecimalUtil.toHexString(0);                 // "00000000"
+DecimalUtil.toHexString(0xABC);             // "00000abc"
+DecimalUtil.toHexString(-1);                // "ffffffff"
+DecimalUtil.toHexString(Integer.MIN_VALUE); // "80000000"
+```
+
+### 新类 FileUtil
+
+包名：`com.henry.common.utils.file`
+
+本地路径和 `java.io.File` 的辅助方法。类不能实例化，也不使用 Android API。不递归遍历目录。
+
+#### `String getExtension(String pathOrName)`
+
+取扩展名，不包含小数点。
+
+- `pathOrName`：允许为 null。null、空串或只含空白时返回 `""`。空白规则与 `StringUtil.isBlank` 相同。其余文本不 trim。
+- 只看最后一个 `/` 或 `\` 之后的文件名。目录名里的小数点不算扩展名。
+- 没有小数点、小数点在末尾，或小数点是文件名第一个字符时返回 `""`。`.gitignore` 没有扩展名，`archive.tar.gz` 的扩展名是 `gz`。
+- 不改变大小写。路径以分隔符结尾时返回 `""`。
+
+```java
+FileUtil.getExtension("archive.tar.gz"); // "gz"
+FileUtil.getExtension("dir.old/file");   // ""
+FileUtil.getExtension(".gitignore");     // ""
+FileUtil.getExtension(null);             // ""
+```
+
+#### `String getNameWithoutExtension(String pathOrName)`
+
+取最后一个路径分隔符之后的文件名，并去掉扩展名。
+
+- 判定扩展名的规则与 `getExtension` 相同。
+- null、空串或只含空白时返回 `""`。
+- 没有扩展名时返回文件名本身，所以 `file.`、`.gitignore` 和 `..` 都原样保留。
+- 路径以分隔符结尾时返回 `""`。
+
+```java
+FileUtil.getNameWithoutExtension("/path/to/archive.tar.gz"); // "archive.tar"
+FileUtil.getNameWithoutExtension(".gitignore");              // ".gitignore"
+FileUtil.getNameWithoutExtension("file.");                   // "file."
+```
+
+#### `boolean isEmpty(File file)`
+
+判断是不是空的普通文件。
+
+- `file`：允许为 null。null、路径不存在，或普通文件长度为 0 时返回 true。
+- 目录返回 false，即使目录里没有子项。已存在但既不是文件也不是目录的路径也返回 false。
+
+```java
+FileUtil.isEmpty(null);                         // true
+FileUtil.isEmpty(new File("missing.txt"));      // 文件不存在时为 true
+FileUtil.isEmpty(new File("."));                // 目录为 false
+```
+
+#### `long size(File file)`
+
+返回普通文件的字节长度。
+
+- `file`：允许为 null。null、不存在的路径、目录，以及其他非普通文件都返回 0。
+- 不递归统计目录中的文件。
+
+```java
+FileUtil.size(null); // 0
+```
+
+#### `boolean deleteQuietly(File file)`
+
+删除一个文件或空目录。
+
+- `file`：允许为 null。null 或不存在时返回 false。
+- 只调用 `File.delete()`，不递归删除。非空目录删除失败并返回 false，目录和里面的文件都还在。
+- `SecurityException` 时返回 false，不向外抛出。
+
+```java
+FileUtil.deleteQuietly(null); // false
 ```

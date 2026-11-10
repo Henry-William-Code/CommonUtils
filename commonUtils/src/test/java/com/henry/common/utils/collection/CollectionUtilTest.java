@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class CollectionUtilTest {
@@ -48,5 +49,49 @@ public class CollectionUtilTest {
         data.put("k", "v");
         assertEquals(1, CollectionUtil.size(data));
         assertEquals(0, CollectionUtil.size(Collections.emptyMap()));
+    }
+
+    @Test
+    public void isNotEmpty_matchesOppositeOfIsEmpty() {
+        assertFalse(CollectionUtil.isNotEmpty((Collection<?>) null));
+        assertFalse(CollectionUtil.isNotEmpty(Collections.emptyList()));
+        assertTrue(CollectionUtil.isNotEmpty(Collections.singletonList("a")));
+        assertTrue(CollectionUtil.isNotEmpty(Collections.singletonList(null)));
+
+        assertFalse(CollectionUtil.isNotEmpty((Map<?, ?>) null));
+        assertFalse(CollectionUtil.isNotEmpty(Collections.emptyMap()));
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("k", null);
+        assertTrue(CollectionUtil.isNotEmpty(data));
+
+        assertFalse(CollectionUtil.isNotEmpty((Object[]) null));
+        assertFalse(CollectionUtil.isNotEmpty(new Object[0]));
+        assertTrue(CollectionUtil.isNotEmpty(new Object[]{null}));
+    }
+
+    @Test
+    public void getOrNull_rejectsNullAndOutOfRangeButReturnsNullElement() {
+        assertNull(CollectionUtil.getOrNull(null, 0));
+        assertNull(CollectionUtil.getOrNull(Collections.emptyList(), 0));
+        assertNull(CollectionUtil.getOrNull(Collections.singletonList("a"), -1));
+        assertNull(CollectionUtil.getOrNull(Collections.singletonList("a"), 1));
+        assertEquals("a", CollectionUtil.getOrNull(Arrays.asList("a", "b"), 0));
+        assertEquals("b", CollectionUtil.getOrNull(Arrays.asList("a", "b"), 1));
+        assertNull(CollectionUtil.getOrNull(Arrays.asList("a", null), 1));
+    }
+
+    @Test
+    public void getOrDefault_usesContainsKeyNotNullValue() {
+        assertEquals("fallback", CollectionUtil.getOrDefault(null, "k", "fallback"));
+        assertNull(CollectionUtil.getOrDefault(null, "k", null));
+
+        Map<String, String> data = new HashMap<String, String>();
+        assertEquals("fallback", CollectionUtil.getOrDefault(data, "missing", "fallback"));
+        data.put("present", null);
+        assertNull(CollectionUtil.getOrDefault(data, "present", "fallback"));
+        data.put("value", "kept");
+        assertEquals("kept", CollectionUtil.getOrDefault(data, "value", "fallback"));
+        data.put(null, "null-key");
+        assertEquals("null-key", CollectionUtil.getOrDefault(data, null, "fallback"));
     }
 }
