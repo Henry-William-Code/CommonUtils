@@ -342,6 +342,20 @@ MathematicsUtil.clamp(-1, 0, 10); // 0
 MathematicsUtil.clamp(5, 0, 10);  // 5
 ```
 
+#### `long clamp(long value, long min, long max)`
+
+把 long 限制在闭区间内。已有的 int 重载不变。
+
+- `value`、`min`、`max` 都是 long。`min > max` 时抛出 `IllegalArgumentException`，不会对调边界。
+- 只做比较，`Long.MIN_VALUE` 和 `Long.MAX_VALUE` 可以作为原值或边界。
+- 小于下界返回 `min`，大于上界返回 `max`，否则返回原值。
+
+```java
+MathematicsUtil.clamp(12L, 0L, 10L); // 10
+MathematicsUtil.clamp(-1L, 0L, 10L); // 0
+MathematicsUtil.clamp(5L, 0L, 10L);  // 5
+```
+
 #### `int gcd(int a, int b)`
 
 计算最大公约数。
@@ -418,6 +432,22 @@ TimeUtil.isSameDay(0L, 86400000L); // false
 TimeUtil.isSameDay(-1L, 0L);       // false
 ```
 
+#### `long startOfUtcDay(long millis)`
+
+返回该毫秒时间戳所在 UTC 日的起始毫秒。
+
+- 日界与 `isSameDay` 相同，使用 `floor(millis / 86400000)`，不是设备时区。
+- 结果是 86400000 的整数倍，并且和原时间戳属于同一个 UTC 日。
+- `-1` 属于前一天，起始毫秒是 `-86400000`，不是 `0`。
+- `Long.MIN_VALUE` 所在 UTC 日的起点小于 long 最小值，抛出 `ArithmeticException`。`Long.MAX_VALUE` 可以正常返回。
+
+```java
+TimeUtil.startOfUtcDay(0L);          // 0
+TimeUtil.startOfUtcDay(86399999L);   // 0
+TimeUtil.startOfUtcDay(86400000L);   // 86400000
+TimeUtil.startOfUtcDay(-1L);         // -86400000
+```
+
 ### WebUtil 新增
 
 #### `boolean isHttpUrl(String url)`
@@ -455,6 +485,55 @@ DecimalUtil.toHexString(0);                 // "00000000"
 DecimalUtil.toHexString(0xABC);             // "00000abc"
 DecimalUtil.toHexString(-1);                // "ffffffff"
 DecimalUtil.toHexString(Integer.MIN_VALUE); // "80000000"
+```
+
+#### `int parseHex(String hex)`
+
+把十六进制文本按无符号 32 位比特解析成 int。`toHexString` 的反向解析，不改变 `checkNumber`。
+
+- `hex`：允许为 null。null、空串或只含空白时抛出 `IllegalArgumentException`。
+- 可以带 `0x` 或 `0X` 前缀。前缀后必须是 1 到 8 位十六进制数字，字母不区分大小写。
+- 超过 8 位就抛异常，多出来的前导 0 也不接受。不 trim 非空白文本，夹着空格或正负号也会抛异常。
+- `ffffffff` 得到 -1，`80000000` 得到 `Integer.MIN_VALUE`。
+
+```java
+DecimalUtil.parseHex("0xABC");     // 2748
+DecimalUtil.parseHex("ffffffff");  // -1
+DecimalUtil.parseHex(DecimalUtil.toHexString(Integer.MIN_VALUE)); // Integer.MIN_VALUE
+```
+
+### 新类 Sha256Util
+
+包名：`com.henry.common.utils.encryption`
+
+SHA-256 摘要。这是单向散列，不是可逆加密。类不能实例化。不修改已发布的 `MD5Util`。`CommonUtils:1.0.2` 没有这个类。
+
+#### `String digest(String text)`
+
+计算文本的 SHA-256，返回 64 位小写十六进制。
+
+- `text`：允许为 null。null 返回 `""`，不计算摘要。
+- 空串会计算空字节的真实摘要，所以和 null 不同。
+- 固定按 UTF-8 编码，不使用平台默认字符集。
+- 运行环境缺少 SHA-256 时抛出 `IllegalStateException`。API 23 和 Java 8 都提供该算法。
+
+```java
+Sha256Util.digest(null); // ""
+Sha256Util.digest("");   // "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+Sha256Util.digest("abc"); // "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+```
+
+#### `String digest(byte[] data)`
+
+计算字节数组的 SHA-256，返回 64 位小写十六进制。
+
+- `data`：允许为 null。null 返回 `""`。
+- 空数组计算真实摘要，不返回空串。
+- 缺少 SHA-256 时抛出 `IllegalStateException`。
+
+```java
+Sha256Util.digest((byte[]) null); // ""
+Sha256Util.digest(new byte[0]);   // 与 Sha256Util.digest("") 相同
 ```
 
 ### 新类 FileUtil

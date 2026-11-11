@@ -51,6 +51,29 @@ public class MathematicsUtil {
     }
 
     /**
+     * 把 long 限制在闭区间 [min, max] 内。
+     * 规则与 {@link #clamp(int, int, int)} 相同：min 大于 max 时抛出 {@link IllegalArgumentException}，不会交换边界。
+     * 只做比较，因此 {@link Long#MIN_VALUE} 和 {@link Long#MAX_VALUE} 都可以作为原值或边界。
+     *
+     * @param value 原值
+     * @param min   下界，包含
+     * @param max   上界，包含
+     * @return value 小于 min 时返回 min，大于 max 时返回 max，否则返回 value
+     */
+    public static long clamp(long value, long min, long max) {
+        if (min > max) {
+            throw new IllegalArgumentException("min is greater than max");
+        }
+        if (value < min) {
+            return min;
+        }
+        if (value > max) {
+            return max;
+        }
+        return value;
+    }
+
+    /**
      * 计算最大公约数，结果为非负整数。
      * 负数按绝对值参与计算。gcd(0, 0) 返回 0。
      * 任一参数为 {@link Integer#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，

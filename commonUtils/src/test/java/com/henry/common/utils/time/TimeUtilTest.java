@@ -59,4 +59,27 @@ public class TimeUtilTest {
         assertTrue(TimeUtil.isSameDay(Long.MIN_VALUE, Long.MIN_VALUE));
         assertTrue(TimeUtil.isSameDay(Long.MAX_VALUE, Long.MAX_VALUE));
     }
+
+    @Test
+    public void startOfUtcDay_usesSameFloorBoundaryAsIsSameDay() {
+        assertEquals(0L, TimeUtil.startOfUtcDay(0L));
+        assertEquals(0L, TimeUtil.startOfUtcDay(86399999L));
+        assertEquals(86400000L, TimeUtil.startOfUtcDay(86400000L));
+        assertEquals(-86400000L, TimeUtil.startOfUtcDay(-1L));
+        assertEquals(-86400000L, TimeUtil.startOfUtcDay(-86400000L));
+        assertEquals(-172800000L, TimeUtil.startOfUtcDay(-86400001L));
+        assertUtcDayStart(Long.MAX_VALUE);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void startOfUtcDay_rejectsMinValueBecauseStartDoesNotFit() {
+        TimeUtil.startOfUtcDay(Long.MIN_VALUE);
+    }
+
+    private static void assertUtcDayStart(long millis) {
+        long start = TimeUtil.startOfUtcDay(millis);
+        assertEquals(0L, start % 86400000L);
+        assertTrue(start <= millis);
+        assertTrue(TimeUtil.isSameDay(start, millis));
+    }
 }

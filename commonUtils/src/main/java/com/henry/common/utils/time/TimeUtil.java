@@ -162,6 +162,23 @@ public class TimeUtil {
         return utcDayIndex(millisA) == utcDayIndex(millisB);
     }
 
+    /**
+     * 返回 millis 所在 UTC 日的起始毫秒。
+     * 日界与 {@link #isSameDay(long, long)} 相同，使用 {@code floor(millis / 86400000)}，不是设备时区。
+     * 结果是 86400000 的整数倍。{@link Long#MIN_VALUE} 所在 UTC 日的起点小于 long 最小值，因此抛出 {@link ArithmeticException}。
+     *
+     * @param millis 毫秒时间戳
+     * @return 该 UTC 日 00:00:00.000 的毫秒值
+     */
+    public static long startOfUtcDay(long millis) {
+        long day = utcDayIndex(millis);
+        long start = day * 86400000L;
+        if (day != 0 && start / day != 86400000L) {
+            throw new ArithmeticException("long overflow");
+        }
+        return start;
+    }
+
     private static long utcDayIndex(long millis) {
         long day = millis / 86400000L;
         if (millis < 0 && millis % 86400000L != 0) {
