@@ -76,6 +76,32 @@ public class TimeUtilTest {
         TimeUtil.startOfUtcDay(Long.MIN_VALUE);
     }
 
+    @Test
+    public void endOfUtcDay_isLastMillisecondOfTheSameUtcDay() {
+        assertEquals(86399999L, TimeUtil.endOfUtcDay(0L));
+        assertEquals(86399999L, TimeUtil.endOfUtcDay(86399999L));
+        assertEquals(172799999L, TimeUtil.endOfUtcDay(86400000L));
+        assertEquals(-1L, TimeUtil.endOfUtcDay(-1L));
+        assertEquals(-1L, TimeUtil.endOfUtcDay(-86400000L));
+        assertEquals(-86400001L, TimeUtil.endOfUtcDay(-86400001L));
+        long sample = 86400000L * 3 + 20L;
+        long end = TimeUtil.endOfUtcDay(sample);
+        assertTrue(end >= sample);
+        assertTrue(TimeUtil.isSameDay(sample, end));
+        assertEquals(TimeUtil.startOfUtcDay(sample), TimeUtil.startOfUtcDay(end));
+        assertEquals(TimeUtil.startOfUtcDay(sample) + 86399999L, end);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void endOfUtcDay_rejectsMaxValueBecauseEndDoesNotFit() {
+        TimeUtil.endOfUtcDay(Long.MAX_VALUE);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void endOfUtcDay_rejectsMinValueBecauseStartDoesNotFit() {
+        TimeUtil.endOfUtcDay(Long.MIN_VALUE);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

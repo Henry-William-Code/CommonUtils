@@ -243,6 +243,30 @@ CollectionUtil.getOrNull(Arrays.asList("a"), -1);     // null
 CollectionUtil.getOrNull(null, 0);                    // null
 ```
 
+#### `<T> T firstOrNull(List<T> list)`
+
+返回列表的第一个元素。
+
+- `list`：允许为 null。null 或空列表返回 null。
+- 第一个元素本身是 null 时也返回 null，无法和空列表区分。
+
+```java
+CollectionUtil.firstOrNull(Arrays.asList("a", "b")); // "a"
+CollectionUtil.firstOrNull(Collections.emptyList()); // null
+```
+
+#### `<T> T lastOrNull(List<T> list)`
+
+返回列表的最后一个元素。
+
+- `list`：允许为 null。null 或空列表返回 null。
+- 最后一个元素本身是 null 时也返回 null，无法和空列表区分。
+
+```java
+CollectionUtil.lastOrNull(Arrays.asList("a", "b")); // "b"
+CollectionUtil.lastOrNull(null);                    // null
+```
+
 #### `<V> V getOrDefault(Map<?, V> map, Object key, V defaultValue)`
 
 读取 Map 的值。键不存在或 Map 为 null 时返回默认值。
@@ -448,6 +472,20 @@ TimeUtil.startOfUtcDay(86400000L);   // 86400000
 TimeUtil.startOfUtcDay(-1L);         // -86400000
 ```
 
+#### `long endOfUtcDay(long millis)`
+
+返回该毫秒时间戳所在 UTC 日的最后一毫秒。
+
+- 日界与 `startOfUtcDay` 相同，结果是该日起点加 86399999 毫秒。
+- 不使用设备时区。`-1` 的终点是 `-1`，不是 `86399999`。
+- `Long.MIN_VALUE` 的日起点无法表示，`Long.MAX_VALUE` 所在日的终点大于 long 最大值，这两种情况都抛出 `ArithmeticException`。
+
+```java
+TimeUtil.endOfUtcDay(0L);         // 86399999
+TimeUtil.endOfUtcDay(86400000L);  // 172799999
+TimeUtil.endOfUtcDay(-1L);        // -1
+```
+
 ### WebUtil 新增
 
 #### `boolean isHttpUrl(String url)`
@@ -500,6 +538,40 @@ DecimalUtil.toHexString(Integer.MIN_VALUE); // "80000000"
 DecimalUtil.parseHex("0xABC");     // 2748
 DecimalUtil.parseHex("ffffffff");  // -1
 DecimalUtil.parseHex(DecimalUtil.toHexString(Integer.MIN_VALUE)); // Integer.MIN_VALUE
+```
+
+### 新类 ConvertUtil
+
+包名：`com.henry.common.utils.convert`
+
+把十进制文本安全地解析成整数。失败时返回调用方给出的默认值，不抛出解析异常。类不能实例化。不代替会抛异常的 `DecimalUtil.checkNumber`，也不改 `DecimalUtil`。`CommonUtils:1.0.2` 没有这个类。
+
+#### `int parseInt(String text, int defaultValue)`
+
+把十进制文本解析成 int。
+
+- `text`：允许为 null。null、空串、只含空白、非法格式或超出 int 范围时返回 `defaultValue`。
+- 空白规则与 `StringUtil.isBlank` 相同。非空白文本会去掉首尾空白，中间空格不接受。
+- 允许 ASCII 的 `+` 和 `-`。不接受小数点、千分位、`0x` 前缀或全角数字。
+- 默认值可以是任意 int。文本无效时如果默认值碰巧等于某个合法数字，调用方无法从返回值看出用的是默认值。
+
+```java
+ConvertUtil.parseInt("  +12 ", -1); // 12
+ConvertUtil.parseInt(null, 9);      // 9
+ConvertUtil.parseInt("2147483648", 9); // 9
+```
+
+#### `long parseLong(String text, long defaultValue)`
+
+把十进制文本解析成 long。空白、正负号和非法格式与 `parseInt` 相同。
+
+- 超出 long 范围时返回 `defaultValue`，不抛异常。
+- `9223372036854775807` 得到 `Long.MAX_VALUE`，`-9223372036854775808` 得到 `Long.MIN_VALUE`。
+- 再多一位就返回默认值。
+
+```java
+ConvertUtil.parseLong("-9223372036854775808", 0L); // Long.MIN_VALUE
+ConvertUtil.parseLong("12a", 3L);                  // 3
 ```
 
 ### 新类 Sha256Util

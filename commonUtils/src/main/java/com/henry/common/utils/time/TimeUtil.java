@@ -179,6 +179,24 @@ public class TimeUtil {
         return start;
     }
 
+    /**
+     * 返回 millis 所在 UTC 日的最后一毫秒。
+     * 日界与 {@link #startOfUtcDay(long)} 相同。结果等于该日起点再加 86399999 毫秒。
+     * {@link Long#MIN_VALUE} 的日起点无法表示，{@link Long#MAX_VALUE} 所在日的终点大于 long 最大值，这两种情况都抛出 {@link ArithmeticException}。
+     *
+     * @param millis 毫秒时间戳
+     * @return 该 UTC 日 23:59:59.999 的毫秒值
+     */
+    public static long endOfUtcDay(long millis) {
+        long start = startOfUtcDay(millis);
+        long delta = 86399999L;
+        long end = start + delta;
+        if (((start ^ end) & (delta ^ end)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return end;
+    }
+
     private static long utcDayIndex(long millis) {
         long day = millis / 86400000L;
         if (millis < 0 && millis % 86400000L != 0) {

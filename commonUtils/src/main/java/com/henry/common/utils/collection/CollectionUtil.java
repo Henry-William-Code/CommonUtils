@@ -114,6 +114,33 @@ public class CollectionUtil {
     }
 
     /**
+     * 返回列表的第一个元素。
+     * 列表为 null 或没有元素时返回 null。第一个元素本身是 null 时也返回 null，无法和空列表区分。
+     *
+     * @param list 允许为 null
+     * @param <T>  元素类型
+     * @return 第一个元素；没有元素时返回 null
+     */
+    public static <T> T firstOrNull(List<T> list) {
+        return getOrNull(list, 0);
+    }
+
+    /**
+     * 返回列表的最后一个元素。
+     * 列表为 null 或没有元素时返回 null。最后一个元素本身是 null 时也返回 null，无法和空列表区分。
+     *
+     * @param list 允许为 null
+     * @param <T>  元素类型
+     * @return 最后一个元素；没有元素时返回 null
+     */
+    public static <T> T lastOrNull(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(list.size() - 1);
+    }
+
+    /**
      * 读取 Map 中的值；键不存在或 Map 为 null 时返回默认值。
      * 键存在且对应值为 null 时返回 null，不返回 defaultValue。
      * 判断键是否存在使用 {@link Map#containsKey(Object)}，不用 {@link Map#get(Object)} 单独判断。

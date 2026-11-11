@@ -81,6 +81,20 @@ public class CollectionUtilTest {
     }
 
     @Test
+    public void firstOrNullAndLastOrNull_handleEmptyAndNullElements() {
+        assertNull(CollectionUtil.firstOrNull(null));
+        assertNull(CollectionUtil.lastOrNull(null));
+        assertNull(CollectionUtil.firstOrNull(Collections.emptyList()));
+        assertNull(CollectionUtil.lastOrNull(Collections.emptyList()));
+        assertEquals("a", CollectionUtil.firstOrNull(Arrays.asList("a", "b", "c")));
+        assertEquals("c", CollectionUtil.lastOrNull(Arrays.asList("a", "b", "c")));
+        assertEquals("only", CollectionUtil.firstOrNull(Collections.singletonList("only")));
+        assertEquals("only", CollectionUtil.lastOrNull(Collections.singletonList("only")));
+        assertNull(CollectionUtil.firstOrNull(Collections.singletonList(null)));
+        assertNull(CollectionUtil.lastOrNull(Arrays.asList("a", null)));
+    }
+
+    @Test
     public void getOrDefault_usesContainsKeyNotNullValue() {
         assertEquals("fallback", CollectionUtil.getOrDefault(null, "k", "fallback"));
         assertNull(CollectionUtil.getOrDefault(null, "k", null));
