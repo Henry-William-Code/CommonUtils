@@ -2,20 +2,18 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。已发布的 `1.0.2` 有 **8 个工具类**，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。当前 `main` 源码里还有尚未发布的类和方法，不能通过 JitPack `1.0.2` 调用。
+工具按类组织。当前发布版本是 `1.0.3`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 在此基础上增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`，并给已有类追加了方法。
 
 ## 版本说明
 
 | 范围 | 怎么用 | 包含什么 |
 | --- | --- | --- |
-| 已发布 `1.0.2` | JitPack 依赖下面的 `1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
-| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.2` 调用 |
+| 已发布 `1.0.2` | JitPack `CommonUtils:1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
+| 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。两个 tag 的类名位置不同，不能混用。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 沿用 `1.0.2` 的包结构，没有修改 `1.0.2` 已有方法的签名和返回值。
 
-本次没有发布新 tag，也没有修改 `1.0.2` 里已有方法的签名和返回值。
-
-## 依赖已发布的 1.0.2
+## 依赖 1.0.3
 
 在工程的 `build.gradle` 中加入：
 
@@ -31,11 +29,11 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.2'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.3'
 }
 ```
 
-调用前先看清方法属于哪一节。下面「main 上尚未发布」的示例只对当前 `main` 源码有效，不能用于 JitPack `1.0.2`。
+`1.0.3` 包含下面两节的全部方法。仍使用 `1.0.2` 的工程只能调用「已发布 1.0.2 的工具类」一节。
 
 ## 已发布 1.0.2 的工具类
 
@@ -121,9 +119,9 @@ dependencies {
 
 - `int power(int number, int times)`：计算整数次幂。`times` 小于 1 时返回 0。
 
-## main 上尚未发布
+## 1.0.3 新增
 
-下面的类和方法在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.2` 不能调用它们。已发布方法的签名和返回值没有改。
+下面的类和方法从 `1.0.3` 起可以通过 JitPack 使用。`1.0.2` 没有它们。`1.0.2` 已有方法的签名和返回值没有改。
 
 ### 新类 CollectionUtil
 
@@ -544,7 +542,7 @@ DecimalUtil.parseHex(DecimalUtil.toHexString(Integer.MIN_VALUE)); // Integer.MIN
 
 包名：`com.henry.common.utils.convert`
 
-把十进制文本安全地解析成整数。失败时返回调用方给出的默认值，不抛出解析异常。类不能实例化。不代替会抛异常的 `DecimalUtil.checkNumber`，也不改 `DecimalUtil`。`CommonUtils:1.0.2` 没有这个类。
+把十进制文本安全地解析成整数。失败时返回调用方给出的默认值，不抛出解析异常。类不能实例化。不代替会抛异常的 `DecimalUtil.checkNumber`，也不改 `DecimalUtil`。这个类从 `1.0.3` 开始提供。
 
 #### `int parseInt(String text, int defaultValue)`
 
@@ -578,7 +576,7 @@ ConvertUtil.parseLong("12a", 3L);                  // 3
 
 包名：`com.henry.common.utils.encryption`
 
-SHA-256 摘要。这是单向散列，不是可逆加密。类不能实例化。不修改已发布的 `MD5Util`。`CommonUtils:1.0.2` 没有这个类。
+SHA-256 摘要。这是单向散列，不是可逆加密。类不能实例化。不修改 `MD5Util`。这个类从 `1.0.3` 开始提供。
 
 #### `String digest(String text)`
 
