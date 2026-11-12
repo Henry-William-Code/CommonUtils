@@ -782,3 +782,98 @@ ConvertUtil.parseBoolean(null, false);     // false
 FileUtil.isDirectory(null);          // false
 FileUtil.isDirectory(new File(".")); // 当前目录存在时为 true
 ```
+
+### 新类 ObjectUtil
+
+包名：`com.henry.common.utils.object`
+
+对象的 null 安全判断。类不能实例化，也不使用 Android API。字符串内容比较仍用 `StringUtil.equals`。`CommonUtils:1.0.3` 没有这个类。
+
+#### `<T> T defaultIfNull(T value, T defaultValue)`
+
+value 为 null 时返回默认值。
+
+- `value`、`defaultValue` 都允许为 null。
+- value 不是 null 时返回 value，即使它是空串。
+- 默认值本身是 null 时，value 为 null 也会返回 null，无法区分“原值就是 null”和“使用了默认值”。
+
+```java
+ObjectUtil.defaultIfNull(null, "b"); // "b"
+ObjectUtil.defaultIfNull("a", "b");  // "a"
+ObjectUtil.defaultIfNull(null, null); // null
+```
+
+#### `boolean equals(Object left, Object right)`
+
+按 `Object.equals` 做 null 安全比较。
+
+- 两者都为 null 时返回 true；只有一方为 null 时返回 false。
+- 不比较数组内容。两个不同的数组对象即使元素相同也返回 false。
+- 字符串内容相同但大小写不同返回 false。这和 `StringUtil.equals` 对字符串的结果一致，但本方法接受任意对象。
+
+```java
+ObjectUtil.equals(null, null);              // true
+ObjectUtil.equals("a", new String("a"));    // true
+ObjectUtil.equals(new String[]{"a"}, new String[]{"a"}); // false
+```
+
+#### `<T> T firstNonNull(T... values)`
+
+返回第一个不是 null 的参数。
+
+- `values` 数组本身允许为 null，此时返回 null。
+- 没有参数，或全部元素都是 null 时返回 null。
+- 空串不是 null，会作为结果返回。不调用元素的 equals。
+
+```java
+ObjectUtil.firstNonNull(null, "b", "c"); // "b"
+ObjectUtil.firstNonNull();               // null
+ObjectUtil.firstNonNull("", "b");        // ""
+```
+
+### TimeUtil 新增
+
+已在 main 上、尚未发布的 `addHours` 没有变化。
+
+#### `long addMinutes(long millis, int minutes)`
+
+在毫秒时间戳上增加或减少整分钟。
+
+- `millis`：起始毫秒。`minutes`：增加的分钟数，可以是负数或 0。
+- 一分钟固定为 60000 毫秒，不使用设备时区，也不处理夏令时。
+- `minutes` 先提升为 long 再乘以一分钟的毫秒数，这个乘法不会溢出。
+- 相加结果放不进 long 时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.addMinutes(0L, 1);             // 60000
+TimeUtil.addMinutes(60000L, -1);        // 0
+TimeUtil.addMinutes(Long.MAX_VALUE, 1); // 抛出 ArithmeticException
+```
+
+### FileUtil 新增
+
+已在 main 上、尚未发布的 `isDirectory` 没有变化。
+
+#### `boolean isFile(File file)`
+
+判断路径是不是已存在的普通文件。
+
+- `file`：允许为 null。null、不存在，或存在但不是普通文件时返回 false。
+- 目录返回 false。
+- 不存在的路径在这里返回 false，在 `isEmpty` 中返回 true。
+
+```java
+FileUtil.isFile(null); // false
+```
+
+#### `boolean exists(File file)`
+
+判断路径是否存在。
+
+- `file`：允许为 null。null 或不存在时返回 false。
+- 普通文件和目录存在时都返回 true。
+- 不读取内容，也不区分文件和目录。
+
+```java
+FileUtil.exists(null); // false
+```

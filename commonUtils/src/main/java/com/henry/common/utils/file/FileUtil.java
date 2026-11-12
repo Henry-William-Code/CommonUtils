@@ -89,6 +89,31 @@ public class FileUtil {
     }
 
     /**
+     * 判断路径是不是已存在的普通文件。
+     * file 为 null、路径不存在，或存在但不是普通文件时返回 false。
+     * 目录返回 false。这和 {@link #isDirectory(File)} 互补，也和 {@link #isEmpty(File)} 不同：
+     * 不存在的路径在这里返回 false，在 isEmpty 中返回 true。
+     *
+     * @param file 允许为 null
+     * @return 已存在的普通文件返回 true
+     */
+    public static boolean isFile(File file) {
+        return file != null && file.isFile();
+    }
+
+    /**
+     * 判断路径是否存在。
+     * file 为 null 或不存在时返回 false。普通文件和目录存在时都返回 true。
+     * 不读取文件内容，也不区分文件和目录。
+     *
+     * @param file 允许为 null
+     * @return 路径存在时返回 true
+     */
+    public static boolean exists(File file) {
+        return file != null && file.exists();
+    }
+
+    /**
      * 删除一个文件或空目录。
      * null 或不存在时返回 false。只调用 {@link File#delete()}，不递归删除目录内容。
      * 非空目录会删除失败并返回 false，目录仍然保留。

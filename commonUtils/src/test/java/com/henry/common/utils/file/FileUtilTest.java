@@ -83,6 +83,15 @@ public class FileUtilTest {
             assertFalse(FileUtil.isDirectory(filled));
             assertFalse(FileUtil.isDirectory(missing));
             assertFalse(FileUtil.isDirectory(null));
+            assertTrue(FileUtil.isFile(filled));
+            assertTrue(FileUtil.isFile(empty));
+            assertFalse(FileUtil.isFile(dir));
+            assertFalse(FileUtil.isFile(missing));
+            assertFalse(FileUtil.isFile(null));
+            assertTrue(FileUtil.exists(filled));
+            assertTrue(FileUtil.exists(dir));
+            assertFalse(FileUtil.exists(missing));
+            assertFalse(FileUtil.exists(null));
         } finally {
             deleteTree(dir);
         }
