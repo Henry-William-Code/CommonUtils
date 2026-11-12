@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.3`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 在此基础上增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`，并给已有类追加了方法。
+工具按类组织。当前发布版本是 `1.0.4`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`，并给已有类追加了方法。
 
 ## 版本说明
 
@@ -10,11 +10,11 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | --- | --- | --- |
 | 已发布 `1.0.2` | JitPack `CommonUtils:1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
 | 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
-| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.3` 调用 |
+| 已发布 `1.0.4` | JitPack `CommonUtils:1.0.4` | 包含 `1.0.3` 的全部方法，以及「1.0.4 新增」一节 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 沿用 `1.0.2` 的包结构，没有修改 `1.0.2` 已有方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 和 `1.0.4` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
-## 依赖 1.0.3
+## 依赖 1.0.4
 
 在工程的 `build.gradle` 中加入：
 
@@ -30,11 +30,11 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.3'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.4'
 }
 ```
 
-`1.0.3` 包含「已发布 1.0.2 的工具类」和「1.0.3 新增」两节。仍使用 `1.0.2` 的工程只能调用前一节。「main 上尚未发布」里的方法还没有 tag，不能用 `CommonUtils:1.0.3` 调用。
+`1.0.4` 包含「已发布 1.0.2 的工具类」「1.0.3 新增」和「1.0.4 新增」。仍使用 `1.0.3` 的工程不能调用「1.0.4 新增」。
 
 ## 已发布 1.0.2 的工具类
 
@@ -680,9 +680,9 @@ FileUtil.size(null); // 0
 FileUtil.deleteQuietly(null); // false
 ```
 
-## main 上尚未发布
+## 1.0.4 新增
 
-下面的类和方法只在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.3` 不能调用它们。`1.0.3` 已有方法的签名和返回值没有改。
+下面的类和方法从 `1.0.4` 起可以通过 JitPack 使用。`1.0.3` 没有它们。`1.0.3` 已有方法的签名和返回值没有改。
 
 ### 新类 IoUtil
 
@@ -787,7 +787,7 @@ FileUtil.isDirectory(new File(".")); // 当前目录存在时为 true
 
 包名：`com.henry.common.utils.object`
 
-对象的 null 安全判断。类不能实例化，也不使用 Android API。字符串内容比较仍用 `StringUtil.equals`。`CommonUtils:1.0.3` 没有这个类。
+对象的 null 安全判断。类不能实例化，也不使用 Android API。字符串内容比较仍用 `StringUtil.equals`。这个类从 `1.0.4` 开始提供。
 
 #### `<T> T defaultIfNull(T value, T defaultValue)`
 
@@ -833,7 +833,7 @@ ObjectUtil.firstNonNull("", "b");        // ""
 
 ### TimeUtil 新增
 
-已在 main 上、尚未发布的 `addHours` 没有变化。
+同属 `1.0.4` 的 `addHours` 没有变化。
 
 #### `long addMinutes(long millis, int minutes)`
 
@@ -852,7 +852,7 @@ TimeUtil.addMinutes(Long.MAX_VALUE, 1); // 抛出 ArithmeticException
 
 ### FileUtil 新增
 
-已在 main 上、尚未发布的 `isDirectory` 没有变化。
+同属 `1.0.4` 的 `isDirectory` 没有变化。
 
 #### `boolean isFile(File file)`
 
