@@ -3,6 +3,8 @@ package com.henry.common.utils.convert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ConvertUtilTest {
 
@@ -46,5 +48,21 @@ public class ConvertUtilTest {
         assertEquals(3L, ConvertUtil.parseLong("-9223372036854775809", 3L));
         assertEquals(3L, ConvertUtil.parseLong("12a", 3L));
         assertEquals(0L, ConvertUtil.parseLong("0", 3L));
+    }
+
+    @Test
+    public void parseBoolean_acceptsOnlyTrueAndFalse() {
+        assertTrue(ConvertUtil.parseBoolean("true", false));
+        assertTrue(ConvertUtil.parseBoolean(" TRUE ", false));
+        assertFalse(ConvertUtil.parseBoolean("false", true));
+        assertFalse(ConvertUtil.parseBoolean("FaLsE", true));
+        assertTrue(ConvertUtil.parseBoolean(null, true));
+        assertFalse(ConvertUtil.parseBoolean("", false));
+        assertFalse(ConvertUtil.parseBoolean(" \t", false));
+        assertTrue(ConvertUtil.parseBoolean("yes", true));
+        assertFalse(ConvertUtil.parseBoolean("1", false));
+        assertFalse(ConvertUtil.parseBoolean("0", false));
+        assertTrue(ConvertUtil.parseBoolean("tr ue", true));
+        assertTrue(ConvertUtil.parseBoolean("真", true));
     }
 }

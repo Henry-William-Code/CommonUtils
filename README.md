@@ -10,6 +10,7 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | --- | --- | --- |
 | 已发布 `1.0.2` | JitPack `CommonUtils:1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
 | 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
+| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.3` 调用 |
 
 `1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 沿用 `1.0.2` 的包结构，没有修改 `1.0.2` 已有方法的签名和返回值。
 
@@ -33,7 +34,7 @@ dependencies {
 }
 ```
 
-`1.0.3` 包含下面两节的全部方法。仍使用 `1.0.2` 的工程只能调用「已发布 1.0.2 的工具类」一节。
+`1.0.3` 包含「已发布 1.0.2 的工具类」和「1.0.3 新增」两节。仍使用 `1.0.2` 的工程只能调用前一节。「main 上尚未发布」里的方法还没有 tag，不能用 `CommonUtils:1.0.3` 调用。
 
 ## 已发布 1.0.2 的工具类
 
@@ -677,4 +678,107 @@ FileUtil.size(null); // 0
 
 ```java
 FileUtil.deleteQuietly(null); // false
+```
+
+## main 上尚未发布
+
+下面的类和方法只在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.3` 不能调用它们。`1.0.3` 已有方法的签名和返回值没有改。
+
+### 新类 IoUtil
+
+包名：`com.henry.common.utils.io`
+
+关闭流，以及在字节上限内读取输入流。类不能实例化，也不使用 Android API。
+
+#### `void closeQuietly(Closeable closeable)`
+
+关闭对象，并吞掉 `IOException`。
+
+- `closeable`：允许为 null。null 时直接返回。
+- 只捕获 `IOException`。其他运行时异常仍向外抛出。
+- 不判断对象是否已经关闭。
+
+```java
+IoUtil.closeQuietly(null);
+IoUtil.closeQuietly(inputStream);
+```
+
+#### `byte[] readBytes(InputStream input, int maxBytes)`
+
+读取输入流的全部字节，但不超过 `maxBytes`。
+
+- `input`：不能为 null。null 时抛出 `IllegalArgumentException`。
+- `maxBytes`：小于 0 时抛出 `IllegalArgumentException`。
+- 实际字节数大于 `maxBytes` 时抛出 `IllegalArgumentException`，不返回截断内容。
+- 流里没有字节时返回长度为 0 的数组。`maxBytes` 为 0 且流为空时同样返回空数组。
+- 不关闭 `input`。读取失败时抛出 `IOException`。
+
+```java
+byte[] data = IoUtil.readBytes(input, 1024);
+```
+
+#### `String readUtf8(InputStream input, int maxBytes)`
+
+按 UTF-8 读取文本。字节上限和拒绝规则与 `readBytes` 相同。
+
+- 非法 UTF-8 字节替换为 `U+FFFD`，不因此抛异常。
+- 不关闭 `input`。
+
+```java
+String text = IoUtil.readUtf8(input, 1024);
+```
+
+### TimeUtil 新增
+
+已发布的 `addDays` 没有变化。
+
+#### `long addHours(long millis, int hours)`
+
+在毫秒时间戳上增加或减少整小时。
+
+- `millis`：起始毫秒。`hours`：增加的小时数，可以是负数或 0。
+- 一小时固定为 3600000 毫秒，不使用设备时区，也不处理夏令时。
+- `hours` 先提升为 long 再乘以一小时的毫秒数，这个乘法不会溢出。
+- 相加结果放不进 long 时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.addHours(0L, 1);              // 3600000
+TimeUtil.addHours(3600000L, -1);       // 0
+TimeUtil.addHours(Long.MAX_VALUE, 1);  // 抛出 ArithmeticException
+```
+
+### ConvertUtil 新增
+
+已发布的 `parseInt` 和 `parseLong` 没有变化。
+
+#### `boolean parseBoolean(String text, boolean defaultValue)`
+
+把文本解析成布尔值。
+
+- `text`：允许为 null。null、空串、只含空白，或不是 true / false 时返回 `defaultValue`，不抛异常。
+- 去掉首尾空白后，只接受 ASCII 大小写不敏感的 `true` 和 `false`。
+- 不接受 `1`、`0`、`yes`、`no` 或全角字母。中间有空白时返回默认值。
+- 文本无效时，无法从返回值区分“解析成功”和“使用了默认值”。
+
+```java
+ConvertUtil.parseBoolean(" TRUE ", false); // true
+ConvertUtil.parseBoolean("no", true);      // true，因为 "no" 不是 false
+ConvertUtil.parseBoolean(null, false);     // false
+```
+
+### FileUtil 新增
+
+已发布的 `isEmpty` 没有变化。
+
+#### `boolean isDirectory(File file)`
+
+判断路径是不是已存在的目录。
+
+- `file`：允许为 null。null、不存在，或存在但不是目录时返回 false。
+- 普通文件返回 false。
+- 空目录返回 true。这和 `isEmpty` 不同：空目录在 `isEmpty` 中返回 false。
+
+```java
+FileUtil.isDirectory(null);          // false
+FileUtil.isDirectory(new File(".")); // 当前目录存在时为 true
 ```

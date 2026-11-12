@@ -79,6 +79,10 @@ public class FileUtilTest {
             assertTrue(child.createNewFile());
             assertFalse(FileUtil.isEmpty(dir));
             assertEquals(0L, FileUtil.size(dir));
+            assertTrue(FileUtil.isDirectory(dir));
+            assertFalse(FileUtil.isDirectory(filled));
+            assertFalse(FileUtil.isDirectory(missing));
+            assertFalse(FileUtil.isDirectory(null));
         } finally {
             deleteTree(dir);
         }

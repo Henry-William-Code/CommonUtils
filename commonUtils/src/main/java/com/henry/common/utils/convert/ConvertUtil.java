@@ -49,6 +49,31 @@ public class ConvertUtil {
     }
 
     /**
+     * 把文本解析成布尔值。
+     * null、空串、只含空白，或不是 true / false 时返回 defaultValue，不抛异常。
+     * 去掉首尾空白后，只接受 ASCII 大小写不敏感的 {@code true} 和 {@code false}。
+     * 不接受 1、0、yes、no 或全角字母。中间有空白时返回默认值。
+     * 默认值可以是 true 或 false。文本无效时无法从返回值区分“解析成功”和“使用了默认值”。
+     *
+     * @param text         文本，允许为 null
+     * @param defaultValue 无法解析时返回的值
+     * @return true、false 或 defaultValue
+     */
+    public static boolean parseBoolean(String text, boolean defaultValue) {
+        if (StringUtil.isBlank(text)) {
+            return defaultValue;
+        }
+        String trimmed = trimWhitespace(text);
+        if (equalsIgnoreAsciiCase(trimmed, "true")) {
+            return true;
+        }
+        if (equalsIgnoreAsciiCase(trimmed, "false")) {
+            return false;
+        }
+        return defaultValue;
+    }
+
+    /**
      * @return 解析成功时返回对应 long；空白、格式错误或溢出时返回 null
      */
     private static Long parseDecimal(String text) {
@@ -104,5 +129,21 @@ public class ConvertUtil {
             end--;
         }
         return text.substring(start, end);
+    }
+
+    private static boolean equalsIgnoreAsciiCase(String text, String expectedLower) {
+        if (text.length() != expectedLower.length()) {
+            return false;
+        }
+        for (int i = 0; i < text.length(); i++) {
+            char current = text.charAt(i);
+            if (current >= 'A' && current <= 'Z') {
+                current = (char) (current + ('a' - 'A'));
+            }
+            if (current != expectedLower.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

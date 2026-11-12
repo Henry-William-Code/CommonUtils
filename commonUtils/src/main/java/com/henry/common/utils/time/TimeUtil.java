@@ -150,6 +150,26 @@ public class TimeUtil {
     }
 
     /**
+     * 在毫秒时间戳上增加或减少整小时。
+     * 一小时按 3600000 毫秒计算，不使用设备时区，也不处理夏令时。
+     * hours 可以为负数或 0。hours 先提升为 long 再乘以一小时的毫秒数，这个乘法不会溢出。
+     * 相加的结果无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不代替 {@link #addDays(long, int)}。
+     *
+     * @param millis 起始毫秒
+     * @param hours  增加的小时数，负数表示向前
+     * @return 增加后的毫秒时间戳
+     */
+    public static long addHours(long millis, int hours) {
+        long delta = (long) hours * 3600000L;
+        long sum = millis + delta;
+        if (((millis ^ sum) & (delta ^ sum)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return sum;
+    }
+
+    /**
      * 判断两个毫秒时间戳是否落在同一个 UTC 日。
      * 日界是 {@code floor(millis / 86400000)}，不是设备本地日历，也不是 Java 整数除法的向 0 截断。
      * 因此纪元前不足一天的时间不会和 1970-01-01 算成同一天：{@code isSameDay(-1L, 0L)} 为 false。

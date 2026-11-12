@@ -37,6 +37,26 @@ public class TimeUtilTest {
         assertEquals(0L, TimeUtil.addDays(Integer.MAX_VALUE * 86400000L, -Integer.MAX_VALUE));
     }
 
+    @Test
+    public void addHours_movesByExactHourLength() {
+        assertEquals(3600000L, TimeUtil.addHours(0L, 1));
+        assertEquals(-3600000L, TimeUtil.addHours(0L, -1));
+        assertEquals(1000L, TimeUtil.addHours(1000L, 0));
+        assertEquals(0L, TimeUtil.addHours(3600000L, -1));
+        assertEquals(Long.MAX_VALUE, TimeUtil.addHours(Long.MAX_VALUE, 0));
+        assertEquals((long) Integer.MAX_VALUE * 3600000L, TimeUtil.addHours(0L, Integer.MAX_VALUE));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addHours_rejectsPositiveOverflow() {
+        TimeUtil.addHours(Long.MAX_VALUE, 1);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addHours_rejectsNegativeOverflow() {
+        TimeUtil.addHours(Long.MIN_VALUE, -1);
+    }
+
     @Test(expected = ArithmeticException.class)
     public void addDays_rejectsPositiveOverflow() {
         TimeUtil.addDays(Long.MAX_VALUE, 1);
