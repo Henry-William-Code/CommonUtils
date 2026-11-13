@@ -51,6 +51,24 @@ public class FileUtilTest {
     }
 
     @Test
+    public void getParent_splitsOnLastSeparatorWithoutResolvingDots() {
+        assertEquals("", FileUtil.getParent(null));
+        assertEquals("", FileUtil.getParent(""));
+        assertEquals("", FileUtil.getParent(" \t"));
+        assertEquals("", FileUtil.getParent("file.txt"));
+        assertEquals("", FileUtil.getParent("foo/"));
+        assertEquals("", FileUtil.getParent("/"));
+        assertEquals("", FileUtil.getParent("\\"));
+        assertEquals("foo", FileUtil.getParent("foo/bar/"));
+        assertEquals("foo", FileUtil.getParent("foo\\bar\\"));
+        assertEquals("/path/to", FileUtil.getParent("/path/to/file.txt"));
+        assertEquals("C:\\foo\\bar", FileUtil.getParent("C:\\foo\\bar\\a.txt"));
+        assertEquals("a/b", FileUtil.getParent("a/b\\c.txt"));
+        assertEquals("foo/.", FileUtil.getParent("foo/./bar"));
+        assertEquals(" foo", FileUtil.getParent(" foo/bar"));
+    }
+
+    @Test
     public void getNameWithoutExtension_keepsNamesThatHaveNoExtension() {
         assertEquals("", FileUtil.getNameWithoutExtension(null));
         assertEquals("", FileUtil.getNameWithoutExtension("  "));

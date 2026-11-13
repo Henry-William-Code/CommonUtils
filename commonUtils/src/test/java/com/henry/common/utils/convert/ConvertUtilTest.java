@@ -65,4 +65,30 @@ public class ConvertUtilTest {
         assertTrue(ConvertUtil.parseBoolean("tr ue", true));
         assertTrue(ConvertUtil.parseBoolean("真", true));
     }
+
+    @Test
+    public void parseDouble_acceptsFiniteDecimalAndExponent() {
+        assertEquals(12.5, ConvertUtil.parseDouble("12.5", -1), 0);
+        assertEquals(1.25, ConvertUtil.parseDouble(" +1.25 ", -1), 0);
+        assertEquals(-0.5, ConvertUtil.parseDouble("-.5", 9), 0);
+        assertEquals(150, ConvertUtil.parseDouble("1.5e2", -1), 0);
+        assertEquals(0.015, ConvertUtil.parseDouble("1.5E-2", -1), 0);
+        assertEquals(0, ConvertUtil.parseDouble("1e-400", 9), 0);
+    }
+
+    @Test
+    public void parseDouble_returnsDefaultForBlankIllegalAndNonFinite() {
+        assertEquals(9, ConvertUtil.parseDouble(null, 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble(" \t", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("1,5", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("1.2.3", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("0x1.0p1", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("NaN", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("+Infinity", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("-infinity", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("1e309", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("１.５", 9), 0);
+        assertEquals(9, ConvertUtil.parseDouble("1 .5", 9), 0);
+    }
 }

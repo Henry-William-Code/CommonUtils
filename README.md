@@ -966,3 +966,114 @@ FileUtil.getName("/path/to/archive.tar.gz"); // "archive.tar.gz"
 FileUtil.getName("foo/bar/");                // ""
 FileUtil.getName(null);                      // ""
 ```
+
+### 新类 ArrayUtil
+
+包名：`com.henry.common.utils.array`
+
+数组查找。类不能实例化，也不使用 Android API。对象数组是否为空仍用 `CollectionUtil.isEmpty(Object[])`，本类不提供这个方法，也不改 `CollectionUtil`。
+
+#### `boolean isEmpty(int[] data)`
+
+判断 int 数组是否没有元素。
+
+- `data`：允许为 null。null 或长度为 0 时返回 true。
+
+```java
+ArrayUtil.isEmpty(null);        // true
+ArrayUtil.isEmpty(new int[]{0}); // false
+```
+
+#### `int indexOf(Object[] data, Object value)`
+
+查找对象数组中第一个匹配元素的下标。
+
+- `data`：允许为 null。null 或没有匹配时返回 -1。
+- `value`：允许为 null。元素和 value 都是 null 时算匹配。
+- 使用 `Object.equals`。元素本身是数组时只按引用相等，不比较数组内容。
+
+```java
+ArrayUtil.indexOf(new Object[]{null, "b"}, "b"); // 1
+ArrayUtil.indexOf(null, "a");                    // -1
+```
+
+#### `boolean contains(Object[] data, Object value)`
+
+判断对象数组是否包含指定元素。规则与上面的 `indexOf` 相同，`indexOf >= 0` 时返回 true。
+
+```java
+ArrayUtil.contains(new Object[]{null, "b"}, null); // true
+```
+
+#### `int indexOf(int[] data, int value)`
+
+查找 int 数组中第一个等于 value 的下标。`data` 为 null 或没有匹配时返回 -1。
+
+```java
+ArrayUtil.indexOf(new int[]{1, 3}, 3); // 1
+ArrayUtil.indexOf((int[]) null, 1);    // -1
+```
+
+#### `boolean contains(int[] data, int value)`
+
+判断 int 数组是否包含指定值。`data` 为 null 时返回 false。
+
+```java
+ArrayUtil.contains(new int[]{0, -1}, -1); // true
+```
+
+### ConvertUtil 新增
+
+已发布的 `parseInt`、`parseLong` 和 `parseBoolean` 没有变化。
+
+#### `double parseDouble(String text, double defaultValue)`
+
+把十进制文本解析成有限的 double。
+
+- `text`：允许为 null。null、空串、只含空白、非法格式，或结果为 NaN、无穷大时返回 `defaultValue`，不抛异常。
+- 空白规则和去掉首尾空白的方式与 `parseInt` 相同。中间空白不接受。
+- 允许 ASCII 正负号、小数点和标准十进制指数，例如 `1.5e2`。
+- 不接受千分位、全角数字、逗号小数，也不接受 `0x` 十六进制浮点。
+- 文本本身是 NaN 或 Infinity，以及大数溢出成无穷大，都返回默认值。下溢成 0 的有限结果返回 0。
+
+```java
+ConvertUtil.parseDouble("1.5e2", -1); // 150
+ConvertUtil.parseDouble("NaN", 9);    // 9
+ConvertUtil.parseDouble(null, 9);     // 9
+```
+
+### IoUtil 新增
+
+已发布的 `closeQuietly`、`readBytes` 和 `readUtf8` 没有变化。
+
+#### `int copy(InputStream input, OutputStream output, int maxBytes)`
+
+在字节上限内把输入流全部写入输出流，返回实际拷贝的字节数。
+
+- `input`、`output`：都不能为 null。任一为 null，或 `maxBytes` 小于 0 时抛出 `IllegalArgumentException`。
+- 先完整读入。实际字节数超过 `maxBytes` 时抛出 `IllegalArgumentException`，不会把截断内容写入 `output`。
+- 返回值是 `int`，范围是 0 到 `maxBytes`。
+- 不关闭两个流。读写失败时抛出 `IOException`。
+
+```java
+int copied = IoUtil.copy(input, output, 1024);
+```
+
+### FileUtil 新增
+
+已发布的 `getName` 没有变化。
+
+#### `String getParent(String pathOrName)`
+
+取父路径。不访问磁盘，也不解析 `.` 和 `..`。
+
+- `pathOrName`：允许为 null。null、空串或只含空白时返回 `""`。空白规则与 `getExtension` 相同，其余文本不 trim。
+- 按最后一个 `/` 或 `\` 分割。没有分隔符时返回 `""`。
+- 路径以分隔符结尾时，先去掉这一层目录，再取上一层：`foo/bar/` 得到 `foo`。
+- 只有根分隔符 `/` 或 `\` 时返回 `""`。`/path/to/file.txt` 得到 `/path/to`。
+
+```java
+FileUtil.getParent("/path/to/file.txt"); // "/path/to"
+FileUtil.getParent("foo/bar/");          // "foo"
+FileUtil.getParent("file.txt");          // ""
+```

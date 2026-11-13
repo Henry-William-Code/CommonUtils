@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -84,5 +85,28 @@ public class IoUtil {
      */
     public static String readUtf8(InputStream input, int maxBytes) throws IOException {
         return new String(readBytes(input, maxBytes), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 在字节上限内把输入流全部写入输出流，返回实际拷贝的字节数。
+     * input 或 output 为 null，或 maxBytes 小于 0 时抛出 {@link IllegalArgumentException}。
+     * 先按 {@link #readBytes(InputStream, int)} 读完整段；超过 maxBytes 时抛出 {@link IllegalArgumentException}，
+     * 此时不会把截断内容写入 output。
+     * 不关闭 input 和 output。读写失败时抛出 {@link IOException}。
+     * 不修改 {@link #closeQuietly(Closeable)}、{@link #readBytes(InputStream, int)} 和 {@link #readUtf8(InputStream, int)}。
+     *
+     * @param input    输入流，不能为 null
+     * @param output   输出流，不能为 null
+     * @param maxBytes 允许拷贝的最大字节数，包含 0
+     * @return 实际写入的字节数，范围是 0 到 maxBytes
+     * @throws IOException 读取或写入失败，或底层 read 在请求长度大于 0 时返回 0
+     */
+    public static int copy(InputStream input, OutputStream output, int maxBytes) throws IOException {
+        if (output == null) {
+            throw new IllegalArgumentException("output is null");
+        }
+        byte[] data = readBytes(input, maxBytes);
+        output.write(data);
+        return data.length;
     }
 }

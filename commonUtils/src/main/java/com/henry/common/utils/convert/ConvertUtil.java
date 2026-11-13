@@ -74,6 +74,39 @@ public class ConvertUtil {
     }
 
     /**
+     * 把十进制文本解析成有限的 double。
+     * null、空串、只含空白、非法格式，或结果为 NaN、无穷大时返回 defaultValue，不抛异常。
+     * 空白规则和去掉首尾空白的方式与 {@link #parseInt(String, int)} 相同。中间空白不接受。
+     * 允许 ASCII 正负号、小数点和标准十进制指数，例如 {@code 1.5e2}。
+     * 不接受千分位、全角数字、逗号小数，也不接受 {@code 0x} 十六进制浮点。
+     * 文本本身是 NaN 或 Infinity，以及大数溢出成无穷大，都返回默认值。
+     * 下溢成 0 的有限结果会返回 0，不换成默认值。
+     * 不修改 {@link #parseInt(String, int)}、{@link #parseLong(String, long)} 和 {@link #parseBoolean(String, boolean)}。
+     *
+     * @param text         十进制文本，允许为 null
+     * @param defaultValue 无法得到有限数值时返回的值
+     * @return 有限解析结果或 defaultValue
+     */
+    public static double parseDouble(String text, double defaultValue) {
+        if (StringUtil.isBlank(text)) {
+            return defaultValue;
+        }
+        String trimmed = trimWhitespace(text);
+        if (trimmed.length() == 0 || isRejectedFloatText(trimmed)) {
+            return defaultValue;
+        }
+        try {
+            double value = Double.parseDouble(trimmed);
+            if (Double.isNaN(value) || Double.isInfinite(value)) {
+                return defaultValue;
+            }
+            return value;
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    /**
      * @return 解析成功时返回对应 long；空白、格式错误或溢出时返回 null
      */
     private static Long parseDecimal(String text) {
@@ -145,5 +178,23 @@ public class ConvertUtil {
             }
         }
         return true;
+    }
+
+    private static boolean isRejectedFloatText(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            char current = text.charAt(i);
+            if (current == 'x' || current == 'X' || current == 'p' || current == 'P') {
+                return true;
+            }
+        }
+        int start = 0;
+        if (text.charAt(0) == '+' || text.charAt(0) == '-') {
+            start = 1;
+        }
+        int length = text.length() - start;
+        if (length == 3 && equalsIgnoreAsciiCase(text.substring(start), "nan")) {
+            return true;
+        }
+        return length == 8 && equalsIgnoreAsciiCase(text.substring(start), "infinity");
     }
 }

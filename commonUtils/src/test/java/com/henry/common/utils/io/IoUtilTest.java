@@ -3,9 +3,11 @@ package com.henry.common.utils.io;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -76,6 +78,48 @@ public class IoUtilTest {
         TrackingInputStream input = new TrackingInputStream(new byte[] {'a'});
         assertEquals("a", IoUtil.readUtf8(input, 1));
         assertFalse(input.closed);
+    }
+
+    @Test
+    public void copy_writesOnlyWhenTheWholeInputFits() throws Exception {
+        TrackingInputStream input = new TrackingInputStream(new byte[] {1, 2, 3});
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        assertEquals(3, IoUtil.copy(input, output, 3));
+        assertArrayEquals(new byte[] {1, 2, 3}, output.toByteArray());
+        assertFalse(input.closed);
+
+        ByteArrayOutputStream limited = new ByteArrayOutputStream();
+        assertIllegalArgument(new Call() {
+            @Override
+            public void run() throws IOException {
+                IoUtil.copy(new ByteArrayInputStream(new byte[] {1, 2}), limited, 1);
+            }
+        });
+        assertEquals(0, limited.size());
+        assertEquals(0, IoUtil.copy(new ByteArrayInputStream(new byte[0]), new ByteArrayOutputStream(), 0));
+    }
+
+    @Test
+    public void copy_rejectsNullStreamsAndNegativeLimit() throws Exception {
+        OutputStream output = new ByteArrayOutputStream();
+        assertIllegalArgument(new Call() {
+            @Override
+            public void run() throws IOException {
+                IoUtil.copy(null, output, 1);
+            }
+        });
+        assertIllegalArgument(new Call() {
+            @Override
+            public void run() throws IOException {
+                IoUtil.copy(new ByteArrayInputStream(new byte[] {1}), null, 1);
+            }
+        });
+        assertIllegalArgument(new Call() {
+            @Override
+            public void run() throws IOException {
+                IoUtil.copy(new ByteArrayInputStream(new byte[] {1}), output, -1);
+            }
+        });
     }
 
     private static void assertIllegalArgument(Call call) throws Exception {

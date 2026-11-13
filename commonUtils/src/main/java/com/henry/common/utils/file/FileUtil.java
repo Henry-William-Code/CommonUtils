@@ -156,6 +156,42 @@ public class FileUtil {
     }
 
     /**
+     * 取父路径，不访问磁盘，也不解析 {@code .} 和 {@code ..}。
+     * null、空串或只含空白时返回空串。空白规则与 {@link #getExtension(String)} 相同，其余文本不 trim。
+     * 按最后一个 {@code /} 或 {@code \} 分割。没有分隔符时返回空串。
+     * 路径以分隔符结尾时，先把这一层目录去掉，再取上一层：{@code foo/bar/} 得到 {@code foo}。
+     * 只有根分隔符 {@code /} 或 {@code \} 时返回空串。{@code /path/to/file.txt} 得到 {@code /path/to}。
+     * 不修改 {@link #getName(String)}、{@link #getExtension(String)} 和 {@link #getNameWithoutExtension(String)}。
+     *
+     * @param pathOrName 路径或文件名，允许为 null
+     * @return 父路径；没有父路径时返回空串
+     */
+    public static String getParent(String pathOrName) {
+        if (StringUtil.isBlank(pathOrName)) {
+            return "";
+        }
+        int end = pathOrName.length();
+        char last = pathOrName.charAt(end - 1);
+        if (last == '/' || last == '\\') {
+            end--;
+            if (end == 0) {
+                return "";
+            }
+        }
+        int separator = -1;
+        for (int i = 0; i < end; i++) {
+            char current = pathOrName.charAt(i);
+            if (current == '/' || current == '\\') {
+                separator = i;
+            }
+        }
+        if (separator < 0) {
+            return "";
+        }
+        return pathOrName.substring(0, separator);
+    }
+
+    /**
      * @return 扩展名小数点的下标；没有可去掉的扩展名时返回 -1
      */
     private static int extensionDot(String name) {
