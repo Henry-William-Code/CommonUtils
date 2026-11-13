@@ -25,7 +25,7 @@ public class FileUtil {
      * @return 扩展名；没有扩展名时返回空串
      */
     public static String getExtension(String pathOrName) {
-        String name = fileName(pathOrName);
+        String name = getName(pathOrName);
         int dot = extensionDot(name);
         if (dot < 0) {
             return "";
@@ -42,7 +42,7 @@ public class FileUtil {
      * @return 去掉扩展名后的文件名
      */
     public static String getNameWithoutExtension(String pathOrName) {
-        String name = fileName(pathOrName);
+        String name = getName(pathOrName);
         int dot = extensionDot(name);
         if (dot < 0) {
             return name;
@@ -133,7 +133,15 @@ public class FileUtil {
         }
     }
 
-    private static String fileName(String pathOrName) {
+    /**
+     * 取最后一个 {@code /} 或 {@code \} 之后的文件名，保留扩展名。
+     * null、空串或只含空白时返回空串。空白规则与 {@link #getExtension(String)} 相同，其余文本不 trim。
+     * 路径以分隔符结尾时返回空串。没有分隔符时返回原文本。
+     *
+     * @param pathOrName 路径或文件名，允许为 null
+     * @return 文件名；没有文件名时返回空串
+     */
+    public static String getName(String pathOrName) {
         if (StringUtil.isBlank(pathOrName)) {
             return "";
         }

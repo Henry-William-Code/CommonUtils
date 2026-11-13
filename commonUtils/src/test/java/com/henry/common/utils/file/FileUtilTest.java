@@ -35,6 +35,22 @@ public class FileUtilTest {
     }
 
     @Test
+    public void getName_keepsExtensionAndDropsDirectory() {
+        assertEquals("", FileUtil.getName(null));
+        assertEquals("", FileUtil.getName(""));
+        assertEquals("", FileUtil.getName(" \t"));
+        assertEquals("file.txt", FileUtil.getName("file.txt"));
+        assertEquals("file.txt", FileUtil.getName("/path/to/file.txt"));
+        assertEquals("a.txt", FileUtil.getName("C:\\foo\\a.txt"));
+        assertEquals("c.txt", FileUtil.getName("a/b\\c.txt"));
+        assertEquals(".gitignore", FileUtil.getName("dir/.gitignore"));
+        assertEquals("file.", FileUtil.getName("dir.old/file."));
+        assertEquals("", FileUtil.getName("foo/bar/"));
+        assertEquals("", FileUtil.getName("/"));
+        assertEquals("archive.tar.gz", FileUtil.getName("archive.tar.gz"));
+    }
+
+    @Test
     public void getNameWithoutExtension_keepsNamesThatHaveNoExtension() {
         assertEquals("", FileUtil.getNameWithoutExtension(null));
         assertEquals("", FileUtil.getNameWithoutExtension("  "));

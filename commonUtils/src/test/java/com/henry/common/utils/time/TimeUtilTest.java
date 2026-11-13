@@ -77,6 +77,26 @@ public class TimeUtilTest {
         TimeUtil.addMinutes(Long.MIN_VALUE, -1);
     }
 
+    @Test
+    public void addSeconds_movesByExactSecondLength() {
+        assertEquals(1000L, TimeUtil.addSeconds(0L, 1));
+        assertEquals(-1000L, TimeUtil.addSeconds(0L, -1));
+        assertEquals(1000L, TimeUtil.addSeconds(1000L, 0));
+        assertEquals(0L, TimeUtil.addSeconds(1000L, -1));
+        assertEquals(Long.MAX_VALUE, TimeUtil.addSeconds(Long.MAX_VALUE, 0));
+        assertEquals((long) Integer.MAX_VALUE * 1000L, TimeUtil.addSeconds(0L, Integer.MAX_VALUE));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addSeconds_rejectsPositiveOverflow() {
+        TimeUtil.addSeconds(Long.MAX_VALUE, 1);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addSeconds_rejectsNegativeOverflow() {
+        TimeUtil.addSeconds(Long.MIN_VALUE, -1);
+    }
+
     @Test(expected = ArithmeticException.class)
     public void addDays_rejectsPositiveOverflow() {
         TimeUtil.addDays(Long.MAX_VALUE, 1);

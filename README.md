@@ -11,6 +11,7 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.2` | JitPack `CommonUtils:1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
 | 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
 | 已发布 `1.0.4` | JitPack `CommonUtils:1.0.4` | 包含 `1.0.3` 的全部方法，以及「1.0.4 新增」一节 |
+| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.4` 调用 |
 
 `1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 和 `1.0.4` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
@@ -34,7 +35,7 @@ dependencies {
 }
 ```
 
-`1.0.4` 包含「已发布 1.0.2 的工具类」「1.0.3 新增」和「1.0.4 新增」。仍使用 `1.0.3` 的工程不能调用「1.0.4 新增」。
+`1.0.4` 包含「已发布 1.0.2 的工具类」「1.0.3 新增」和「1.0.4 新增」。仍使用 `1.0.3` 的工程不能调用「1.0.4 新增」。「main 上尚未发布」里的方法还没有 tag，不能用 `CommonUtils:1.0.4` 调用。
 
 ## 已发布 1.0.2 的工具类
 
@@ -876,4 +877,92 @@ FileUtil.isFile(null); // false
 
 ```java
 FileUtil.exists(null); // false
+```
+
+## main 上尚未发布
+
+下面的类和方法只在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.4` 不能调用它们。`1.0.4` 已有方法的签名和返回值没有改。
+
+### 新类 HexUtil
+
+包名：`com.henry.common.utils.hex`
+
+字节数组和十六进制文本的互相转换。类不能实例化，也不使用 Android API。这不是 `DecimalUtil.parseHex` 那种 int 进制转换，也不改 `Sha256Util` 或 `MD5Util`。
+
+#### `String encode(byte[] data)`
+
+把字节数组编成小写十六进制。每个字节两个字符，不带 `0x` 前缀。
+
+- `data`：允许为 null。null 或空数组返回 `""`。
+- `-1` 这个字节写成 `ff`，不是带符号的十进制。
+
+```java
+HexUtil.encode(null);                         // ""
+HexUtil.encode(new byte[] {0x0f, (byte) 0xff}); // "0fff"
+```
+
+#### `byte[] decode(String hex)`
+
+把十六进制文本解析成字节数组。
+
+- `hex`：允许为 null。null、空串或只含空白时返回长度为 0 的数组。空白规则与 `StringUtil.isBlank` 相同。
+- 字母不区分大小写。不接受 `0x` 或 `0X` 前缀，也不去掉非空白文本里的空格或换行。
+- 长度为奇数、含非法字符，或非空白文本中夹着空白时抛出 `IllegalArgumentException`，不返回截断结果。
+
+```java
+HexUtil.decode(null);   // 空数组
+HexUtil.decode("AB");   // new byte[] {(byte) 0xab}
+HexUtil.decode("0x10"); // 抛出 IllegalArgumentException
+```
+
+### TimeUtil 新增
+
+已发布的 `addMinutes` 没有变化。
+
+#### `long addSeconds(long millis, int seconds)`
+
+在毫秒时间戳上增加或减少整秒。
+
+- `millis`：起始毫秒。`seconds`：增加的秒数，可以是负数或 0。
+- 一秒固定为 1000 毫秒，不使用设备时区，也不处理夏令时。
+- `seconds` 先提升为 long 再乘以一秒的毫秒数，这个乘法不会溢出。
+- 相加结果放不进 long 时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.addSeconds(0L, 1);             // 1000
+TimeUtil.addSeconds(1000L, -1);         // 0
+TimeUtil.addSeconds(Long.MAX_VALUE, 1); // 抛出 ArithmeticException
+```
+
+### CollectionUtil 新增
+
+#### `boolean contains(Collection<?> data, Object value)`
+
+判断集合是否包含指定元素。
+
+- `data`：允许为 null。null 时返回 false，不抛异常。
+- `value`：允许为 null。集合里有 null 元素时，查找 null 返回 true。
+- 其余情况调用 `data.contains(value)`，不吞掉集合自己抛出的异常。
+
+```java
+CollectionUtil.contains(null, "a");                         // false
+CollectionUtil.contains(Arrays.asList("a", null), null);    // true
+```
+
+### FileUtil 新增
+
+已发布的 `getExtension` 和 `getNameWithoutExtension` 没有变化。
+
+#### `String getName(String pathOrName)`
+
+取最后一个 `/` 或 `\` 之后的文件名，保留扩展名。
+
+- `pathOrName`：允许为 null。null、空串或只含空白时返回 `""`。空白规则与 `getExtension` 相同，其余文本不 trim。
+- 路径以分隔符结尾时返回 `""`。没有分隔符时返回原文本。
+- `.gitignore` 和 `file.` 都原样保留，不去掉扩展名。
+
+```java
+FileUtil.getName("/path/to/archive.tar.gz"); // "archive.tar.gz"
+FileUtil.getName("foo/bar/");                // ""
+FileUtil.getName(null);                      // ""
 ```

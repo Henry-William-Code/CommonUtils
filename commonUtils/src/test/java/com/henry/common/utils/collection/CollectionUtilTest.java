@@ -108,4 +108,14 @@ public class CollectionUtilTest {
         data.put(null, "null-key");
         assertEquals("null-key", CollectionUtil.getOrDefault(data, null, "fallback"));
     }
+
+    @Test
+    public void contains_nullCollectionIsFalseAndNullElementCounts() {
+        assertFalse(CollectionUtil.contains(null, "a"));
+        assertFalse(CollectionUtil.contains(null, null));
+        assertFalse(CollectionUtil.contains(Collections.emptyList(), null));
+        assertTrue(CollectionUtil.contains(Collections.singletonList(null), null));
+        assertTrue(CollectionUtil.contains(Arrays.asList("a", "b"), "b"));
+        assertFalse(CollectionUtil.contains(Arrays.asList("a", "b"), "c"));
+    }
 }

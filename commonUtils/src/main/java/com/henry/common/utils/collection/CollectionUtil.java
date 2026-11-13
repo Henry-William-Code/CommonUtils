@@ -158,4 +158,20 @@ public class CollectionUtil {
         }
         return map.get(key);
     }
+
+    /**
+     * 判断集合是否包含指定元素。
+     * data 为 null 时返回 false，不抛异常。value 允许为 null。
+     * 其余情况调用 {@code data.contains(value)}，不吞掉集合自己抛出的异常。
+     *
+     * @param data  集合，允许为 null
+     * @param value 要查找的元素，允许为 null
+     * @return 集合包含该元素时返回 true
+     */
+    public static boolean contains(Collection<?> data, Object value) {
+        if (data == null) {
+            return false;
+        }
+        return data.contains(value);
+    }
 }
