@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class StringUtilTest {
@@ -38,6 +39,28 @@ public class StringUtilTest {
         assertFalse(StringUtil.equals("a", "A"));
         assertFalse(StringUtil.equals("a", "a "));
         assertFalse(StringUtil.equals(" ", ""));
+    }
+
+    @Test
+    public void equalsIgnoreCase_foldsAsciiOnlyAndDoesNotTrim() {
+        assertTrue(StringUtil.equalsIgnoreCase(null, null));
+        assertFalse(StringUtil.equalsIgnoreCase(null, "a"));
+        assertFalse(StringUtil.equalsIgnoreCase("A", null));
+        assertTrue(StringUtil.equalsIgnoreCase("AbC", "aBc"));
+        assertFalse(StringUtil.equalsIgnoreCase("a", "a "));
+        assertFalse(StringUtil.equalsIgnoreCase("a", "ab"));
+        assertTrue(StringUtil.equals("A", "A"));
+        assertFalse(StringUtil.equals("A", "a"));
+    }
+
+    @Test
+    public void defaultIfBlank_usesIsBlankAndKeepsNonBlankText() {
+        assertEquals("fallback", StringUtil.defaultIfBlank(null, "fallback"));
+        assertEquals("fallback", StringUtil.defaultIfBlank("", "fallback"));
+        assertEquals("fallback", StringUtil.defaultIfBlank(" \t", "fallback"));
+        assertNull(StringUtil.defaultIfBlank(" ", null));
+        assertEquals(" a ", StringUtil.defaultIfBlank(" a ", "fallback"));
+        assertEquals("\u00A0", StringUtil.defaultIfBlank("\u00A0", "fallback"));
     }
 
     @Test

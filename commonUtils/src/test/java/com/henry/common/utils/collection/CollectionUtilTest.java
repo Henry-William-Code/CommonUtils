@@ -49,6 +49,9 @@ public class CollectionUtilTest {
         data.put("k", "v");
         assertEquals(1, CollectionUtil.size(data));
         assertEquals(0, CollectionUtil.size(Collections.emptyMap()));
+        assertEquals(0, CollectionUtil.size((Object[]) null));
+        assertEquals(0, CollectionUtil.size(new Object[0]));
+        assertEquals(2, CollectionUtil.size(new Object[] {null, "a"}));
     }
 
     @Test

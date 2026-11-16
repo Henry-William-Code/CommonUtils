@@ -131,6 +131,44 @@ public class TimeUtil {
     }
 
     /**
+     * 计算两个毫秒时间戳相差的整小时数。
+     * 以 3600000 毫秒为 1 小时做整数除法，向 0 截断，不按设备时区折算。
+     * endMillis 小于 startMillis 时结果为负数。
+     * 两个时间戳的差值无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #daysBetween(long, long)}。
+     *
+     * @param startMillis 开始时间，毫秒
+     * @param endMillis   结束时间，毫秒
+     * @return 相差的整小时数
+     */
+    public static long hoursBetween(long startMillis, long endMillis) {
+        return divideElapsed(startMillis, endMillis, 3600000L);
+    }
+
+    /**
+     * 计算两个毫秒时间戳相差的整分钟数。
+     * 以 60000 毫秒为 1 分钟做整数除法，向 0 截断，不按设备时区折算。
+     * endMillis 小于 startMillis 时结果为负数。
+     * 两个时间戳的差值无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #daysBetween(long, long)} 和 {@link #hoursBetween(long, long)}。
+     *
+     * @param startMillis 开始时间，毫秒
+     * @param endMillis   结束时间，毫秒
+     * @return 相差的整分钟数
+     */
+    public static long minutesBetween(long startMillis, long endMillis) {
+        return divideElapsed(startMillis, endMillis, 60000L);
+    }
+
+    private static long divideElapsed(long startMillis, long endMillis, long unitMillis) {
+        long diff = endMillis - startMillis;
+        if (((endMillis ^ startMillis) & (endMillis ^ diff)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return diff / unitMillis;
+    }
+
+    /**
      * 在毫秒时间戳上增加或减少整天。
      * 一天按 86400000 毫秒计算，不使用设备时区，也不处理夏令时。
      * days 可以为负数或 0。days 先提升为 long 再乘以一天的毫秒数，这个乘法不会溢出。

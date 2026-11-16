@@ -74,6 +74,24 @@ public class MathematicsUtil {
     }
 
     /**
+     * 判断整数是否落在闭区间 [min, max] 内。
+     * min 大于 max 时抛出 {@link IllegalArgumentException}，不会交换两个边界。
+     * value 小于 min 或大于 max 时返回 false，否则返回 true。
+     * 不修改 {@link #clamp(int, int, int)}。
+     *
+     * @param value 原值
+     * @param min   下界，包含
+     * @param max   上界，包含
+     * @return 落在闭区间内时返回 true
+     */
+    public static boolean isInRange(int value, int min, int max) {
+        if (min > max) {
+            throw new IllegalArgumentException("min is greater than max");
+        }
+        return value >= min && value <= max;
+    }
+
+    /**
      * 计算最大公约数，结果为非负整数。
      * 负数按绝对值参与计算。gcd(0, 0) 返回 0。
      * 任一参数为 {@link Integer#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，

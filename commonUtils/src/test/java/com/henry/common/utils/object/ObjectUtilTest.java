@@ -38,4 +38,13 @@ public class ObjectUtilTest {
         assertEquals("a", ObjectUtil.firstNonNull("a", null));
         assertEquals("", ObjectUtil.firstNonNull("", "b"));
     }
+
+    @Test
+    public void toStringOrEmpty_returnsEmptyForNullAndDoesNotFormatArrayContents() {
+        assertEquals("", ObjectUtil.toStringOrEmpty(null));
+        assertEquals("12", ObjectUtil.toStringOrEmpty(Integer.valueOf(12)));
+        assertEquals("a", ObjectUtil.toStringOrEmpty("a"));
+        String text = ObjectUtil.toStringOrEmpty(new int[] {1, 2});
+        assertTrue(text.startsWith("[I@"));
+    }
 }

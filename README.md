@@ -12,6 +12,7 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
 | 已发布 `1.0.4` | JitPack `CommonUtils:1.0.4` | 包含 `1.0.3` 的全部方法，以及「1.0.4 新增」一节 |
 | 已发布 `1.0.5` | JitPack `CommonUtils:1.0.5` | 包含 `1.0.4` 的全部方法，以及「1.0.5 新增」一节 |
+| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.5` 调用 |
 
 `1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3`、`1.0.4` 和 `1.0.5` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
@@ -35,7 +36,7 @@ dependencies {
 }
 ```
 
-`1.0.5` 包含「已发布 1.0.2 的工具类」「1.0.3 新增」「1.0.4 新增」和「1.0.5 新增」。仍使用 `1.0.4` 的工程不能调用「1.0.5 新增」。
+`1.0.5` 包含「已发布 1.0.2 的工具类」「1.0.3 新增」「1.0.4 新增」和「1.0.5 新增」。仍使用 `1.0.4` 的工程不能调用「1.0.5 新增」。「main 上尚未发布」里的方法还没有 tag，不能用 `CommonUtils:1.0.5` 调用。当前 `main` 上还有尚未发布的 `GzipUtil` 和 `UrlCodecUtil`，发布版本并不包含它们。
 
 ## 已发布 1.0.2 的工具类
 
@@ -1076,4 +1077,173 @@ int copied = IoUtil.copy(input, output, 1024);
 FileUtil.getParent("/path/to/file.txt"); // "/path/to"
 FileUtil.getParent("foo/bar/");          // "foo"
 FileUtil.getParent("file.txt");          // ""
+```
+
+## main 上尚未发布
+
+下面的类和方法只在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.5` 不能调用它们。`1.0.5` 已有方法的签名和返回值没有改。
+
+### 新类 GzipUtil
+
+包名：`com.henry.common.utils.compress`
+
+用 JDK 的 `java.util.zip` 做 gzip 压缩和解压。类不能实例化，也不使用 Android API。
+
+#### `byte[] compress(byte[] data)`
+
+把字节数组压成 gzip。
+
+- `data`：允许为 null。null 时返回长度为 0 的数组，不做压缩。
+- 空数组会压成合法的 gzip 字节，不是空数组。解压后仍是空数组。
+- 不修改入参数组的内容。
+
+```java
+GzipUtil.compress(null);          // 空数组
+GzipUtil.compress(new byte[0]);   // 合法 gzip，解压后为空数组
+```
+
+#### `byte[] decompress(byte[] data, int maxBytes)`
+
+解压 gzip，结果不超过 `maxBytes`。
+
+- `data`：不能为 null。null，或 `maxBytes` 小于 0 时抛出 `IllegalArgumentException`。
+- `data` 长度为 0，或不是合法 gzip 时抛出 `IllegalArgumentException`，原因放在 cause 里。
+- 解压后字节数大于 `maxBytes` 时抛出 `IllegalArgumentException`，不返回截断内容。
+- 解压结果可以是空数组。`maxBytes` 为 0 时，只有解压结果也为空才允许。
+
+```java
+byte[] gzip = GzipUtil.compress(new byte[] {1, 2, 3});
+GzipUtil.decompress(gzip, 3); // new byte[] {1, 2, 3}
+```
+
+### 新类 UrlCodecUtil
+
+包名：`com.henry.common.utils.codec`
+
+UTF-8 的 `application/x-www-form-urlencoded` 编解码。类不能实例化。不修改 `WebUtil`。使用 `URLEncoder` 和 `URLDecoder`，不另做一套百分号规则。
+
+#### `String encode(String text)`
+
+按表单规则编码。
+
+- `text`：允许为 null。null 或空串返回 `""`。
+- 空格编成 `+`。UTF-8 不可用时抛出 `IllegalStateException`。
+
+```java
+UrlCodecUtil.encode(null);  // ""
+UrlCodecUtil.encode("a b"); // "a+b"
+```
+
+#### `String decode(String text)`
+
+按表单规则解码。
+
+- `text`：允许为 null。null 或空串返回 `""`。
+- `+` 解成空格。
+- 非法百分号序列，例如末尾单独的 `%`、不完整的 `%A` 或非十六进制，抛出 `IllegalArgumentException`，不返回截断结果。
+- 对原文而言，`encode` 与 `decode` 互为逆运算。
+
+```java
+UrlCodecUtil.decode("a+b"); // "a b"
+UrlCodecUtil.decode(UrlCodecUtil.encode("你")); // "你"
+```
+
+### StringUtil 新增
+
+已发布的 `equals` 和 `isBlank` 没有变化。
+
+#### `boolean equalsIgnoreCase(String left, String right)`
+
+按 ASCII 大小写不敏感的方式比较两个字符串。
+
+- 两者都为 null 时返回 true；只有一方为 null 时返回 false。
+- 不 trim。只把 `A-Z` 看成与 `a-z` 相同，不处理 Unicode 大小写。
+- 已有的 `equals` 仍然区分大小写。
+
+```java
+StringUtil.equalsIgnoreCase("AbC", "aBc"); // true
+StringUtil.equalsIgnoreCase(null, null);   // true
+StringUtil.equals("A", "a");                // false
+```
+
+#### `String defaultIfBlank(String text, String defaultValue)`
+
+text 为空白时返回默认值，否则原样返回 text。
+
+- 空白规则与 `isBlank` 相同。`defaultValue` 允许为 null。
+- 非空白文本不去掉首尾空白。
+
+```java
+StringUtil.defaultIfBlank("  ", "fallback"); // "fallback"
+StringUtil.defaultIfBlank(" a ", "fallback"); // " a "
+```
+
+### TimeUtil 新增
+
+已发布的 `daysBetween` 没有变化。
+
+#### `long hoursBetween(long startMillis, long endMillis)`
+
+计算相差的整小时数。
+
+- 一小时固定为 3600000 毫秒，整数除法向 0 截断，不使用设备时区。
+- 结束早于开始时为负数。差值放不进 long 时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.hoursBetween(0L, 3600000L); // 1
+TimeUtil.hoursBetween(0L, 3599999L); // 0
+```
+
+#### `long minutesBetween(long startMillis, long endMillis)`
+
+计算相差的整分钟数。规则与 `hoursBetween` 相同，一分钟固定为 60000 毫秒。
+
+```java
+TimeUtil.minutesBetween(0L, 60000L); // 1
+TimeUtil.minutesBetween(60000L, 0L); // -1
+```
+
+### CollectionUtil 新增
+
+已有的 `isEmpty(Object[])` 没有变化，也没有改 `ArrayUtil`。
+
+#### `int size(Object[] data)`
+
+返回数组元素个数。
+
+- `data`：允许为 null。null 时返回 0，否则返回 `data.length`。
+
+```java
+CollectionUtil.size((Object[]) null);      // 0
+CollectionUtil.size(new Object[] {null});  // 1
+```
+
+### MathematicsUtil 新增
+
+已发布的 `clamp` 没有变化。
+
+#### `boolean isInRange(int value, int min, int max)`
+
+判断整数是否落在闭区间内。
+
+- `min > max` 时抛出 `IllegalArgumentException`，不互换边界。
+- `value < min` 或 `value > max` 返回 false，否则返回 true。
+
+```java
+MathematicsUtil.isInRange(0, 0, 10);  // true
+MathematicsUtil.isInRange(11, 0, 10); // false
+```
+
+### ObjectUtil 新增
+
+#### `String toStringOrEmpty(Object value)`
+
+把对象转成文本。
+
+- `value`：允许为 null。null 时返回 `""`，否则返回 `String.valueOf(value)`。
+- 不做数组内容的深度格式化。
+
+```java
+ObjectUtil.toStringOrEmpty(null); // ""
+ObjectUtil.toStringOrEmpty(12);   // "12"
 ```

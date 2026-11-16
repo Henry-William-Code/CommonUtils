@@ -76,6 +76,55 @@ public class StringUtil {
     }
 
     /**
+     * 按 ASCII 大小写不敏感的方式比较两个字符串。
+     * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
+     * 不去掉首尾空白。只把 {@code A-Z} 看成与 {@code a-z} 相同，不处理 Unicode 大小写。
+     * 已有的 {@link #equals(String, String)} 仍然区分大小写。
+     *
+     * @param left  允许为 null
+     * @param right 允许为 null
+     * @return ASCII 忽略大小写后相同，或同为 null 时返回 true
+     */
+    public static boolean equalsIgnoreCase(String left, String right) {
+        if (left == right) {
+            return true;
+        }
+        if (left == null || right == null || left.length() != right.length()) {
+            return false;
+        }
+        for (int i = 0; i < left.length(); i++) {
+            char first = left.charAt(i);
+            char second = right.charAt(i);
+            if (first >= 'A' && first <= 'Z') {
+                first = (char) (first + ('a' - 'A'));
+            }
+            if (second >= 'A' && second <= 'Z') {
+                second = (char) (second + ('a' - 'A'));
+            }
+            if (first != second) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * text 为空白时返回默认值，否则原样返回 text。
+     * 空白规则与 {@link #isBlank(String)} 相同。defaultValue 允许为 null。
+     * 非空白文本不去掉首尾空白。
+     *
+     * @param text         原文，允许为 null
+     * @param defaultValue text 为空白时返回的值，允许为 null
+     * @return 原文或默认值
+     */
+    public static String defaultIfBlank(String text, String defaultValue) {
+        if (isBlank(text)) {
+            return defaultValue;
+        }
+        return text;
+    }
+
+    /**
      * 把 text 重复 count 次后返回。
      * text 为 null、空串，或 count 小于 1 时返回空串。
      * 结果字符数大于 {@link Integer#MAX_VALUE} 时抛出 {@link IllegalArgumentException}，不返回截断字符串。

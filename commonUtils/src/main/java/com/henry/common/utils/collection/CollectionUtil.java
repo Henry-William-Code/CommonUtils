@@ -66,6 +66,17 @@ public class CollectionUtil {
     }
 
     /**
+     * 返回数组元素个数。
+     * data 为 null 时返回 0。不提供新的 {@code isEmpty(Object[])}，已有方法保持不变。
+     *
+     * @param data 允许为 null
+     * @return 元素个数；data 为 null 时返回 0
+     */
+    public static int size(Object[] data) {
+        return data == null ? 0 : data.length;
+    }
+
+    /**
      * 集合是否至少有一个元素。规则与 {@link #isEmpty(Collection)} 相反。
      *
      * @param data 允许为 null

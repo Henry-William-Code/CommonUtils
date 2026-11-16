@@ -3,6 +3,8 @@ package com.henry.common.utils.calculate;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MathematicsUtilTest {
 
@@ -44,6 +46,21 @@ public class MathematicsUtilTest {
     @Test(expected = IllegalArgumentException.class)
     public void clampLong_rejectsReversedBounds() {
         MathematicsUtil.clamp(1L, 5L, 3L);
+    }
+
+    @Test
+    public void isInRange_isInclusiveAndDoesNotSwapBounds() {
+        assertTrue(MathematicsUtil.isInRange(5, 0, 10));
+        assertTrue(MathematicsUtil.isInRange(0, 0, 10));
+        assertTrue(MathematicsUtil.isInRange(10, 0, 10));
+        assertFalse(MathematicsUtil.isInRange(-1, 0, 10));
+        assertFalse(MathematicsUtil.isInRange(11, 0, 10));
+        assertEquals(0, MathematicsUtil.clamp(-1, 0, 10));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isInRange_rejectsReversedBounds() {
+        MathematicsUtil.isInRange(1, 5, 3);
     }
 
     @Test

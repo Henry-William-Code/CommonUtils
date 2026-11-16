@@ -24,6 +24,21 @@ public class ObjectUtil {
     }
 
     /**
+     * 把对象转成文本。
+     * value 为 null 时返回空串，否则返回 {@link String#valueOf(Object)}。
+     * 不做数组内容的深度格式化，数组仍是默认的类型和身份文本。
+     *
+     * @param value 允许为 null
+     * @return 文本；value 为 null 时返回空串
+     */
+    public static String toStringOrEmpty(Object value) {
+        if (value == null) {
+            return "";
+        }
+        return String.valueOf(value);
+    }
+
+    /**
      * 比较两个对象是否相等。
      * 两者都为 null 时返回 true；只有一方为 null 时返回 false。
      * 其余情况调用 {@code left.equals(right)}，不比较数组内容。两个不同的数组对象即使元素相同也返回 false。

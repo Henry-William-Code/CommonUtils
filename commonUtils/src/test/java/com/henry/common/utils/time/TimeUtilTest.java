@@ -27,6 +27,33 @@ public class TimeUtilTest {
     }
 
     @Test
+    public void hoursBetween_truncatesTowardZero() {
+        assertEquals(0L, TimeUtil.hoursBetween(0L, 3599999L));
+        assertEquals(1L, TimeUtil.hoursBetween(0L, 3600000L));
+        assertEquals(0L, TimeUtil.hoursBetween(0L, -1L));
+        assertEquals(-1L, TimeUtil.hoursBetween(3600000L, 0L));
+        assertEquals(2L, TimeUtil.hoursBetween(0L, 3600000L * 2 + 10L));
+    }
+
+    @Test
+    public void minutesBetween_truncatesTowardZero() {
+        assertEquals(0L, TimeUtil.minutesBetween(0L, 59999L));
+        assertEquals(1L, TimeUtil.minutesBetween(0L, 60000L));
+        assertEquals(0L, TimeUtil.minutesBetween(0L, -1L));
+        assertEquals(-1L, TimeUtil.minutesBetween(60000L, 0L));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void hoursBetween_rejectsLongOverflow() {
+        TimeUtil.hoursBetween(-1L, Long.MAX_VALUE);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void minutesBetween_rejectsLongOverflow() {
+        TimeUtil.minutesBetween(Long.MIN_VALUE, 1L);
+    }
+
+    @Test
     public void addDays_movesByExactUtcDayLength() {
         assertEquals(86400000L, TimeUtil.addDays(0L, 1));
         assertEquals(-86400000L, TimeUtil.addDays(0L, -1));
