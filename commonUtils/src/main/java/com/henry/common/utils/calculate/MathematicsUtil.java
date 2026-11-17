@@ -92,6 +92,22 @@ public class MathematicsUtil {
     }
 
     /**
+     * 判断 long 是否落在闭区间 [min, max] 内。
+     * 规则与 {@link #isInRange(int, int, int)} 相同：min 大于 max 时抛出 {@link IllegalArgumentException}，不会交换边界。
+     *
+     * @param value 原值
+     * @param min   下界，包含
+     * @param max   上界，包含
+     * @return 落在闭区间内时返回 true
+     */
+    public static boolean isInRange(long value, long min, long max) {
+        if (min > max) {
+            throw new IllegalArgumentException("min is greater than max");
+        }
+        return value >= min && value <= max;
+    }
+
+    /**
      * 计算最大公约数，结果为非负整数。
      * 负数按绝对值参与计算。gcd(0, 0) 返回 0。
      * 任一参数为 {@link Integer#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，

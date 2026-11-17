@@ -69,6 +69,19 @@ public class FileUtilTest {
     }
 
     @Test
+    public void join_insertsOneSlashAndDropsEdgeSeparators() {
+        assertEquals("", FileUtil.join(null, null));
+        assertEquals("", FileUtil.join(" ", "\t"));
+        assertEquals("bar", FileUtil.join(null, "bar"));
+        assertEquals("foo", FileUtil.join("foo", null));
+        assertEquals("foo/bar", FileUtil.join("foo/", "/bar"));
+        assertEquals("foo/bar", FileUtil.join("foo\\", "\\bar"));
+        assertEquals("bar", FileUtil.join("/", "bar"));
+        assertEquals("foo/./bar", FileUtil.join("foo/.", "bar"));
+        assertEquals("/path/to", FileUtil.getParent("/path/to/file.txt"));
+    }
+
+    @Test
     public void getNameWithoutExtension_keepsNamesThatHaveNoExtension() {
         assertEquals("", FileUtil.getNameWithoutExtension(null));
         assertEquals("", FileUtil.getNameWithoutExtension("  "));

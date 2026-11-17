@@ -160,6 +160,21 @@ public class TimeUtil {
         return divideElapsed(startMillis, endMillis, 60000L);
     }
 
+    /**
+     * 计算两个毫秒时间戳相差的整秒数。
+     * 以 1000 毫秒为 1 秒做整数除法，向 0 截断，不按设备时区折算。
+     * endMillis 小于 startMillis 时结果为负数。
+     * 两个时间戳的差值无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #minutesBetween(long, long)}。
+     *
+     * @param startMillis 开始时间，毫秒
+     * @param endMillis   结束时间，毫秒
+     * @return 相差的整秒数
+     */
+    public static long secondsBetween(long startMillis, long endMillis) {
+        return divideElapsed(startMillis, endMillis, 1000L);
+    }
+
     private static long divideElapsed(long startMillis, long endMillis, long unitMillis) {
         long diff = endMillis - startMillis;
         if (((endMillis ^ startMillis) & (endMillis ^ diff)) < 0) {

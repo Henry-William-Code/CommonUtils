@@ -64,6 +64,19 @@ public class MathematicsUtilTest {
     }
 
     @Test
+    public void isInRangeLong_isInclusive() {
+        assertTrue(MathematicsUtil.isInRange(5L, 0L, 10L));
+        assertTrue(MathematicsUtil.isInRange(Long.MIN_VALUE, Long.MIN_VALUE, Long.MAX_VALUE));
+        assertFalse(MathematicsUtil.isInRange(11L, 0L, 10L));
+        assertTrue(MathematicsUtil.isInRange(0, 0, 10));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isInRangeLong_rejectsReversedBounds() {
+        MathematicsUtil.isInRange(1L, 5L, 3L);
+    }
+
+    @Test
     public void gcd_signsAndZero() {
         assertEquals(4, MathematicsUtil.gcd(12, 8));
         assertEquals(4, MathematicsUtil.gcd(-12, 8));

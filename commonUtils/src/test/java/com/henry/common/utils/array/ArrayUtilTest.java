@@ -38,4 +38,13 @@ public class ArrayUtilTest {
         assertTrue(ArrayUtil.contains(new int[] {0, -1}, -1));
         assertFalse(ArrayUtil.contains(new int[] {1, 2}, 3));
     }
+
+    @Test
+    public void lastIndexOf_returnsLastMatch() {
+        assertEquals(-1, ArrayUtil.lastIndexOf(null, 1));
+        assertEquals(-1, ArrayUtil.lastIndexOf(new int[0], 0));
+        assertEquals(2, ArrayUtil.lastIndexOf(new int[] {1, 3, 1}, 1));
+        assertEquals(0, ArrayUtil.indexOf(new int[] {1, 3, 1}, 1));
+        assertEquals(-1, ArrayUtil.lastIndexOf(new int[] {2, 3}, 1));
+    }
 }

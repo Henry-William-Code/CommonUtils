@@ -107,6 +107,36 @@ public class ConvertUtil {
     }
 
     /**
+     * 把十进制文本解析成有限的 float。
+     * 空白、正负号、指数和拒绝规则与 {@link #parseDouble(String, double)} 相同。
+     * 结果为 NaN、无穷大，或超出 float 范围而变成无穷大时返回 defaultValue。
+     * 不修改 {@link #parseDouble(String, double)}、{@link #parseInt(String, int)}、
+     * {@link #parseLong(String, long)} 和 {@link #parseBoolean(String, boolean)}。
+     *
+     * @param text         十进制文本，允许为 null
+     * @param defaultValue 无法得到有限数值时返回的值
+     * @return 有限解析结果或 defaultValue
+     */
+    public static float parseFloat(String text, float defaultValue) {
+        if (StringUtil.isBlank(text)) {
+            return defaultValue;
+        }
+        String trimmed = trimWhitespace(text);
+        if (trimmed.length() == 0 || isRejectedFloatText(trimmed)) {
+            return defaultValue;
+        }
+        try {
+            float value = Float.parseFloat(trimmed);
+            if (Float.isNaN(value) || Float.isInfinite(value)) {
+                return defaultValue;
+            }
+            return value;
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    /**
      * @return 解析成功时返回对应 long；空白、格式错误或溢出时返回 null
      */
     private static Long parseDecimal(String text) {

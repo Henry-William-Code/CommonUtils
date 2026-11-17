@@ -1247,3 +1247,178 @@ MathematicsUtil.isInRange(11, 0, 10); // false
 ObjectUtil.toStringOrEmpty(null); // ""
 ObjectUtil.toStringOrEmpty(12);   // "12"
 ```
+
+### 新类 RegexUtil
+
+包名：`com.henry.common.utils.regex`
+
+正则匹配。类不能实例化，也不使用 Android API。`CommonUtils:1.0.5` 没有这个类。
+
+#### `boolean matches(String text, String regex)`
+
+判断整个文本是否匹配正则。
+
+- `text` 或 `regex` 为 null 时返回 false，不编译正则。
+- 空正则是合法模式，只匹配空串。
+- 正则语法错误时抛出 `PatternSyntaxException`，它是 `IllegalArgumentException` 的子类。
+
+```java
+RegexUtil.matches("abc", "a.c"); // true
+RegexUtil.matches(null, "a");    // false
+```
+
+#### `String findFirst(String text, String regex)`
+
+返回第一处匹配到的文本。
+
+- `text` 或 `regex` 为 null，或没有匹配时返回 null。
+- 匹配结果本身可以是空串，这和没有匹配不同。
+- 正则语法错误时抛出 `PatternSyntaxException`。
+
+```java
+RegexUtil.findFirst("a12b", "\\d+"); // "12"
+RegexUtil.findFirst("abc", "z");     // null
+```
+
+### 新类 Crc32Util
+
+包名：`com.henry.common.utils.checksum`
+
+用 JDK 的 `java.util.zip.CRC32` 计算 CRC-32。类不能实例化。
+
+#### `long checksum(byte[] data)`
+
+计算字节数组的 CRC-32。
+
+- `data`：允许为 null。null 或空数组返回 0，因此无法从返回值区分这两种输入。
+- 结果是无符号 32 位值，放在 long 的低 32 位。
+- 不修改入参数组。
+
+```java
+Crc32Util.checksum(null); // 0
+Crc32Util.checksum("123456789".getBytes(java.nio.charset.StandardCharsets.US_ASCII)); // 3421780262
+```
+
+#### `long checksumUtf8(String text)`
+
+按 UTF-8 计算文本的 CRC-32。
+
+- `text`：允许为 null。null 或空串返回 0。
+- 其余规则与 `checksum(byte[])` 相同。
+
+```java
+Crc32Util.checksumUtf8("123456789"); // 3421780262
+Crc32Util.checksumUtf8(null);        // 0
+```
+
+### ArrayUtil 新增
+
+已有的 `indexOf(int[], int)` 仍返回第一处匹配。
+
+#### `int lastIndexOf(int[] data, int value)`
+
+返回最后一处匹配的下标。
+
+- `data`：允许为 null。null 或没有匹配时返回 -1。
+
+```java
+ArrayUtil.lastIndexOf(new int[] {1, 3, 1}, 1); // 2
+ArrayUtil.lastIndexOf(null, 1);                // -1
+```
+
+### IoUtil 新增
+
+已有的 `copy` 没有变化。
+
+#### `void writeBytes(OutputStream output, byte[] data)`
+
+把字节数组写入输出流。
+
+- `output`：不能为 null。null 时抛出 `IllegalArgumentException`。
+- `data`：允许为 null。null 或空数组时不写入任何字节。
+- 不关闭输出流，也不修改入参数组。写入失败时抛出 `IOException`。
+
+```java
+IoUtil.writeBytes(output, new byte[] {1, 2});
+```
+
+### ConvertUtil 新增
+
+已有的 `parseDouble` 没有变化。
+
+#### `float parseFloat(String text, float defaultValue)`
+
+把十进制文本解析成有限的 float。
+
+- 空白、正负号、指数和拒绝规则与 `parseDouble` 相同。
+- 结果为 NaN、无穷大，或超出 float 范围而变成无穷大时返回 `defaultValue`，不抛异常。
+
+```java
+ConvertUtil.parseFloat("1.5e2", -1f); // 150
+ConvertUtil.parseFloat("NaN", -1f);   // -1
+```
+
+### FileUtil 新增
+
+已有的 `getParent` 没有变化。
+
+#### `String join(String parent, String child)`
+
+用一个 `/` 连接父路径和子路径。不访问磁盘，也不解析 `.` 和 `..`。
+
+- null 或只含空白的一侧按空串处理，空白规则与 `getExtension` 相同。
+- 去掉父路径末尾和子路径开头的 `/`、`\` 后再连接。
+- 两侧都空时返回空串。只有一侧有内容时返回那一侧。
+- 只由分隔符组成的路径去掉分隔符后为空，因此 `join("/", "bar")` 得到 `bar`，不保留根斜杠。
+
+```java
+FileUtil.join("foo/", "/bar"); // "foo/bar"
+FileUtil.join(null, "bar");    // "bar"
+FileUtil.join("/", "bar");     // "bar"
+```
+
+### TimeUtil 新增
+
+已有的 `minutesBetween` 没有变化。
+
+#### `long secondsBetween(long startMillis, long endMillis)`
+
+计算相差的整秒数。
+
+- 一秒固定为 1000 毫秒，整数除法向 0 截断，不使用设备时区。
+- 结束早于开始时为负数。差值放不进 long 时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.secondsBetween(0L, 1000L); // 1
+TimeUtil.secondsBetween(0L, 999L);  // 0
+```
+
+### MathematicsUtil 新增
+
+已有的 int 版 `isInRange` 没有变化。
+
+#### `boolean isInRange(long value, long min, long max)`
+
+判断 long 是否落在闭区间内。
+
+- `min > max` 时抛出 `IllegalArgumentException`，不互换边界。
+- `value < min` 或 `value > max` 返回 false，否则返回 true。
+
+```java
+MathematicsUtil.isInRange(5L, 0L, 10L); // true
+MathematicsUtil.isInRange(11L, 0L, 10L); // false
+```
+
+### ObjectUtil 新增
+
+#### `int hashCode(Object value)`
+
+返回对象的哈希码。
+
+- `value`：允许为 null。null 时返回 0，否则返回 `value.hashCode()`。
+- 数组不计算元素内容。
+
+```java
+ObjectUtil.hashCode(null); // 0
+ObjectUtil.hashCode("a");  // 与 "a".hashCode() 相同
+```

@@ -192,6 +192,52 @@ public class FileUtil {
     }
 
     /**
+     * 用一个 {@code /} 连接父路径和子路径。不访问磁盘，也不解析 {@code .} 和 {@code ..}。
+     * null 或只含空白的一侧按空串处理，空白规则与 {@link #getExtension(String)} 相同。
+     * 去掉父路径末尾和子路径开头的 {@code /}、{@code \} 后再连接。
+     * 两侧都空时返回空串。只有一侧有内容时返回那一侧。
+     * 只由分隔符组成的路径去掉分隔符后为空，因此 {@code join("/", "bar")} 得到 {@code bar}，不保留根斜杠。
+     * 不修改 {@link #getParent(String)} 和 {@link #getName(String)}。
+     *
+     * @param parent 父路径，允许为 null
+     * @param child  子路径，允许为 null
+     * @return 连接后的路径
+     */
+    public static String join(String parent, String child) {
+        String left = stripSeparators(parent, false);
+        String right = stripSeparators(child, true);
+        if (left.length() == 0) {
+            return right;
+        }
+        if (right.length() == 0) {
+            return left;
+        }
+        return left + "/" + right;
+    }
+
+    private static String stripSeparators(String path, boolean leading) {
+        if (StringUtil.isBlank(path)) {
+            return "";
+        }
+        int start = 0;
+        int end = path.length();
+        if (leading) {
+            while (start < end && isSeparator(path.charAt(start))) {
+                start++;
+            }
+        } else {
+            while (end > start && isSeparator(path.charAt(end - 1))) {
+                end--;
+            }
+        }
+        return path.substring(start, end);
+    }
+
+    private static boolean isSeparator(char current) {
+        return current == '/' || current == '\\';
+    }
+
+    /**
      * @return 扩展名小数点的下标；没有可去掉的扩展名时返回 -1
      */
     private static int extensionDot(String name) {

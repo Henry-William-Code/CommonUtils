@@ -39,6 +39,18 @@ public class ObjectUtil {
     }
 
     /**
+     * 返回对象的哈希码。
+     * value 为 null 时返回 0，否则返回 {@code value.hashCode()}。
+     * 数组使用其自身的 hashCode，不计算元素内容。
+     *
+     * @param value 允许为 null
+     * @return 哈希码；value 为 null 时返回 0
+     */
+    public static int hashCode(Object value) {
+        return value == null ? 0 : value.hashCode();
+    }
+
+    /**
      * 比较两个对象是否相等。
      * 两者都为 null 时返回 true；只有一方为 null 时返回 false。
      * 其余情况调用 {@code left.equals(right)}，不比较数组内容。两个不同的数组对象即使元素相同也返回 false。

@@ -122,6 +122,28 @@ public class IoUtilTest {
         });
     }
 
+    @Test
+    public void writeBytes_writesDataAndIgnoresNullData() throws Exception {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        IoUtil.writeBytes(output, null);
+        IoUtil.writeBytes(output, new byte[0]);
+        assertEquals(0, output.size());
+        byte[] data = new byte[] {4, 5};
+        IoUtil.writeBytes(output, data);
+        data[0] = 9;
+        assertArrayEquals(new byte[] {4, 5}, output.toByteArray());
+    }
+
+    @Test
+    public void writeBytes_rejectsNullOutput() throws Exception {
+        assertIllegalArgument(new Call() {
+            @Override
+            public void run() throws IOException {
+                IoUtil.writeBytes(null, new byte[] {1});
+            }
+        });
+    }
+
     private static void assertIllegalArgument(Call call) throws Exception {
         try {
             call.run();

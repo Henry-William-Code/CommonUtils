@@ -47,4 +47,12 @@ public class ObjectUtilTest {
         String text = ObjectUtil.toStringOrEmpty(new int[] {1, 2});
         assertTrue(text.startsWith("[I@"));
     }
+
+    @Test
+    public void hashCode_nullIsZeroAndUsesObjectHashCode() {
+        assertEquals(0, ObjectUtil.hashCode(null));
+        assertEquals("a".hashCode(), ObjectUtil.hashCode("a"));
+        int[] data = new int[] {1, 2};
+        assertEquals(data.hashCode(), ObjectUtil.hashCode(data));
+    }
 }

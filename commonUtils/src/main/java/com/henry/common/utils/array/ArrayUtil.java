@@ -84,4 +84,25 @@ public class ArrayUtil {
     public static boolean contains(int[] data, int value) {
         return indexOf(data, value) >= 0;
     }
+
+    /**
+     * 查找 int 数组中最后一个等于 value 的下标。
+     * data 为 null 或没有匹配时返回 -1。
+     * 不修改 {@link #indexOf(int[], int)}，那个方法返回的是第一处匹配。
+     *
+     * @param data  允许为 null
+     * @param value 要查找的值
+     * @return 最后一处匹配下标；未找到时返回 -1
+     */
+    public static int lastIndexOf(int[] data, int value) {
+        if (data == null) {
+            return -1;
+        }
+        for (int i = data.length - 1; i >= 0; i--) {
+            if (data[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

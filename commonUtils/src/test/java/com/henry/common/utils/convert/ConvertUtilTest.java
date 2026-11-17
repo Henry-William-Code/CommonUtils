@@ -91,4 +91,15 @@ public class ConvertUtilTest {
         assertEquals(9, ConvertUtil.parseDouble("１.５", 9), 0);
         assertEquals(9, ConvertUtil.parseDouble("1 .5", 9), 0);
     }
+
+    @Test
+    public void parseFloat_acceptsFiniteValuesAndRejectsOverflow() {
+        assertEquals(1.5f, ConvertUtil.parseFloat(" 1.5 ", -1f), 0f);
+        assertEquals(150f, ConvertUtil.parseFloat("1.5e2", -1f), 0f);
+        assertEquals(-1f, ConvertUtil.parseFloat(null, -1f), 0f);
+        assertEquals(-1f, ConvertUtil.parseFloat("NaN", -1f), 0f);
+        assertEquals(-1f, ConvertUtil.parseFloat("1e39", -1f), 0f);
+        assertEquals(-1f, ConvertUtil.parseFloat("0x1.0p1", -1f), 0f);
+        assertEquals(12.5, ConvertUtil.parseDouble("12.5", -1), 0);
+    }
 }

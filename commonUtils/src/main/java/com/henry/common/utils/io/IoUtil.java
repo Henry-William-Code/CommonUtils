@@ -109,4 +109,25 @@ public class IoUtil {
         output.write(data);
         return data.length;
     }
+
+    /**
+     * 把字节数组写入输出流。
+     * output 为 null 时抛出 {@link IllegalArgumentException}。
+     * data 为 null 或空数组时不写入任何字节。
+     * 不关闭 output，也不修改 data。写入失败时抛出 {@link IOException}。
+     * 不修改 {@link #copy(InputStream, OutputStream, int)}。
+     *
+     * @param output 输出流，不能为 null
+     * @param data   要写入的字节，允许为 null
+     * @throws IOException 写入失败
+     */
+    public static void writeBytes(OutputStream output, byte[] data) throws IOException {
+        if (output == null) {
+            throw new IllegalArgumentException("output is null");
+        }
+        if (data == null || data.length == 0) {
+            return;
+        }
+        output.write(data);
+    }
 }

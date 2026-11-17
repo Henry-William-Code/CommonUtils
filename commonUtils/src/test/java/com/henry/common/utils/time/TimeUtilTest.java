@@ -54,6 +54,20 @@ public class TimeUtilTest {
     }
 
     @Test
+    public void secondsBetween_truncatesTowardZero() {
+        assertEquals(0L, TimeUtil.secondsBetween(0L, 999L));
+        assertEquals(1L, TimeUtil.secondsBetween(0L, 1000L));
+        assertEquals(0L, TimeUtil.secondsBetween(0L, -1L));
+        assertEquals(-1L, TimeUtil.secondsBetween(1000L, 0L));
+        assertEquals(1L, TimeUtil.minutesBetween(0L, 60000L));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void secondsBetween_rejectsLongOverflow() {
+        TimeUtil.secondsBetween(-1L, Long.MAX_VALUE);
+    }
+
+    @Test
     public void addDays_movesByExactUtcDayLength() {
         assertEquals(86400000L, TimeUtil.addDays(0L, 1));
         assertEquals(-86400000L, TimeUtil.addDays(0L, -1));
