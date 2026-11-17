@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.5`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`，并给已有类追加了方法。
+工具按类组织。当前发布版本是 `1.0.6`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。
 
 ## 版本说明
 
@@ -12,11 +12,11 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
 | 已发布 `1.0.4` | JitPack `CommonUtils:1.0.4` | 包含 `1.0.3` 的全部方法，以及「1.0.4 新增」一节 |
 | 已发布 `1.0.5` | JitPack `CommonUtils:1.0.5` | 包含 `1.0.4` 的全部方法，以及「1.0.5 新增」一节 |
-| `main` 源码、尚未发布 | 自行构建当前 `main` | 「main 上尚未发布」一节。**不能**通过 `CommonUtils:1.0.5` 调用 |
+| 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3`、`1.0.4` 和 `1.0.5` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.6` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
-## 依赖 1.0.5
+## 依赖 1.0.6
 
 在工程的 `build.gradle` 中加入：
 
@@ -32,11 +32,11 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.5'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.6'
 }
 ```
 
-`1.0.5` 包含「已发布 1.0.2 的工具类」「1.0.3 新增」「1.0.4 新增」和「1.0.5 新增」。仍使用 `1.0.4` 的工程不能调用「1.0.5 新增」。「main 上尚未发布」里的方法还没有 tag，不能用 `CommonUtils:1.0.5` 调用。当前 `main` 上还有尚未发布的 `GzipUtil` 和 `UrlCodecUtil`，发布版本并不包含它们。
+`1.0.6` 包含到「1.0.6 新增」为止的全部已发布方法。仍使用 `1.0.5` 的工程不能调用「1.0.6 新增」。
 
 ## 已发布 1.0.2 的工具类
 
@@ -1079,9 +1079,9 @@ FileUtil.getParent("foo/bar/");          // "foo"
 FileUtil.getParent("file.txt");          // ""
 ```
 
-## main 上尚未发布
+## 1.0.6 新增
 
-下面的类和方法只在当前 `main` 源码里，还没有打 tag，也没有发布到 JitPack。`CommonUtils:1.0.5` 不能调用它们。`1.0.5` 已有方法的签名和返回值没有改。
+下面的类和方法从 `1.0.6` 起可以通过 JitPack 使用。`1.0.5` 没有它们。`1.0.5` 已有方法的签名和返回值没有改。
 
 ### 新类 GzipUtil
 
