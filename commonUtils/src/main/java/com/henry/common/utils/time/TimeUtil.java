@@ -263,6 +263,24 @@ public class TimeUtil {
     }
 
     /**
+     * 在毫秒时间戳上增加或减少任意毫秒。
+     * delta 可以为负数或 0。不使用设备时区，也不把毫秒换成秒。
+     * 相加的结果无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #addSeconds(long, int)}。
+     *
+     * @param millis 起始毫秒
+     * @param delta  增加的毫秒，负数表示向前
+     * @return 增加后的毫秒时间戳
+     */
+    public static long addMillis(long millis, long delta) {
+        long sum = millis + delta;
+        if (((millis ^ sum) & (delta ^ sum)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return sum;
+    }
+
+    /**
      * 判断两个毫秒时间戳是否落在同一个 UTC 日。
      * 日界是 {@code floor(millis / 86400000)}，不是设备本地日历，也不是 Java 整数除法的向 0 截断。
      * 因此纪元前不足一天的时间不会和 1970-01-01 算成同一天：{@code isSameDay(-1L, 0L)} 为 false。

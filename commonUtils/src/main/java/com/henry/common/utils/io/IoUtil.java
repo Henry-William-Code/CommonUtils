@@ -130,4 +130,25 @@ public class IoUtil {
         }
         output.write(data);
     }
+
+    /**
+     * 按 UTF-8 把文本写入输出流。
+     * output 为 null 时抛出 {@link IllegalArgumentException}。
+     * text 为 null 或空串时不写入任何字节。
+     * 不关闭 output。写入失败时抛出 {@link IOException}。
+     * 不修改 {@link #readUtf8(InputStream, int)} 和 {@link #writeBytes(OutputStream, byte[])}。
+     *
+     * @param output 输出流，不能为 null
+     * @param text   文本，允许为 null
+     * @throws IOException 写入失败
+     */
+    public static void writeUtf8(OutputStream output, String text) throws IOException {
+        if (output == null) {
+            throw new IllegalArgumentException("output is null");
+        }
+        if (text == null || text.length() == 0) {
+            return;
+        }
+        output.write(text.getBytes(StandardCharsets.UTF_8));
+    }
 }

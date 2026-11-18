@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class HexUtilTest {
@@ -54,5 +56,19 @@ public class HexUtilTest {
         } catch (IllegalArgumentException expected) {
             // 奇数长度、前缀和非法字符都应拒绝。
         }
+    }
+
+    @Test
+    public void isHex_acceptsEvenHexAndRejectsBlankWithoutThrowing() {
+        assertFalse(HexUtil.isHex(null));
+        assertFalse(HexUtil.isHex(""));
+        assertFalse(HexUtil.isHex(" \t"));
+        assertFalse(HexUtil.isHex("a"));
+        assertFalse(HexUtil.isHex("0x10"));
+        assertFalse(HexUtil.isHex("ab "));
+        assertFalse(HexUtil.isHex("gg"));
+        assertTrue(HexUtil.isHex("0f"));
+        assertTrue(HexUtil.isHex("0F"));
+        assertTrue(HexUtil.isHex("00ff"));
     }
 }

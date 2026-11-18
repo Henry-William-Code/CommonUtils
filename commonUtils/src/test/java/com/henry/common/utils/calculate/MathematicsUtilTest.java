@@ -118,4 +118,18 @@ public class MathematicsUtilTest {
     public void lcm_rejectsMinValueEvenWhenOtherIsZero() {
         MathematicsUtil.lcm(0, Integer.MIN_VALUE);
     }
+
+    @Test
+    public void abs_longKeepsSignAndZero() {
+        assertEquals(0L, MathematicsUtil.abs(0L));
+        assertEquals(1L, MathematicsUtil.abs(1L));
+        assertEquals(1L, MathematicsUtil.abs(-1L));
+        assertEquals(Long.MAX_VALUE, MathematicsUtil.abs(Long.MAX_VALUE));
+        assertEquals(Long.MAX_VALUE, MathematicsUtil.abs(-Long.MAX_VALUE));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void abs_rejectsLongMinValue() {
+        MathematicsUtil.abs(Long.MIN_VALUE);
+    }
 }

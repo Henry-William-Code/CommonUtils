@@ -90,4 +90,16 @@ public class StringUtilTest {
         assertEquals(",", StringUtil.join(",", new String[]{null, null}));
         assertEquals("a-b", StringUtil.join(new StringBuilder("-"), "a", "b"));
     }
+
+    @Test
+    public void trimToEmpty_nullAndWhitespaceEdges() {
+        assertEquals("", StringUtil.trimToEmpty(null));
+        assertEquals("", StringUtil.trimToEmpty(""));
+        assertEquals("", StringUtil.trimToEmpty(" \t\n\r\f"));
+        assertEquals("", StringUtil.trimToEmpty("\u3000"));
+        assertEquals("\u00A0", StringUtil.trimToEmpty("\u00A0"));
+        assertEquals("a b", StringUtil.trimToEmpty(" \u3000a b\t"));
+        String exact = "a";
+        assertTrue(StringUtil.trimToEmpty(exact) == exact);
+    }
 }

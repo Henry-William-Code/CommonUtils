@@ -77,4 +77,25 @@ public class HexUtil {
         }
         return -1;
     }
+
+    /**
+     * 判断文本是不是偶数长度的十六进制。
+     * hex 为 null、空串或只含空白时返回 false。空白规则与 {@link StringUtil#isBlank(String)} 相同。
+     * 长度为奇数、含非法字符、带 {@code 0x} 前缀，或非空白文本中夹着空白时返回 false，不抛异常。
+     * 字母不区分大小写。不修改 {@link #decode(String)}。
+     *
+     * @param hex 允许为 null
+     * @return 可以按两个字符一个字节解码时返回 true
+     */
+    public static boolean isHex(String hex) {
+        if (StringUtil.isBlank(hex) || (hex.length() & 1) != 0) {
+            return false;
+        }
+        for (int i = 0; i < hex.length(); i++) {
+            if (hexDigit(hex.charAt(i)) < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

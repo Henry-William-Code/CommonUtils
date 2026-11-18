@@ -57,6 +57,33 @@ public class StringUtil {
     }
 
     /**
+     * 去掉首尾空白；null 时返回空串。
+     * 空白规则与 {@link #isBlank(String)} 相同，使用 {@link Character#isWhitespace(char)}。
+     * 不间断空格 {@code \u00A0} 会保留。中间的空白不删除。
+     * 不修改 {@link #outPrintEmptyString(String)} 和 {@link #defaultIfBlank(String, String)}。
+     *
+     * @param text 允许为 null
+     * @return 去掉首尾空白后的文本；null 时返回空串
+     */
+    public static String trimToEmpty(String text) {
+        if (text == null) {
+            return "";
+        }
+        int start = 0;
+        int end = text.length();
+        while (start < end && Character.isWhitespace(text.charAt(start))) {
+            start++;
+        }
+        while (end > start && Character.isWhitespace(text.charAt(end - 1))) {
+            end--;
+        }
+        if (start == 0 && end == text.length()) {
+            return text;
+        }
+        return text.substring(start, end);
+    }
+
+    /**
      * 比较两个字符串的内容是否相同。
      * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
      * 区分大小写，不去掉首尾空白。

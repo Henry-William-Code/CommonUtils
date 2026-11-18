@@ -108,6 +108,21 @@ public class MathematicsUtil {
     }
 
     /**
+     * 返回 long 的绝对值。
+     * value 为 {@link Long#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，因为该绝对值无法用 long 表示。
+     * 不修改 {@link #isInRange(long, long, long)}。
+     *
+     * @param value 原值
+     * @return 非负绝对值
+     */
+    public static long abs(long value) {
+        if (value == Long.MIN_VALUE) {
+            throw new IllegalArgumentException("absolute value overflows");
+        }
+        return value < 0L ? -value : value;
+    }
+
+    /**
      * 计算最大公约数，结果为非负整数。
      * 负数按绝对值参与计算。gcd(0, 0) 返回 0。
      * 任一参数为 {@link Integer#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，

@@ -203,6 +203,26 @@ public class TimeUtilTest {
         TimeUtil.endOfUtcDay(Long.MIN_VALUE);
     }
 
+    @Test
+    public void addMillis_addsExactDelta() {
+        assertEquals(0L, TimeUtil.addMillis(0L, 0L));
+        assertEquals(1L, TimeUtil.addMillis(0L, 1L));
+        assertEquals(-1L, TimeUtil.addMillis(0L, -1L));
+        assertEquals(Long.MAX_VALUE, TimeUtil.addMillis(Long.MAX_VALUE, 0L));
+        assertEquals(Long.MIN_VALUE, TimeUtil.addMillis(Long.MIN_VALUE, 0L));
+        assertEquals(0L, TimeUtil.addMillis(Long.MAX_VALUE, Long.MIN_VALUE + 1L));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addMillis_rejectsPositiveOverflow() {
+        TimeUtil.addMillis(Long.MAX_VALUE, 1L);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addMillis_rejectsNegativeOverflow() {
+        TimeUtil.addMillis(Long.MIN_VALUE, -1L);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

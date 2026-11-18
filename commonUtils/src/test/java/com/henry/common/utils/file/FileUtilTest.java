@@ -175,6 +175,19 @@ public class FileUtilTest {
         }
     }
 
+    @Test
+    public void isAbsolute_onlyLeadingSeparator() {
+        assertFalse(FileUtil.isAbsolute(null));
+        assertFalse(FileUtil.isAbsolute(""));
+        assertFalse(FileUtil.isAbsolute(" \t"));
+        assertFalse(FileUtil.isAbsolute(" /tmp"));
+        assertFalse(FileUtil.isAbsolute("a/b"));
+        assertFalse(FileUtil.isAbsolute("C:temp"));
+        assertTrue(FileUtil.isAbsolute("/tmp/a"));
+        assertTrue(FileUtil.isAbsolute("\\tmp\\a"));
+        assertTrue(FileUtil.isAbsolute("/"));
+    }
+
     private static File newTempDir() {
         File dir = new File(System.getProperty("java.io.tmpdir"), "fileutil-" + System.nanoTime());
         assertTrue(dir.mkdir());

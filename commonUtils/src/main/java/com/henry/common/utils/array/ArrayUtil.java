@@ -54,6 +54,26 @@ public class ArrayUtil {
     }
 
     /**
+     * 查找对象数组中最后一个匹配元素的下标。
+     * data 为 null 或没有匹配时返回 -1。比较规则与 {@link #indexOf(Object[], Object)} 相同。
+     *
+     * @param data  允许为 null
+     * @param value 允许为 null
+     * @return 最后一处匹配下标；未找到时返回 -1
+     */
+    public static int lastIndexOf(Object[] data, Object value) {
+        if (data == null) {
+            return -1;
+        }
+        for (int i = data.length - 1; i >= 0; i--) {
+            if (value == null ? data[i] == null : value.equals(data[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * 查找 int 数组中第一个等于 value 的下标。
      * data 为 null 或没有匹配时返回 -1。
      *

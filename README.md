@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.6`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。
+工具按类组织。当前发布版本是 `1.0.6`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。当前 `main` 上还有一批尚未发布的方法，见文末「main 上尚未发布」，不能通过 `CommonUtils:1.0.6` 调用。
 
 ## 版本说明
 
@@ -13,6 +13,7 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.4` | JitPack `CommonUtils:1.0.4` | 包含 `1.0.3` 的全部方法，以及「1.0.4 新增」一节 |
 | 已发布 `1.0.5` | JitPack `CommonUtils:1.0.5` | 包含 `1.0.4` 的全部方法，以及「1.0.5 新增」一节 |
 | 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
+| `main` 上尚未发布 | 不能用 `1.0.6` 调用 | 只包含文末「main 上尚未发布」一节 |
 
 `1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.6` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
@@ -36,7 +37,7 @@ dependencies {
 }
 ```
 
-`1.0.6` 包含到「1.0.6 新增」为止的全部已发布方法。仍使用 `1.0.5` 的工程不能调用「1.0.6 新增」。
+`1.0.6` 包含到「1.0.6 新增」为止的全部已发布方法。仍使用 `1.0.5` 的工程不能调用「1.0.6 新增」。`main` 上尚未发布的方法也不在 `1.0.6` 里。
 
 ## 已发布 1.0.2 的工具类
 
@@ -1421,4 +1422,176 @@ MathematicsUtil.isInRange(11L, 0L, 10L); // false
 ```java
 ObjectUtil.hashCode(null); // 0
 ObjectUtil.hashCode("a");  // 与 "a".hashCode() 相同
+```
+
+## main 上尚未发布
+
+下面这些方法只在当前 `main` 源码里。JitPack `CommonUtils:1.0.6` 不包含它们。这一批还没有打 tag，也没有发布新版本。
+
+### 新类 UuidUtil
+
+包名 `com.henry.common.utils.uuid`。生成和校验标准 UUID 文本。
+
+#### `String random()`
+
+生成随机 UUID 的标准文本。
+
+- 固定 36 个字符，小写十六进制，连字符位置是 8-4-4-4-12。
+- 每次调用生成一个新的值。
+
+```java
+String id = UuidUtil.random();
+UuidUtil.isValid(id); // true
+```
+
+#### `boolean isValid(String text)`
+
+判断文本是不是标准 UUID。
+
+- `text`：允许为 null。null、空串、缺少连字符或长度不对时返回 false，不抛异常。
+- 必须带连字符，分段长度是 8-4-4-4-12。十六进制不区分大小写。
+- 不接受去掉连字符的 32 位文本。
+
+```java
+UuidUtil.isValid("550e8400-e29b-41d4-a716-446655440000"); // true
+UuidUtil.isValid("550E8400-E29B-41D4-A716-446655440000"); // true
+UuidUtil.isValid(null); // false
+```
+
+### 新类 VersionUtil
+
+包名 `com.henry.common.utils.version`。比较点号数字版本，例如 `1.0.10` 和 `1.0.2`。
+
+#### `int compare(String left, String right)`
+
+按点号分段做数值比较。
+
+- 缺少的段按 0 处理，因此 `1.0` 等于 `1.0.0`。`1.0.10` 大于 `1.0.2`。
+- 前导零不改变数值。不 trim 非空白文本。
+- null、空串、只含空白、空段、非数字，或某一段超出 long 范围时抛出 `IllegalArgumentException`。
+- 不接受正负号、字母前缀或空格。
+- 左侧较小返回负数，相等返回 0，左侧较大返回正数。
+
+```java
+VersionUtil.compare("1.0.10", "1.0.2"); // 大于 0
+VersionUtil.compare("1.0", "1.0.0");    // 0
+```
+
+### StringUtil 新增
+
+已有的 `isBlank`、`defaultIfBlank` 没有变化。
+
+#### `String trimToEmpty(String text)`
+
+去掉首尾空白；null 时返回空串。
+
+- `text`：允许为 null。null 时返回 `""`。
+- 空白规则与 `isBlank` 相同，使用 `Character.isWhitespace`。不间断空格 `\u00A0` 会保留。
+- 中间的空白不删除。首尾本来就没有空白时返回原字符串。
+
+```java
+StringUtil.trimToEmpty(null);       // ""
+StringUtil.trimToEmpty(" a b\t");    // "a b"
+StringUtil.trimToEmpty("\u00A0");    // "\u00A0"
+```
+
+### ArrayUtil 新增
+
+已有的 `lastIndexOf(int[], int)` 没有变化。
+
+#### `int lastIndexOf(Object[] data, Object value)`
+
+查找对象数组中最后一个匹配元素的下标。
+
+- `data`：允许为 null。null 或没有匹配时返回 -1。
+- `value`：允许为 null。元素和 value 都为 null 时算匹配。
+- 比较使用 `Object.equals`。元素本身是数组时只按引用相等，不比较数组内容。
+
+```java
+ArrayUtil.lastIndexOf(new Object[] {"b", null, "b"}, "b"); // 2
+ArrayUtil.lastIndexOf(new Object[] {"a", null}, null);     // 1
+```
+
+### IoUtil 新增
+
+已有的 `readUtf8`、`writeBytes` 没有变化。
+
+#### `void writeUtf8(OutputStream output, String text)`
+
+按 UTF-8 把文本写入输出流。
+
+- `output`：不能为 null，否则抛出 `IllegalArgumentException`。
+- `text`：允许为 null。null 或空串时不写入任何字节。
+- 不关闭 `output`。写入失败时抛出 `IOException`。
+
+```java
+ByteArrayOutputStream output = new ByteArrayOutputStream();
+IoUtil.writeUtf8(output, "中文");
+```
+
+### FileUtil 新增
+
+已有的 `exists` 没有变化。
+
+#### `boolean isAbsolute(String pathOrName)`
+
+判断路径文本是不是以分隔符开头。
+
+- `pathOrName`：允许为 null。null、空串或只含空白时返回 false。
+- 不 trim。第一个字符是 `/` 或 `\` 时返回 true。`" /tmp"` 返回 false。
+- 不访问磁盘，也不解析 `.` 和 `..`。
+
+```java
+FileUtil.isAbsolute("/tmp/a"); // true
+FileUtil.isAbsolute("a/b");    // false
+```
+
+### TimeUtil 新增
+
+已有的 `addSeconds` 没有变化。
+
+#### `long addMillis(long millis, long delta)`
+
+在毫秒时间戳上增加或减少任意毫秒。
+
+- `delta` 可以为负数或 0。不使用设备时区，也不把毫秒换成秒。
+- 相加的结果无法用 long 表示时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.addMillis(0L, 1L);  // 1
+TimeUtil.addMillis(5L, -1L); // 4
+```
+
+### MathematicsUtil 新增
+
+已有的 `isInRange` 没有变化。
+
+#### `long abs(long value)`
+
+返回 long 的绝对值。
+
+- `value` 为 `Long.MIN_VALUE` 时抛出 `IllegalArgumentException`，因为该绝对值无法用 long 表示。
+- 其余负数返回相反数，0 和非负数原样返回。
+
+```java
+MathematicsUtil.abs(-1L); // 1
+MathematicsUtil.abs(0L);  // 0
+```
+
+### HexUtil 新增
+
+已有的 `decode` 没有变化。`decode` 对非法输入抛异常；本方法只返回 false。
+
+#### `boolean isHex(String hex)`
+
+判断文本是不是偶数长度的十六进制。
+
+- `hex`：允许为 null。null、空串、只含空白、奇数长度、非法字符、`0x` 前缀，或中间夹空白时返回 false，不抛异常。
+- 字母不区分大小写。
+
+```java
+HexUtil.isHex("0f");   // true
+HexUtil.isHex("0F");   // true
+HexUtil.isHex(null);   // false
+HexUtil.isHex("0x10"); // false
 ```

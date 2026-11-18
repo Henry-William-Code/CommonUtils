@@ -114,6 +114,24 @@ public class FileUtil {
     }
 
     /**
+     * 判断路径文本是不是以分隔符开头。
+     * pathOrName 为 null、空串或只含空白时返回 false。空白规则与 {@link #getExtension(String)} 相同。
+     * 不 trim。第一个字符是 {@code /} 或 {@code \} 时返回 true。
+     * 不访问磁盘，也不解析 {@code .} 和 {@code ..}。
+     * 不修改 {@link #exists(File)}。
+     *
+     * @param pathOrName 路径或文件名，允许为 null
+     * @return 以路径分隔符开头时返回 true
+     */
+    public static boolean isAbsolute(String pathOrName) {
+        if (StringUtil.isBlank(pathOrName)) {
+            return false;
+        }
+        char first = pathOrName.charAt(0);
+        return first == '/' || first == '\\';
+    }
+
+    /**
      * 删除一个文件或空目录。
      * null 或不存在时返回 false。只调用 {@link File#delete()}，不递归删除目录内容。
      * 非空目录会删除失败并返回 false，目录仍然保留。

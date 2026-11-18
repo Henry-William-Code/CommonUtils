@@ -153,6 +153,36 @@ public class IoUtilTest {
         }
     }
 
+    @Test
+    public void writeUtf8_nullAndEmptyWriteNothing() throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        IoUtil.writeUtf8(output, null);
+        IoUtil.writeUtf8(output, "");
+        assertEquals(0, output.size());
+        IoUtil.writeUtf8(output, "中文");
+        assertEquals("中文", new String(output.toByteArray(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void writeUtf8_rejectsNullOutputAndDoesNotClose() throws IOException {
+        try {
+            IoUtil.writeUtf8(null, "a");
+            fail("expected IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+            // 空输出流不能写入。
+        }
+        final boolean[] closed = new boolean[] {false};
+        ByteArrayOutputStream output = new ByteArrayOutputStream() {
+            @Override
+            public void close() {
+                closed[0] = true;
+            }
+        };
+        IoUtil.writeUtf8(output, "a");
+        assertFalse(closed[0]);
+        assertEquals("a", output.toString("UTF-8"));
+    }
+
     private interface Call {
         void run() throws IOException;
     }

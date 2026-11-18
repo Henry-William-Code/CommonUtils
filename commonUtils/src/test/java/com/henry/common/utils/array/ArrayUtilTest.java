@@ -47,4 +47,16 @@ public class ArrayUtilTest {
         assertEquals(0, ArrayUtil.indexOf(new int[] {1, 3, 1}, 1));
         assertEquals(-1, ArrayUtil.lastIndexOf(new int[] {2, 3}, 1));
     }
+
+    @Test
+    public void lastIndexOf_objectArrayReturnsLastMatch() {
+        assertEquals(-1, ArrayUtil.lastIndexOf((Object[]) null, "a"));
+        assertEquals(-1, ArrayUtil.lastIndexOf(new Object[0], null));
+        assertEquals(2, ArrayUtil.lastIndexOf(new Object[] {"b", null, "b"}, "b"));
+        assertEquals(1, ArrayUtil.lastIndexOf(new Object[] {"a", null, "b"}, null));
+        assertEquals(-1, ArrayUtil.lastIndexOf(new String[] {"a"}, "A"));
+        Object[] nested = new Object[] {new int[] {1}, new int[] {1}};
+        assertEquals(0, ArrayUtil.lastIndexOf(nested, nested[0]));
+        assertEquals(-1, ArrayUtil.lastIndexOf(nested, new int[] {1}));
+    }
 }
