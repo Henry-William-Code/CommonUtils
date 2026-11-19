@@ -55,4 +55,13 @@ public class ObjectUtilTest {
         int[] data = new int[] {1, 2};
         assertEquals(data.hashCode(), ObjectUtil.hashCode(data));
     }
+
+    @Test
+    public void countNonNull_countsOnlyPresentValues() {
+        assertEquals(0, ObjectUtil.countNonNull((Object[]) null));
+        assertEquals(0, ObjectUtil.countNonNull());
+        assertEquals(0, ObjectUtil.countNonNull(null, null));
+        assertEquals(1, ObjectUtil.countNonNull(null, "a", null));
+        assertEquals(2, ObjectUtil.countNonNull("a", Integer.valueOf(1)));
+    }
 }

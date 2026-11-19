@@ -102,4 +102,17 @@ public class StringUtilTest {
         String exact = "a";
         assertTrue(StringUtil.trimToEmpty(exact) == exact);
     }
+
+    @Test
+    public void startsWith_nullAndEmptyPrefix() {
+        assertFalse(StringUtil.startsWith(null, "a"));
+        assertFalse(StringUtil.startsWith("a", null));
+        assertFalse(StringUtil.startsWith(null, null));
+        assertTrue(StringUtil.startsWith("", ""));
+        assertTrue(StringUtil.startsWith("abc", ""));
+        assertTrue(StringUtil.startsWith("abc", "ab"));
+        assertFalse(StringUtil.startsWith("abc", "ab "));
+        assertFalse(StringUtil.startsWith(" abc", "ab"));
+        assertFalse(StringUtil.startsWith("Abc", "ab"));
+    }
 }

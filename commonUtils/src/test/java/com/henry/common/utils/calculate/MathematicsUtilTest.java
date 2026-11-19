@@ -132,4 +132,13 @@ public class MathematicsUtilTest {
     public void abs_rejectsLongMinValue() {
         MathematicsUtil.abs(Long.MIN_VALUE);
     }
+
+    @Test
+    public void signum_longIncludesMinValue() {
+        assertEquals(0, MathematicsUtil.signum(0L));
+        assertEquals(1, MathematicsUtil.signum(1L));
+        assertEquals(-1, MathematicsUtil.signum(-1L));
+        assertEquals(1, MathematicsUtil.signum(Long.MAX_VALUE));
+        assertEquals(-1, MathematicsUtil.signum(Long.MIN_VALUE));
+    }
 }

@@ -90,4 +90,25 @@ public class ObjectUtil {
         }
         return null;
     }
+
+    /**
+     * 统计参数中不是 null 的个数。
+     * values 本身为 null 或没有参数时返回 0。null 元素不计数。
+     * 不调用元素的方法。不修改 {@link #firstNonNull(Object[])}。
+     *
+     * @param values 候选值，数组本身允许为 null
+     * @return 非 null 元素的个数
+     */
+    public static int countNonNull(Object... values) {
+        if (values == null) {
+            return 0;
+        }
+        int count = 0;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] != null) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

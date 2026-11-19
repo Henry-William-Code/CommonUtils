@@ -51,6 +51,19 @@ public class FileUtil {
     }
 
     /**
+     * 判断路径或文件名是否有扩展名。
+     * 判定与 {@link #getExtension(String)} 相同：扩展名非空时返回 true。
+     * null、空白、{@code .gitignore}、{@code file.} 和没有小数点的名字返回 false。
+     * 不访问磁盘，也不修改大小写。
+     *
+     * @param pathOrName 路径或文件名，允许为 null
+     * @return 有扩展名时返回 true
+     */
+    public static boolean hasExtension(String pathOrName) {
+        return getExtension(pathOrName).length() > 0;
+    }
+
+    /**
      * 判断是不是空的普通文件。
      * null、路径不存在，或普通文件长度为 0 时返回 true。
      * 目录返回 false，即使目录里没有子项。已存在但既不是文件也不是目录的路径也返回 false。

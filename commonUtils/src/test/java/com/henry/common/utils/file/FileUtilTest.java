@@ -188,6 +188,20 @@ public class FileUtilTest {
         assertTrue(FileUtil.isAbsolute("/"));
     }
 
+    @Test
+    public void hasExtension_followsGetExtension() {
+        assertFalse(FileUtil.hasExtension(null));
+        assertFalse(FileUtil.hasExtension(""));
+        assertFalse(FileUtil.hasExtension(" \t"));
+        assertFalse(FileUtil.hasExtension("file"));
+        assertFalse(FileUtil.hasExtension("file."));
+        assertFalse(FileUtil.hasExtension(".gitignore"));
+        assertFalse(FileUtil.hasExtension("dir/"));
+        assertTrue(FileUtil.hasExtension("archive.tar.gz"));
+        assertTrue(FileUtil.hasExtension("dir/a.TXT"));
+        assertEquals("TXT", FileUtil.getExtension("dir/a.TXT"));
+    }
+
     private static File newTempDir() {
         File dir = new File(System.getProperty("java.io.tmpdir"), "fileutil-" + System.nanoTime());
         assertTrue(dir.mkdir());

@@ -31,6 +31,22 @@ public class ConvertUtil {
     }
 
     /**
+     * 判断文本能否按 {@link #parseInt(String, int)} 的规则解析成 int。
+     * null、空白、非法格式或超出 int 范围时返回 false，不抛异常。
+     * 去掉首尾空白。允许 ASCII 正负号。不接受小数点、千分位或十六进制。
+     * 返回值不依赖默认值，因此可以区分“文本本身是不是 int”。
+     *
+     * @param text 十进制文本，允许为 null
+     * @return 能完整解析成 int 时返回 true
+     */
+    public static boolean isInt(String text) {
+        Long parsed = parseDecimal(text);
+        return parsed != null
+                && parsed.longValue() >= Integer.MIN_VALUE
+                && parsed.longValue() <= Integer.MAX_VALUE;
+    }
+
+    /**
      * 把十进制文本解析成 long。
      * null、空串、只含空白、非法格式或超出 long 范围时返回 defaultValue，不抛异常。
      * 空白、正负号和拒绝的格式与 {@link #parseInt(String, int)} 相同。

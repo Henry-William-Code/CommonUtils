@@ -223,6 +223,21 @@ public class TimeUtilTest {
         TimeUtil.addMillis(Long.MIN_VALUE, -1L);
     }
 
+    @Test
+    public void millisBetween_returnsExactDifference() {
+        assertEquals(0L, TimeUtil.millisBetween(0L, 0L));
+        assertEquals(1L, TimeUtil.millisBetween(0L, 1L));
+        assertEquals(-1L, TimeUtil.millisBetween(1L, 0L));
+        assertEquals(999L, TimeUtil.millisBetween(0L, 999L));
+        assertEquals(1L, TimeUtil.secondsBetween(0L, 1000L));
+        assertEquals(Long.MIN_VALUE, TimeUtil.millisBetween(0L, Long.MIN_VALUE));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void millisBetween_rejectsOverflow() {
+        TimeUtil.millisBetween(Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

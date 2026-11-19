@@ -175,6 +175,24 @@ public class TimeUtil {
         return divideElapsed(startMillis, endMillis, 1000L);
     }
 
+    /**
+     * 计算两个毫秒时间戳的精确差值。
+     * 结果是 endMillis 减 startMillis，不换算成秒，也不使用设备时区。
+     * 差值无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #secondsBetween(long, long)}。
+     *
+     * @param startMillis 开始时间，毫秒
+     * @param endMillis   结束时间，毫秒
+     * @return 相差的毫秒数；结束较早时为负数
+     */
+    public static long millisBetween(long startMillis, long endMillis) {
+        long diff = endMillis - startMillis;
+        if (((endMillis ^ startMillis) & (endMillis ^ diff)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return diff;
+    }
+
     private static long divideElapsed(long startMillis, long endMillis, long unitMillis) {
         long diff = endMillis - startMillis;
         if (((endMillis ^ startMillis) & (endMillis ^ diff)) < 0) {

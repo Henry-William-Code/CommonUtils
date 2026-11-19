@@ -84,6 +84,22 @@ public class StringUtil {
     }
 
     /**
+     * 判断 text 是否以 prefix 开头。
+     * text 或 prefix 为 null 时返回 false。prefix 为空串且 text 不是 null 时返回 true，包括 text 也是空串。
+     * 区分大小写，不去掉空白。不修改 {@link #equals(String, String)}。
+     *
+     * @param text   原文，允许为 null
+     * @param prefix 前缀，允许为 null
+     * @return 以前缀开头时返回 true
+     */
+    public static boolean startsWith(String text, String prefix) {
+        if (text == null || prefix == null) {
+            return false;
+        }
+        return text.startsWith(prefix);
+    }
+
+    /**
      * 比较两个字符串的内容是否相同。
      * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
      * 区分大小写，不去掉首尾空白。

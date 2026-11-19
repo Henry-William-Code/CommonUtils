@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.6`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。当前 `main` 上还有一批尚未发布的方法，见文末「main 上尚未发布」，不能通过 `CommonUtils:1.0.6` 调用。
+工具按类组织。当前发布版本是 `1.0.7`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。
 
 ## 版本说明
 
@@ -13,11 +13,11 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.4` | JitPack `CommonUtils:1.0.4` | 包含 `1.0.3` 的全部方法，以及「1.0.4 新增」一节 |
 | 已发布 `1.0.5` | JitPack `CommonUtils:1.0.5` | 包含 `1.0.4` 的全部方法，以及「1.0.5 新增」一节 |
 | 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
-| `main` 上尚未发布 | 不能用 `1.0.6` 调用 | 只包含文末「main 上尚未发布」一节 |
+| 已发布 `1.0.7` | JitPack `CommonUtils:1.0.7` | 包含 `1.0.6` 的全部方法，以及「1.0.7 新增」一节 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.6` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.7` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
-## 依赖 1.0.6
+## 依赖 1.0.7
 
 在工程的 `build.gradle` 中加入：
 
@@ -33,11 +33,11 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.6'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.7'
 }
 ```
 
-`1.0.6` 包含到「1.0.6 新增」为止的全部已发布方法。仍使用 `1.0.5` 的工程不能调用「1.0.6 新增」。`main` 上尚未发布的方法也不在 `1.0.6` 里。
+`1.0.7` 包含到「1.0.7 新增」为止的全部已发布方法。仍使用 `1.0.6` 的工程不能调用「1.0.7 新增」。
 
 ## 已发布 1.0.2 的工具类
 
@@ -1424,9 +1424,9 @@ ObjectUtil.hashCode(null); // 0
 ObjectUtil.hashCode("a");  // 与 "a".hashCode() 相同
 ```
 
-## main 上尚未发布
+## 1.0.7 新增
 
-下面这些方法只在当前 `main` 源码里。JitPack `CommonUtils:1.0.6` 不包含它们。这一批还没有打 tag，也没有发布新版本。
+下面的类和方法从 `1.0.7` 起可以通过 JitPack 使用。`1.0.6` 没有它们。`1.0.6` 已有方法的签名和返回值没有改。
 
 ### 新类 UuidUtil
 
@@ -1594,4 +1594,178 @@ HexUtil.isHex("0f");   // true
 HexUtil.isHex("0F");   // true
 HexUtil.isHex(null);   // false
 HexUtil.isHex("0x10"); // false
+```
+
+### 新类 BytesUtil
+
+包名 `com.henry.common.utils.bytes`。处理 `byte[]`，不读取流，也不代替 `ArrayUtil` 的 `int[]` 和 `Object[]` 方法。
+
+#### `boolean isEmpty(byte[] data)`
+
+判断 byte 数组是否没有内容。
+
+- `data`：允许为 null。null 或长度为 0 时返回 true。
+
+```java
+BytesUtil.isEmpty(null);          // true
+BytesUtil.isEmpty(new byte[] {0}); // false
+```
+
+#### `byte[] concat(byte[] left, byte[] right)`
+
+拼接两个 byte 数组，返回新数组。
+
+- 任一侧为 null 时按空数组处理。两侧都是 null 时返回长度为 0 的新数组，不返回 null。
+- 不修改传入的数组。长度之和超出 int 时抛出 `IllegalArgumentException`。
+
+```java
+BytesUtil.concat(new byte[] {1, 2}, new byte[] {3}); // {1, 2, 3}
+BytesUtil.concat(null, null);                         // 空数组
+```
+
+### 新类 HtmlEscapeUtil
+
+包名 `com.henry.common.utils.html`。只转义或还原五个字符，不删除标签。与 `WebUtil.removeHtmlTag` 不同。
+
+#### `String escape(String text)`
+
+转义 `& < > " '`。
+
+- `text`：允许为 null。null 时返回空串。没有这些字符时返回原字符串。
+- 实体依次是 `&amp;`、`&lt;`、`&gt;`、`&quot;`、`&#39;`。
+
+```java
+HtmlEscapeUtil.escape("a&b<c>"); // "a&amp;b&lt;c&gt;"
+HtmlEscapeUtil.escape(null);     // ""
+```
+
+#### `String unescape(String text)`
+
+还原 `escape` 写出的实体，并额外接受 `&apos;`。
+
+- `text`：允许为 null。null 时返回空串。
+- `&amp;lt;` 还原成 `&lt;`，不会再变成 `<`。
+- 不认识的实体、缺少分号的 `&`，以及 `&#60;` 这类其他数字实体都原样保留。不删除标签。
+
+```java
+HtmlEscapeUtil.unescape("&amp;&lt;"); // "&<"
+HtmlEscapeUtil.unescape("&amp;lt;");  // "&lt;"
+HtmlEscapeUtil.unescape("&nbsp;");    // "&nbsp;"
+```
+
+### StringUtil 新增
+
+已有的 `equals` 没有变化。
+
+#### `boolean startsWith(String text, String prefix)`
+
+判断文本是否以前缀开头。
+
+- `text` 或 `prefix` 为 null 时返回 false。
+- `prefix` 为空串且 `text` 不是 null 时返回 true，包括 `text` 也是空串。
+- 区分大小写，不去掉空白。
+
+```java
+StringUtil.startsWith("abc", "ab"); // true
+StringUtil.startsWith(null, "a");   // false
+StringUtil.startsWith("abc", "");   // true
+```
+
+### RegexUtil 新增
+
+已有的 `matches` 和 `findFirst` 没有变化。
+
+#### `String replaceFirst(String text, String regex, String replacement)`
+
+替换第一处匹配。
+
+- `text`、`regex` 或 `replacement` 为 null 时返回 null，不编译正则。
+- 没有匹配时返回原 `text`。
+- `replacement` 里的 `$` 和 `\` 按 `Matcher.replaceFirst` 的替换语法处理，不是字面量。替换语法不合法时抛出 `IllegalArgumentException`。正则语法错误时抛出 `PatternSyntaxException`。
+
+```java
+RegexUtil.replaceFirst("abcabc", "a", "x"); // "xbcabc"
+RegexUtil.replaceFirst(null, "a", "x");     // null
+```
+
+### FileUtil 新增
+
+已有的 `getExtension` 没有变化。
+
+#### `boolean hasExtension(String pathOrName)`
+
+判断路径或文件名是否有扩展名。规则与 `getExtension` 相同。
+
+- null、空白、`.gitignore`、`file.` 和没有小数点的名字返回 false。
+- `archive.tar.gz` 返回 true。不访问磁盘。
+
+```java
+FileUtil.hasExtension("a.tar.gz"); // true
+FileUtil.hasExtension(".gitignore"); // false
+```
+
+### TimeUtil 新增
+
+已有的 `secondsBetween` 没有变化。
+
+#### `long millisBetween(long startMillis, long endMillis)`
+
+返回两个毫秒时间戳的精确差值，不换算成秒。
+
+- 结果是 `endMillis - startMillis`。结束较早时为负数。
+- 差值无法用 long 表示时抛出 `ArithmeticException`。不使用设备时区。
+
+```java
+TimeUtil.millisBetween(0L, 999L); // 999
+TimeUtil.millisBetween(1L, 0L);   // -1
+```
+
+### ConvertUtil 新增
+
+已有的 `parseInt` 没有变化。
+
+#### `boolean isInt(String text)`
+
+判断文本能否按 `parseInt` 的规则解析成 int。
+
+- null、空白、非法格式或超出 int 范围时返回 false，不抛异常。
+- 去掉首尾空白。允许 ASCII 正负号。不接受小数点、千分位或十六进制。
+- 不使用默认值，因此可以区分文本本身是不是 int。
+
+```java
+ConvertUtil.isInt(" +12 ");      // true
+ConvertUtil.isInt("2147483648"); // false
+```
+
+### ObjectUtil 新增
+
+已有的 `firstNonNull` 没有变化。
+
+#### `int countNonNull(Object... values)`
+
+统计参数中不是 null 的个数。
+
+- `values` 本身为 null 或没有参数时返回 0。null 元素不计数。
+- 不调用元素的方法。
+
+```java
+ObjectUtil.countNonNull(null, "a", null); // 1
+ObjectUtil.countNonNull();                // 0
+```
+
+### MathematicsUtil 新增
+
+已有的 `abs(long)` 没有变化。
+
+#### `int signum(long value)`
+
+返回 long 的符号。
+
+- 负数返回 -1，0 返回 0，正数返回 1。
+- `Long.MIN_VALUE` 返回 -1，不抛异常。
+
+```java
+MathematicsUtil.signum(-2L);            // -1
+MathematicsUtil.signum(0L);             // 0
+MathematicsUtil.signum(Long.MIN_VALUE); // -1
 ```

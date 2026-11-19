@@ -123,6 +123,24 @@ public class MathematicsUtil {
     }
 
     /**
+     * 返回 long 的符号。
+     * 负数返回 -1，0 返回 0，正数返回 1。{@link Long#MIN_VALUE} 返回 -1，不抛异常。
+     * 不修改 {@link #abs(long)}。
+     *
+     * @param value 原值
+     * @return -1、0 或 1
+     */
+    public static int signum(long value) {
+        if (value > 0L) {
+            return 1;
+        }
+        if (value < 0L) {
+            return -1;
+        }
+        return 0;
+    }
+
+    /**
      * 计算最大公约数，结果为非负整数。
      * 负数按绝对值参与计算。gcd(0, 0) 返回 0。
      * 任一参数为 {@link Integer#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，

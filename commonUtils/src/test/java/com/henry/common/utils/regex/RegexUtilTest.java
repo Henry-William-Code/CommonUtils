@@ -41,4 +41,20 @@ public class RegexUtilTest {
     public void findFirst_rejectsIllegalPattern() {
         RegexUtil.findFirst("a", "[");
     }
+
+    @Test
+    public void replaceFirst_replacesOnlyTheFirstMatch() {
+        assertNull(RegexUtil.replaceFirst(null, "a", "b"));
+        assertNull(RegexUtil.replaceFirst("a", null, "b"));
+        assertNull(RegexUtil.replaceFirst("a", "a", null));
+        assertEquals("abc", RegexUtil.replaceFirst("abc", "z", "x"));
+        assertEquals("xbcabc", RegexUtil.replaceFirst("abcabc", "a", "x"));
+        assertEquals("xab", RegexUtil.replaceFirst("ab", "", "x"));
+        assertEquals("a1c", RegexUtil.replaceFirst("abc", "b", "1"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void replaceFirst_rejectsIllegalReplacement() {
+        RegexUtil.replaceFirst("a", "a", "$");
+    }
 }

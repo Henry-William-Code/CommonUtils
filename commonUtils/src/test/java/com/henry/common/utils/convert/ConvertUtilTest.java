@@ -102,4 +102,21 @@ public class ConvertUtilTest {
         assertEquals(-1f, ConvertUtil.parseFloat("0x1.0p1", -1f), 0f);
         assertEquals(12.5, ConvertUtil.parseDouble("12.5", -1), 0);
     }
+
+    @Test
+    public void isInt_matchesParseIntRulesWithoutDefault() {
+        assertFalse(ConvertUtil.isInt(null));
+        assertFalse(ConvertUtil.isInt(""));
+        assertFalse(ConvertUtil.isInt(" \t"));
+        assertTrue(ConvertUtil.isInt("  +12\t"));
+        assertTrue(ConvertUtil.isInt("-12"));
+        assertTrue(ConvertUtil.isInt(String.valueOf(Integer.MIN_VALUE)));
+        assertTrue(ConvertUtil.isInt(String.valueOf(Integer.MAX_VALUE)));
+        assertFalse(ConvertUtil.isInt("2147483648"));
+        assertFalse(ConvertUtil.isInt("-2147483649"));
+        assertFalse(ConvertUtil.isInt("1.0"));
+        assertFalse(ConvertUtil.isInt("0x10"));
+        assertFalse(ConvertUtil.isInt("1 2"));
+        assertFalse(ConvertUtil.isInt("+"));
+    }
 }
