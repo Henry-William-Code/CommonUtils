@@ -141,4 +141,18 @@ public class MathematicsUtilTest {
         assertEquals(1, MathematicsUtil.signum(Long.MAX_VALUE));
         assertEquals(-1, MathematicsUtil.signum(Long.MIN_VALUE));
     }
+
+    @Test
+    public void isPowerOfTwo_onlyPositivePowers() {
+        assertTrue(MathematicsUtil.isPowerOfTwo(1L));
+        assertTrue(MathematicsUtil.isPowerOfTwo(2L));
+        assertTrue(MathematicsUtil.isPowerOfTwo(4L));
+        assertTrue(MathematicsUtil.isPowerOfTwo(1L << 62));
+        assertFalse(MathematicsUtil.isPowerOfTwo(0L));
+        assertFalse(MathematicsUtil.isPowerOfTwo(-1L));
+        assertFalse(MathematicsUtil.isPowerOfTwo(-2L));
+        assertFalse(MathematicsUtil.isPowerOfTwo(3L));
+        assertFalse(MathematicsUtil.isPowerOfTwo(Long.MAX_VALUE));
+        assertFalse(MathematicsUtil.isPowerOfTwo(Long.MIN_VALUE));
+    }
 }

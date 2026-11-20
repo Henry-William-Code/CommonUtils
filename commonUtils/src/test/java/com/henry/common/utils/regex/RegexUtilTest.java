@@ -57,4 +57,19 @@ public class RegexUtilTest {
     public void replaceFirst_rejectsIllegalReplacement() {
         RegexUtil.replaceFirst("a", "a", "$");
     }
+
+    @Test
+    public void replaceAll_replacesEveryMatch() {
+        assertNull(RegexUtil.replaceAll(null, "a", "b"));
+        assertNull(RegexUtil.replaceAll("a", null, "b"));
+        assertNull(RegexUtil.replaceAll("a", "a", null));
+        assertEquals("abc", RegexUtil.replaceAll("abc", "z", "x"));
+        assertEquals("xbcxbc", RegexUtil.replaceAll("abcabc", "a", "x"));
+        assertEquals("xbcabc", RegexUtil.replaceFirst("abcabc", "a", "x"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void replaceAll_rejectsIllegalReplacement() {
+        RegexUtil.replaceAll("a", "a", "$");
+    }
 }

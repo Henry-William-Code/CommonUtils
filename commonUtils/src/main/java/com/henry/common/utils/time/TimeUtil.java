@@ -221,6 +221,26 @@ public class TimeUtil {
     }
 
     /**
+     * 在毫秒时间戳上增加或减少整周。
+     * 一周按 7 天、每天 86400000 毫秒计算，不使用设备时区，也不处理夏令时。
+     * weeks 可以为负数或 0。weeks 先提升为 long 再乘以一周的毫秒数，这个乘法不会溢出。
+     * 相加的结果无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #addDays(long, int)}。
+     *
+     * @param millis 起始毫秒
+     * @param weeks  增加的周数，负数表示向前
+     * @return 增加后的毫秒时间戳
+     */
+    public static long addWeeks(long millis, int weeks) {
+        long delta = (long) weeks * 7L * 86400000L;
+        long sum = millis + delta;
+        if (((millis ^ sum) & (delta ^ sum)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return sum;
+    }
+
+    /**
      * 在毫秒时间戳上增加或减少整小时。
      * 一小时按 3600000 毫秒计算，不使用设备时区，也不处理夏令时。
      * hours 可以为负数或 0。hours 先提升为 long 再乘以一小时的毫秒数，这个乘法不会溢出。

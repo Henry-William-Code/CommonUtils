@@ -115,4 +115,17 @@ public class StringUtilTest {
         assertFalse(StringUtil.startsWith(" abc", "ab"));
         assertFalse(StringUtil.startsWith("Abc", "ab"));
     }
+
+    @Test
+    public void endsWith_nullAndEmptySuffix() {
+        assertFalse(StringUtil.endsWith(null, "a"));
+        assertFalse(StringUtil.endsWith("a", null));
+        assertFalse(StringUtil.endsWith(null, null));
+        assertTrue(StringUtil.endsWith("", ""));
+        assertTrue(StringUtil.endsWith("abc", ""));
+        assertTrue(StringUtil.endsWith("abc", "bc"));
+        assertFalse(StringUtil.endsWith("abc", " bc"));
+        assertFalse(StringUtil.endsWith("abc ", "bc"));
+        assertFalse(StringUtil.endsWith("abC", "bc"));
+    }
 }

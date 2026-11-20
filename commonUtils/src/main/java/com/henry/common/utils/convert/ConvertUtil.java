@@ -65,6 +65,19 @@ public class ConvertUtil {
     }
 
     /**
+     * 判断文本能否按 {@link #parseLong(String, long)} 的规则解析成 long。
+     * null、空白、非法格式或超出 long 范围时返回 false，不抛异常。
+     * 去掉首尾空白。允许 ASCII 正负号。不接受小数点、千分位或十六进制。
+     * 不修改 {@link #isInt(String)}。
+     *
+     * @param text 十进制文本，允许为 null
+     * @return 能完整解析成 long 时返回 true
+     */
+    public static boolean isLong(String text) {
+        return parseDecimal(text) != null;
+    }
+
+    /**
      * 把文本解析成布尔值。
      * null、空串、只含空白，或不是 true / false 时返回 defaultValue，不抛异常。
      * 去掉首尾空白后，只接受 ASCII 大小写不敏感的 {@code true} 和 {@code false}。

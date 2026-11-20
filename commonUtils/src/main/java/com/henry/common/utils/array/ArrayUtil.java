@@ -3,7 +3,7 @@ package com.henry.common.utils.array;
 /**
  * 数组查找。
  * 已发布的 1.0.4 没有这个类。不使用 Android API。
- * 对象数组是否为空仍使用 {@code CollectionUtil.isEmpty(Object[])}，本类不提供该方法。
+ * {@code CollectionUtil.isEmpty(Object[])} 仍然可用，本类另有同名方法，两者都不修改对方。
  */
 public class ArrayUtil {
 
@@ -17,6 +17,18 @@ public class ArrayUtil {
      * @return data 为 null 或长度为 0 时返回 true
      */
     public static boolean isEmpty(int[] data) {
+        return data == null || data.length == 0;
+    }
+
+    /**
+     * 判断对象数组是否没有元素。
+     * data 为 null 或长度为 0 时返回 true。含 null 元素但长度大于 0 时返回 false。
+     * 不修改 {@code CollectionUtil.isEmpty(Object[])}，也不修改 {@link #isEmpty(int[])}。
+     *
+     * @param data 允许为 null
+     * @return data 为 null 或长度为 0 时返回 true
+     */
+    public static boolean isEmpty(Object[] data) {
         return data == null || data.length == 0;
     }
 

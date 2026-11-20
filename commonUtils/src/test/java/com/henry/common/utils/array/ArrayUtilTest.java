@@ -1,5 +1,7 @@
 package com.henry.common.utils.array;
 
+import com.henry.common.utils.collection.CollectionUtil;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,9 +12,18 @@ public class ArrayUtilTest {
 
     @Test
     public void isEmpty_intArray() {
-        assertTrue(ArrayUtil.isEmpty(null));
+        assertTrue(ArrayUtil.isEmpty((int[]) null));
         assertTrue(ArrayUtil.isEmpty(new int[0]));
         assertFalse(ArrayUtil.isEmpty(new int[] {0}));
+    }
+
+    @Test
+    public void isEmpty_objectArray() {
+        assertTrue(ArrayUtil.isEmpty((Object[]) null));
+        assertTrue(ArrayUtil.isEmpty(new Object[0]));
+        assertFalse(ArrayUtil.isEmpty(new Object[] {null}));
+        assertFalse(ArrayUtil.isEmpty(new String[] {"a"}));
+        assertTrue(CollectionUtil.isEmpty((Object[]) null));
     }
 
     @Test

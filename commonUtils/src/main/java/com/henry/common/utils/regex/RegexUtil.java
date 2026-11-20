@@ -69,4 +69,23 @@ public class RegexUtil {
         }
         return Pattern.compile(regex).matcher(text).replaceFirst(replacement);
     }
+
+    /**
+     * 替换全部匹配。
+     * 规则与 {@link #replaceFirst(String, String, String)} 相同：任一参数为 null 时返回 null，不编译正则。
+     * 没有匹配时返回原 text。replacement 中的 {@code $} 和 {@code \} 按 {@link Matcher#replaceAll(String)} 的替换语法处理，不是字面量。
+     * 替换语法不合法时抛出 {@link IllegalArgumentException}。正则语法错误时抛出 {@link PatternSyntaxException}。
+     * 不修改 {@link #replaceFirst(String, String, String)}。
+     *
+     * @param text        原文，允许为 null
+     * @param regex       正则，允许为 null
+     * @param replacement 替换文本，允许为 null
+     * @return 替换后的文本；任一参数为 null 时返回 null
+     */
+    public static String replaceAll(String text, String regex, String replacement) {
+        if (text == null || regex == null || replacement == null) {
+            return null;
+        }
+        return Pattern.compile(regex).matcher(text).replaceAll(replacement);
+    }
 }

@@ -3,6 +3,7 @@ package com.henry.common.utils.bytes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,5 +30,17 @@ public class BytesUtilTest {
         assertArrayEquals(new byte[] {1}, BytesUtil.concat(new byte[] {1}, null));
         assertArrayEquals(new byte[] {2}, BytesUtil.concat(null, new byte[] {2}));
         assertArrayEquals(new byte[0], BytesUtil.concat(new byte[0], new byte[0]));
+    }
+
+    @Test
+    public void indexOf_returnsFirstByteAndDoesNotMutate() {
+        assertEquals(-1, BytesUtil.indexOf(null, (byte) 1));
+        assertEquals(-1, BytesUtil.indexOf(new byte[0], (byte) 0));
+        byte[] data = new byte[] {1, 2, 1};
+        assertEquals(0, BytesUtil.indexOf(data, (byte) 1));
+        assertEquals(1, BytesUtil.indexOf(data, (byte) 2));
+        assertEquals(-1, BytesUtil.indexOf(data, (byte) 3));
+        assertEquals(0, BytesUtil.indexOf(new byte[] {(byte) 0xff}, (byte) -1));
+        assertArrayEquals(new byte[] {1, 2, 1}, data);
     }
 }

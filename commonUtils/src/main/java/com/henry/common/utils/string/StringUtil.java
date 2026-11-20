@@ -100,6 +100,23 @@ public class StringUtil {
     }
 
     /**
+     * 判断 text 是否以 suffix 结尾。
+     * 规则与 {@link #startsWith(String, String)} 对称。
+     * text 或 suffix 为 null 时返回 false。suffix 为空串且 text 不是 null 时返回 true，包括 text 也是空串。
+     * 区分大小写，不去掉空白。
+     *
+     * @param text   原文，允许为 null
+     * @param suffix 后缀，允许为 null
+     * @return 以后缀结尾时返回 true
+     */
+    public static boolean endsWith(String text, String suffix) {
+        if (text == null || suffix == null) {
+            return false;
+        }
+        return text.endsWith(suffix);
+    }
+
+    /**
      * 比较两个字符串的内容是否相同。
      * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
      * 区分大小写，不去掉首尾空白。

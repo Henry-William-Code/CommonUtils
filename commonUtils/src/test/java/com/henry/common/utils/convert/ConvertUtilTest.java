@@ -119,4 +119,22 @@ public class ConvertUtilTest {
         assertFalse(ConvertUtil.isInt("1 2"));
         assertFalse(ConvertUtil.isInt("+"));
     }
+
+    @Test
+    public void isLong_matchesParseLongRulesWithoutDefault() {
+        assertFalse(ConvertUtil.isLong(null));
+        assertFalse(ConvertUtil.isLong(""));
+        assertFalse(ConvertUtil.isLong(" \t"));
+        assertTrue(ConvertUtil.isLong("  +12\t"));
+        assertTrue(ConvertUtil.isLong("-12"));
+        assertTrue(ConvertUtil.isLong("2147483648"));
+        assertFalse(ConvertUtil.isInt("2147483648"));
+        assertTrue(ConvertUtil.isLong(String.valueOf(Long.MIN_VALUE)));
+        assertTrue(ConvertUtil.isLong(String.valueOf(Long.MAX_VALUE)));
+        assertFalse(ConvertUtil.isLong("9223372036854775808"));
+        assertFalse(ConvertUtil.isLong("-9223372036854775809"));
+        assertFalse(ConvertUtil.isLong("1.0"));
+        assertFalse(ConvertUtil.isLong("0x10"));
+        assertFalse(ConvertUtil.isLong("+"));
+    }
 }

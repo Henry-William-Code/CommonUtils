@@ -141,6 +141,18 @@ public class MathematicsUtil {
     }
 
     /**
+     * 判断 long 是不是 2 的非负整数次幂。
+     * {@code 1} 是 {@code 2^0}，返回 true。0 和负数返回 false，不抛异常。
+     * {@link Long#MIN_VALUE} 返回 false。不修改 {@link #signum(long)}。
+     *
+     * @param value 原值
+     * @return 正的 2 的幂时返回 true
+     */
+    public static boolean isPowerOfTwo(long value) {
+        return value > 0L && (value & (value - 1L)) == 0L;
+    }
+
+    /**
      * 计算最大公约数，结果为非负整数。
      * 负数按绝对值参与计算。gcd(0, 0) 返回 0。
      * 任一参数为 {@link Integer#MIN_VALUE} 时抛出 {@link IllegalArgumentException}，

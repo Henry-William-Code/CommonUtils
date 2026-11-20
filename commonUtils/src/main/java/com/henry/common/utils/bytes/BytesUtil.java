@@ -46,4 +46,25 @@ public class BytesUtil {
         }
         return out;
     }
+
+    /**
+     * 查找 byte 数组中第一处等于 value 的下标。
+     * data 为 null 或没有匹配时返回 -1。不修改 data。
+     * 比较的是 8 位值，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。
+     *
+     * @param data  允许为 null
+     * @param value 要查找的字节
+     * @return 第一处匹配下标；未找到时返回 -1
+     */
+    public static int indexOf(byte[] data, byte value) {
+        if (data == null) {
+            return -1;
+        }
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

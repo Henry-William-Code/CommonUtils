@@ -238,6 +238,25 @@ public class TimeUtilTest {
         TimeUtil.millisBetween(Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
+    @Test
+    public void addWeeks_matchesSevenDays() {
+        assertEquals(0L, TimeUtil.addWeeks(0L, 0));
+        assertEquals(7L * 86400000L, TimeUtil.addWeeks(0L, 1));
+        assertEquals(TimeUtil.addDays(5L, 14), TimeUtil.addWeeks(5L, 2));
+        assertEquals(TimeUtil.addDays(5L, -7), TimeUtil.addWeeks(5L, -1));
+        assertEquals(0L, TimeUtil.addWeeks(7L * 86400000L, -1));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addWeeks_rejectsPositiveOverflow() {
+        TimeUtil.addWeeks(Long.MAX_VALUE, 1);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void addWeeks_rejectsNegativeOverflow() {
+        TimeUtil.addWeeks(Long.MIN_VALUE, -1);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.7`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。
+工具按类组织。当前发布版本是 `1.0.7`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。当前 `main` 上还有一批尚未发布的方法，见文末「main 上尚未发布」，不能通过 `CommonUtils:1.0.7` 调用。
 
 ## 版本说明
 
@@ -14,6 +14,7 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.5` | JitPack `CommonUtils:1.0.5` | 包含 `1.0.4` 的全部方法，以及「1.0.5 新增」一节 |
 | 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
 | 已发布 `1.0.7` | JitPack `CommonUtils:1.0.7` | 包含 `1.0.6` 的全部方法，以及「1.0.7 新增」一节 |
+| `main` 上尚未发布 | 不能用 `1.0.7` 调用 | 只包含文末「main 上尚未发布」一节 |
 
 `1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.7` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
@@ -37,7 +38,7 @@ dependencies {
 }
 ```
 
-`1.0.7` 包含到「1.0.7 新增」为止的全部已发布方法。仍使用 `1.0.6` 的工程不能调用「1.0.7 新增」。
+`1.0.7` 包含到「1.0.7 新增」为止的全部已发布方法。仍使用 `1.0.6` 的工程不能调用「1.0.7 新增」。`main` 上尚未发布的方法也不在 `1.0.7` 里。
 
 ## 已发布 1.0.2 的工具类
 
@@ -1768,4 +1769,187 @@ ObjectUtil.countNonNull();                // 0
 MathematicsUtil.signum(-2L);            // -1
 MathematicsUtil.signum(0L);             // 0
 MathematicsUtil.signum(Long.MIN_VALUE); // -1
+```
+
+## main 上尚未发布
+
+下面这些方法只在当前 `main` 源码里。JitPack `CommonUtils:1.0.7` 不包含它们。这一批还没有打 tag，也没有发布新版本。
+
+### 新类 IpUtil
+
+包名 `com.henry.common.utils.ip`。只处理点分十进制 IPv4，不修改 `WebUtil`。
+
+#### `boolean isIpv4(String text)`
+
+判断文本是不是点分十进制 IPv4。
+
+- 必须恰好 4 段，每段是 0 到 255 的十进制整数。除单个 `0` 外不接受前导零。
+- `text`：允许为 null。null、空白、空段、前后空格、多余点号、IPv6、CIDR、端口或非数字都返回 false，不抛异常。
+- 不 trim。`192.168.1.1` 和 `127.0.0.1` 为 true。`256.0.0.1`、`192.168.1`、`192.168.1.1.1`、`01.2.3.4` 为 false。
+
+```java
+IpUtil.isIpv4("192.168.1.1"); // true
+IpUtil.isIpv4("01.2.3.4");    // false
+IpUtil.isIpv4(null);          // false
+```
+
+#### `long toLong(String ipv4)`
+
+把合法 IPv4 转成无符号 32 位整数，用 long 返回。
+
+- 范围是 0 到 4294967295。`0.0.0.0` 为 0，`255.255.255.255` 为 4294967295，`127.0.0.1` 为 2130706433。
+- `isIpv4` 为 false 时抛出 `IllegalArgumentException`。
+
+```java
+IpUtil.toLong("127.0.0.1");       // 2130706433
+IpUtil.toLong("255.255.255.255"); // 4294967295
+```
+
+### 新类 JsonEscapeUtil
+
+包名 `com.henry.common.utils.json`。只转义 JSON 字符串内容，不加外层引号，也不解析整段 JSON。不修改 `HtmlEscapeUtil`。
+
+#### `String escape(String text)`
+
+按 JSON 字符串内容转义。
+
+- 处理 `\\`、`\"`、`\b`、`\f`、`\n`、`\r`、`\t`，以及 U+0000 到 U+001F 的其他控制字符。控制字符写成 `\u00XX`，十六进制为小写。
+- 不转义 `/`。`text` 为 null 时返回空串。没有需要转义的字符时返回原字符串。
+
+```java
+JsonEscapeUtil.escape("a\"b\\c"); // "a\\\"b\\\\c"
+JsonEscapeUtil.escape(null);      // ""
+```
+
+#### `String unescape(String text)`
+
+还原 `escape` 的结果，并接受 `\uXXXX` 与 `\/`。
+
+- `\u` 的四位十六进制不区分大小写。`text` 为 null 时返回空串。
+- 尾部孤立的 `\`、不完整的 `\u`、非法十六进制或不认识的转义抛出 `IllegalArgumentException`，不返回截断结果。
+- 不要求外层引号。
+
+```java
+JsonEscapeUtil.unescape("a\\\"b"); // "a\"b"
+JsonEscapeUtil.unescape("\\u0041"); // "A"
+JsonEscapeUtil.unescape("\\/");     // "/"
+```
+
+### StringUtil 新增
+
+已有的 `startsWith` 没有变化。
+
+#### `boolean endsWith(String text, String suffix)`
+
+判断文本是否以后缀结尾。规则与 `startsWith` 对称。
+
+- `text` 或 `suffix` 为 null 时返回 false。
+- `suffix` 为空串且 `text` 不是 null 时返回 true，包括 `text` 也是空串。
+- 区分大小写，不去掉空白。
+
+```java
+StringUtil.endsWith("abc", "bc"); // true
+StringUtil.endsWith(null, "c");   // false
+StringUtil.endsWith("abc", "");   // true
+```
+
+### RegexUtil 新增
+
+已有的 `replaceFirst` 没有变化。
+
+#### `String replaceAll(String text, String regex, String replacement)`
+
+替换全部匹配。规则与 `replaceFirst` 相同，但作用于每一处匹配。
+
+- `text`、`regex` 或 `replacement` 为 null 时返回 null，不编译正则。
+- 没有匹配时返回原 `text`。
+- `replacement` 里的 `$` 和 `\` 按 `Matcher.replaceAll` 的替换语法处理。替换语法不合法时抛出 `IllegalArgumentException`。正则语法错误时抛出 `PatternSyntaxException`。
+
+```java
+RegexUtil.replaceAll("abcabc", "a", "x"); // "xbcxbc"
+RegexUtil.replaceAll(null, "a", "x");     // null
+```
+
+### ConvertUtil 新增
+
+已有的 `isInt` 没有变化。
+
+#### `boolean isLong(String text)`
+
+判断文本能否按 `parseLong` 的规则解析成 long。
+
+- null、空白、非法格式或超出 long 范围时返回 false，不抛异常。
+- 去掉首尾空白。允许 ASCII 正负号。不接受小数点、千分位或十六进制。
+- `2147483648` 超出 int，但在 long 范围内，返回 true。
+
+```java
+ConvertUtil.isLong("2147483648");          // true
+ConvertUtil.isLong("9223372036854775808"); // false
+```
+
+### BytesUtil 新增
+
+已有的 `isEmpty` 和 `concat` 没有变化。
+
+#### `int indexOf(byte[] data, byte value)`
+
+返回第一处匹配下标。
+
+- `data` 为 null 或未找到时返回 -1。不修改 `data`。
+- 比较的是 8 位值，`(byte) 0xff` 与 `(byte) -1` 相同。
+
+```java
+BytesUtil.indexOf(new byte[] {1, 2, 1}, (byte) 2); // 1
+BytesUtil.indexOf(null, (byte) 1);                 // -1
+```
+
+### ArrayUtil 新增
+
+已有的 `isEmpty(int[])` 没有变化。`CollectionUtil.isEmpty(Object[])` 也没有变化。传入 `null` 时需要强制转换，因为两个 `isEmpty` 重载都接受 `null`。
+
+#### `boolean isEmpty(Object[] data)`
+
+判断对象数组是否没有元素。
+
+- `data` 为 null 或长度为 0 时返回 true。
+- 含 null 元素但长度大于 0 时返回 false。
+
+```java
+ArrayUtil.isEmpty(new Object[0]);       // true
+ArrayUtil.isEmpty(new Object[] {null}); // false
+ArrayUtil.isEmpty((Object[]) null);     // true
+```
+
+### TimeUtil 新增
+
+已有的 `addDays` 没有变化。
+
+#### `long addWeeks(long millis, int weeks)`
+
+在毫秒时间戳上增加或减少整周。
+
+- 一周按 7 天、每天 86400000 毫秒计算。`weeks` 可以为负数或 0。
+- 不使用设备时区，也不处理夏令时。
+- 相加的结果无法用 long 表示时抛出 `ArithmeticException`。
+
+```java
+TimeUtil.addWeeks(0L, 1); // 604800000
+TimeUtil.addWeeks(0L, 0); // 0
+```
+
+### MathematicsUtil 新增
+
+已有的 `signum` 没有变化。
+
+#### `boolean isPowerOfTwo(long value)`
+
+判断 long 是不是 2 的非负整数次幂。
+
+- `1` 是 `2^0`，返回 true。`2`、`4` 返回 true。
+- `0` 和负数返回 false，不抛异常。`Long.MIN_VALUE` 返回 false。
+
+```java
+MathematicsUtil.isPowerOfTwo(1L);            // true
+MathematicsUtil.isPowerOfTwo(0L);            // false
+MathematicsUtil.isPowerOfTwo(Long.MIN_VALUE); // false
 ```
