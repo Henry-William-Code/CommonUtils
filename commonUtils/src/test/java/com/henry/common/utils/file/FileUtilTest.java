@@ -202,6 +202,27 @@ public class FileUtilTest {
         assertEquals("TXT", FileUtil.getExtension("dir/a.TXT"));
     }
 
+    @Test
+    public void changeExtension_replacesOnlyTheLastExtension() {
+        assertEquals("", FileUtil.changeExtension(null, "md"));
+        assertEquals("", FileUtil.changeExtension(" \t", "md"));
+        assertEquals("a/b/c.md", FileUtil.changeExtension("a/b/c.txt", "md"));
+        assertEquals("a/b/c.md", FileUtil.changeExtension("a/b/c.txt", ".md"));
+        assertEquals("a/b/c.md", FileUtil.changeExtension("a/b/c.txt", "..md"));
+        assertEquals("dir\\file.MD", FileUtil.changeExtension("dir\\file.txt", ".MD"));
+        assertEquals("a/b/c.md", FileUtil.changeExtension("a/b/c", "md"));
+        assertEquals("archive.tar.md", FileUtil.changeExtension("archive.tar.gz", "md"));
+        assertEquals("a/b/c", FileUtil.changeExtension("a/b/c.txt", null));
+        assertEquals("a/b/c", FileUtil.changeExtension("a/b/c.txt", " "));
+        assertEquals("a/b/c", FileUtil.changeExtension("a/b/c.txt", "."));
+        String plain = "a/b/c";
+        assertTrue(FileUtil.changeExtension(plain, null) == plain);
+        assertEquals(".gitignore", FileUtil.changeExtension(".gitignore", null));
+        assertEquals(".gitignore.md", FileUtil.changeExtension(".gitignore", "md"));
+        assertEquals("file..md", FileUtil.changeExtension("file.", "md"));
+        assertEquals("gz", FileUtil.getExtension("archive.tar.gz"));
+    }
+
     private static File newTempDir() {
         File dir = new File(System.getProperty("java.io.tmpdir"), "fileutil-" + System.nanoTime());
         assertTrue(dir.mkdir());

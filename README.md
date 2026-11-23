@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.7`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。当前 `main` 上还有一批尚未发布的方法，见文末「main 上尚未发布」，不能通过 `CommonUtils:1.0.7` 调用。
+工具按类组织。当前发布版本是 `1.0.8`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。
 
 ## 版本说明
 
@@ -14,11 +14,11 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.5` | JitPack `CommonUtils:1.0.5` | 包含 `1.0.4` 的全部方法，以及「1.0.5 新增」一节 |
 | 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
 | 已发布 `1.0.7` | JitPack `CommonUtils:1.0.7` | 包含 `1.0.6` 的全部方法，以及「1.0.7 新增」一节 |
-| `main` 上尚未发布 | 不能用 `1.0.7` 调用 | 只包含文末「main 上尚未发布」一节 |
+| 已发布 `1.0.8` | JitPack `CommonUtils:1.0.8` | 包含 `1.0.7` 的全部方法，以及「1.0.8 新增」一节 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.7` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.8` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
-## 依赖 1.0.7
+## 依赖 1.0.8
 
 在工程的 `build.gradle` 中加入：
 
@@ -34,11 +34,11 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.7'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.8'
 }
 ```
 
-`1.0.7` 包含到「1.0.7 新增」为止的全部已发布方法。仍使用 `1.0.6` 的工程不能调用「1.0.7 新增」。`main` 上尚未发布的方法也不在 `1.0.7` 里。
+`1.0.8` 包含到「1.0.8 新增」为止的全部已发布方法。仍使用 `1.0.7` 的工程不能调用「1.0.8 新增」。
 
 ## 已发布 1.0.2 的工具类
 
@@ -1771,9 +1771,9 @@ MathematicsUtil.signum(0L);             // 0
 MathematicsUtil.signum(Long.MIN_VALUE); // -1
 ```
 
-## main 上尚未发布
+## 1.0.8 新增
 
-下面这些方法只在当前 `main` 源码里。JitPack `CommonUtils:1.0.7` 不包含它们。这一批还没有打 tag，也没有发布新版本。
+下面的类和方法从 `1.0.8` 起可以通过 JitPack 使用。`1.0.7` 没有它们。`1.0.7` 已有方法的签名和返回值没有改。
 
 ### 新类 IpUtil
 
@@ -1803,6 +1803,19 @@ IpUtil.isIpv4(null);          // false
 ```java
 IpUtil.toLong("127.0.0.1");       // 2130706433
 IpUtil.toLong("255.255.255.255"); // 4294967295
+```
+
+#### `String fromLong(long value)`
+
+把无符号 32 位整数还原成点分十进制，是 `toLong` 的逆运算。
+
+- `0` 得到 `0.0.0.0`，`4294967295` 得到 `255.255.255.255`，`2130706433` 得到 `127.0.0.1`。
+- 每段不带前导零，段值本身是 0 时写成 `0`。
+- 小于 0 或大于 4294967295 时抛出 `IllegalArgumentException`。
+
+```java
+IpUtil.fromLong(2130706433L); // "127.0.0.1"
+IpUtil.fromLong(0L);          // "0.0.0.0"
 ```
 
 ### 新类 JsonEscapeUtil
@@ -1903,6 +1916,18 @@ BytesUtil.indexOf(new byte[] {1, 2, 1}, (byte) 2); // 1
 BytesUtil.indexOf(null, (byte) 1);                 // -1
 ```
 
+#### `int lastIndexOf(byte[] data, byte value)`
+
+返回最后一处匹配下标。已有的 `indexOf` 没有变化。
+
+- `data` 为 null 或未找到时返回 -1。不修改 `data`。
+- `(byte) 0xff` 与 `(byte) -1` 相同。
+
+```java
+BytesUtil.lastIndexOf(new byte[] {1, 2, 1}, (byte) 1); // 2
+BytesUtil.lastIndexOf(null, (byte) 1);                 // -1
+```
+
 ### ArrayUtil 新增
 
 已有的 `isEmpty(int[])` 没有变化。`CollectionUtil.isEmpty(Object[])` 也没有变化。传入 `null` 时需要强制转换，因为两个 `isEmpty` 重载都接受 `null`。
@@ -1952,4 +1977,151 @@ TimeUtil.addWeeks(0L, 0); // 0
 MathematicsUtil.isPowerOfTwo(1L);            // true
 MathematicsUtil.isPowerOfTwo(0L);            // false
 MathematicsUtil.isPowerOfTwo(Long.MIN_VALUE); // false
+```
+
+### 新类 MacUtil
+
+包名 `com.henry.common.utils.mac`。处理 MAC 地址文本。
+
+#### `boolean isValid(String text)`
+
+判断文本是不是 MAC 地址。
+
+- 接受 6 组各 2 位十六进制。分隔符全程是 `:`，或全程是 `-`，也可以是连续 12 位十六进制。
+- 十六进制不区分大小写。不混用 `:` 和 `-`。
+- `text`：允许为 null。null、空白、长度不对、非法字符、空段、多余分隔符或前后空格返回 false，不抛异常，也不 trim。
+
+```java
+MacUtil.isValid("aa:bb:cc:dd:ee:ff"); // true
+MacUtil.isValid("aabbccddeeff");      // true
+MacUtil.isValid("aa:bb-cc:dd:ee:ff"); // false
+```
+
+#### `String normalize(String text)`
+
+把合法地址规范成小写冒号形式。
+
+- `AA-BB-CC-DD-EE-FF` 和 `aabbccddeeff` 都得到 `aa:bb:cc:dd:ee:ff`。
+- 非法输入抛出 `IllegalArgumentException`，不返回残缺结果。
+
+```java
+MacUtil.normalize("AA-BB-CC-DD-EE-FF"); // "aa:bb:cc:dd:ee:ff"
+MacUtil.normalize("aabbccddeeff");      // "aa:bb:cc:dd:ee:ff"
+```
+
+### 新类 NamingUtil
+
+包名 `com.henry.common.utils.naming`。把标识符转成蛇形或小驼峰。只在 ASCII 小写字母或数字后面紧跟 ASCII 大写字母时分段，连续大写不拆开。连字符、下划线和空白是分隔符。
+
+#### `String toSnakeCase(String text)`
+
+转成小写蛇形。
+
+- `HelloWorld` 和 `helloWorld` 得到 `hello_world`。已经是 `hello_world` 的保持小写蛇形。
+- 连续分隔符合并为一个 `_`，并去掉首尾分隔符。
+- `XMLParser` 得到 `xmlparser`，`getHTTPResponse` 得到 `get_httpresponse`。
+- `text` 为 null，或去掉分隔后没有内容时返回空串。只把 `A-Z` 转成小写。
+
+```java
+NamingUtil.toSnakeCase("helloWorld");     // "hello_world"
+NamingUtil.toSnakeCase("XMLParser");      // "xmlparser"
+NamingUtil.toSnakeCase(null);             // ""
+```
+
+#### `String toCamelCase(String text)`
+
+转成 lowerCamelCase。分段规则与 `toSnakeCase` 相同。
+
+- `hello_world`、`hello-world` 和 `HelloWorld` 都得到 `helloWorld`。
+- 第一段全小写，后续段首字母大写、其余小写。后续段以数字开头时该数字保持不变。
+- `text` 为 null，或去掉分隔后没有内容时返回空串。
+
+```java
+NamingUtil.toCamelCase("hello_world");    // "helloWorld"
+NamingUtil.toCamelCase("getHTTPResponse"); // "getHttpresponse"
+```
+
+### StringUtil 新增
+
+已有的 `endsWith` 没有变化。
+
+#### `boolean contains(String text, String search)`
+
+判断文本是否包含另一段文本。
+
+- `text` 或 `search` 为 null 时返回 false。
+- `search` 为空串且 `text` 不是 null 时返回 true，包括 `text` 也是空串。
+- 区分大小写，不去掉空白。
+
+```java
+StringUtil.contains("abc", "b"); // true
+StringUtil.contains(null, "a");  // false
+StringUtil.contains("abc", "");  // true
+```
+
+### ArrayUtil 新增
+
+已有的 `isEmpty(int[])` 没有变化。
+
+#### `int[] concat(int[] left, int[] right)`
+
+拼接两个 int 数组，返回新数组。语义与 `BytesUtil.concat` 相同。
+
+- 任一侧为 null 时按空数组处理。两侧都是 null 时返回长度为 0 的新数组。
+- 不修改传入的数组。长度之和超出 int 时抛出 `IllegalArgumentException`。
+
+```java
+ArrayUtil.concat(new int[] {1, 2}, new int[] {3}); // {1, 2, 3}
+ArrayUtil.concat(null, null);                      // 空数组
+```
+
+### CollectionUtil 新增
+
+已有的 `contains` 没有变化。
+
+#### `boolean containsKey(Map<?, ?> map, Object key)`
+
+判断 Map 是否包含指定键。
+
+- `map` 为 null 时返回 false。不修改 map。
+- `key` 为 null 时交给 Map 自己判断。支持 null 键则返回真实结果；Map 因 null 键抛出 `NullPointerException` 时返回 false。
+- `key` 不是 null 时不吞掉 Map 抛出的异常。
+
+```java
+CollectionUtil.containsKey(null, "a"); // false
+```
+
+### FileUtil 新增
+
+已有的 `getExtension`、`hasExtension` 和 `getNameWithoutExtension` 没有变化。
+
+#### `String changeExtension(String pathOrName, String newExtension)`
+
+替换最后一段扩展名，保留目录和主文件名。
+
+- 空白路径返回空串。其余文本不 trim。不访问磁盘，也不解析 `.` 和 `..`。
+- `newExtension` 可以带或不带前导点，结果统一用一个点连接。`a/b/c.txt` 配 `md` 或 `.md` 都得到 `a/b/c.md`。
+- `newExtension` 为 null 或空白时去掉扩展名：`a/b/c.txt` 得到 `a/b/c`。本来就没有扩展名则返回原文本。
+- 扩展名规则与 `getExtension` 相同。`file.` 的末尾点不算扩展名，接上 `md` 得到 `file..md`。`.gitignore` 没有扩展名。
+
+```java
+FileUtil.changeExtension("a/b/c.txt", "md"); // "a/b/c.md"
+FileUtil.changeExtension("a/b/c.txt", null); // "a/b/c"
+FileUtil.changeExtension("a/b/c", null);     // "a/b/c"
+```
+
+### TimeUtil 新增
+
+已有的 `addWeeks` 没有变化。
+
+#### `long weeksBetween(long startMillis, long endMillis)`
+
+计算相差的整周数。
+
+- 一周按 7 × 86400000 毫秒整除，向 0 截断。结束早于开始时为负数。
+- 差值放不进 long 时抛出 `ArithmeticException`。不使用设备时区。
+
+```java
+TimeUtil.weeksBetween(0L, 604800000L); // 1
+TimeUtil.weeksBetween(0L, 604799999L); // 0
 ```

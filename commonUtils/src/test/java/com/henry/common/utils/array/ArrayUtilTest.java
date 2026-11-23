@@ -70,4 +70,21 @@ public class ArrayUtilTest {
         assertEquals(0, ArrayUtil.lastIndexOf(nested, nested[0]));
         assertEquals(-1, ArrayUtil.lastIndexOf(nested, new int[] {1}));
     }
+
+    @Test
+    public void concat_intArrayTreatsNullAsEmptyAndDoesNotMutate() {
+        assertEquals(0, ArrayUtil.concat(null, null).length);
+        int[] left = new int[] {1, 2};
+        int[] right = new int[] {3};
+        int[] joined = ArrayUtil.concat(left, right);
+        assertEquals(3, joined.length);
+        assertEquals(1, joined[0]);
+        assertEquals(2, joined[1]);
+        assertEquals(3, joined[2]);
+        joined[0] = 9;
+        assertEquals(1, left[0]);
+        assertEquals(3, right[0]);
+        assertEquals(1, ArrayUtil.concat(new int[] {1}, null)[0]);
+        assertEquals(2, ArrayUtil.concat(null, new int[] {2})[0]);
+    }
 }

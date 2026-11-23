@@ -41,6 +41,25 @@ public class IpUtil {
                 | parts[3];
     }
 
+    /**
+     * 把无符号 32 位整数还原成点分十进制 IPv4。
+     * 这是 {@link #toLong(String)} 的逆运算。每段不带前导零，段值本身是 0 时写成 {@code 0}。
+     * value 小于 0 或大于 4294967295 时抛出 {@link IllegalArgumentException}。
+     * 不修改 {@link #isIpv4(String)} 和 {@link #toLong(String)}。
+     *
+     * @param value 无符号 32 位值
+     * @return 点分十进制 IPv4
+     */
+    public static String fromLong(long value) {
+        if (value < 0L || value > 4294967295L) {
+            throw new IllegalArgumentException("ipv4 value is out of range");
+        }
+        return ((value >>> 24) & 0xffL) + "."
+                + ((value >>> 16) & 0xffL) + "."
+                + ((value >>> 8) & 0xffL) + "."
+                + (value & 0xffL);
+    }
+
     private static int[] parse(String text) {
         if (text == null || text.length() == 0) {
             return null;

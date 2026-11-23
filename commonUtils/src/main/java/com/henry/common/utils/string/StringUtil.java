@@ -117,6 +117,22 @@ public class StringUtil {
     }
 
     /**
+     * 判断 text 是否包含 search。
+     * text 或 search 为 null 时返回 false。search 为空串且 text 不是 null 时返回 true，包括 text 也是空串。
+     * 区分大小写，不去掉空白。不修改 {@link #startsWith(String, String)} 和 {@link #endsWith(String, String)}。
+     *
+     * @param text   原文，允许为 null
+     * @param search 要查找的文本，允许为 null
+     * @return 包含时返回 true
+     */
+    public static boolean contains(String text, String search) {
+        if (text == null || search == null) {
+            return false;
+        }
+        return text.indexOf(search) >= 0;
+    }
+
+    /**
      * 比较两个字符串的内容是否相同。
      * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
      * 区分大小写，不去掉首尾空白。

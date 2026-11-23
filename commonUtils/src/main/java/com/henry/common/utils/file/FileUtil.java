@@ -64,6 +64,58 @@ public class FileUtil {
     }
 
     /**
+     * 替换路径或文件名最后一段扩展名。
+     * 扩展名判定与 {@link #getExtension(String)} 相同。只改文件名，目录分隔符原样保留。
+     * pathOrName 为 null、空串或只含空白时返回空串。其余文本不 trim。
+     * newExtension 为 null、空串或只含空白时去掉扩展名；本来就没有扩展名则返回原文本。
+     * newExtension 去掉开头的 {@code .} 后为空，也按去掉扩展名处理。非空白文本不 trim。
+     * 有扩展名时替换最后一个扩展名点之后的内容。没有扩展名时在末尾用一个点接上。
+     * 因此 {@code file.} 的末尾点不算扩展名，接上 {@code md} 得到 {@code file..md}。
+     * 不访问磁盘，也不解析 {@code .} 和 {@code ..}。
+     * 不修改 {@link #getExtension(String)}、{@link #hasExtension(String)} 和 {@link #getNameWithoutExtension(String)}。
+     *
+     * @param pathOrName   路径或文件名，允许为 null
+     * @param newExtension 新扩展名，允许为 null，可以带或不带前导点
+     * @return 替换后的路径；空白路径返回空串
+     */
+    public static String changeExtension(String pathOrName, String newExtension) {
+        if (StringUtil.isBlank(pathOrName)) {
+            return "";
+        }
+        String extension = stripLeadingDots(newExtension);
+        String name = getName(pathOrName);
+        int dot = extensionDot(name);
+        int nameStart = pathOrName.length() - name.length();
+        if (extension == null) {
+            if (dot < 0) {
+                return pathOrName;
+            }
+            return pathOrName.substring(0, nameStart + dot);
+        }
+        if (dot < 0) {
+            return pathOrName + "." + extension;
+        }
+        return pathOrName.substring(0, nameStart + dot + 1) + extension;
+    }
+
+    private static String stripLeadingDots(String extension) {
+        if (StringUtil.isBlank(extension)) {
+            return null;
+        }
+        int start = 0;
+        while (start < extension.length() && extension.charAt(start) == '.') {
+            start++;
+        }
+        if (start == extension.length()) {
+            return null;
+        }
+        if (start == 0) {
+            return extension;
+        }
+        return extension.substring(start);
+    }
+
+    /**
      * 判断是不是空的普通文件。
      * null、路径不存在，或普通文件长度为 0 时返回 true。
      * 目录返回 false，即使目录里没有子项。已存在但既不是文件也不是目录的路径也返回 false。

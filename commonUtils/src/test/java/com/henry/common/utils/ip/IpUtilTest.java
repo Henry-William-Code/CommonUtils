@@ -45,4 +45,23 @@ public class IpUtilTest {
     public void toLong_rejectsInvalidText() {
         IpUtil.toLong("01.2.3.4");
     }
+
+    @Test
+    public void fromLong_reversesToLongWithoutLeadingZeros() {
+        assertEquals("0.0.0.0", IpUtil.fromLong(0L));
+        assertEquals("255.255.255.255", IpUtil.fromLong(4294967295L));
+        assertEquals("127.0.0.1", IpUtil.fromLong(2130706433L));
+        assertEquals(3232235777L, IpUtil.toLong(IpUtil.fromLong(3232235777L)));
+        assertTrue(IpUtil.isIpv4("127.0.0.1"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void fromLong_rejectsNegative() {
+        IpUtil.fromLong(-1L);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void fromLong_rejectsAboveUnsigned32() {
+        IpUtil.fromLong(4294967296L);
+    }
 }

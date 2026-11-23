@@ -176,6 +176,21 @@ public class TimeUtil {
     }
 
     /**
+     * 计算两个毫秒时间戳相差的整周数。
+     * 一周按 7 天、每天 86400000 毫秒做整数除法，向 0 截断，不使用设备时区。
+     * endMillis 小于 startMillis 时结果为负数。
+     * 两个时间戳的差值无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #daysBetween(long, long)} 和 {@link #addWeeks(long, int)}。
+     *
+     * @param startMillis 开始时间，毫秒
+     * @param endMillis   结束时间，毫秒
+     * @return 相差的整周数
+     */
+    public static long weeksBetween(long startMillis, long endMillis) {
+        return divideElapsed(startMillis, endMillis, 7L * 86400000L);
+    }
+
+    /**
      * 计算两个毫秒时间戳的精确差值。
      * 结果是 endMillis 减 startMillis，不换算成秒，也不使用设备时区。
      * 差值无法用 long 表示时抛出 {@link ArithmeticException}。

@@ -67,4 +67,25 @@ public class BytesUtil {
         }
         return -1;
     }
+
+    /**
+     * 查找 byte 数组中最后一处等于 value 的下标。
+     * data 为 null 或没有匹配时返回 -1。不修改 data。
+     * 比较规则与 {@link #indexOf(byte[], byte)} 相同，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。
+     *
+     * @param data  允许为 null
+     * @param value 要查找的字节
+     * @return 最后一处匹配下标；未找到时返回 -1
+     */
+    public static int lastIndexOf(byte[] data, byte value) {
+        if (data == null) {
+            return -1;
+        }
+        for (int i = data.length - 1; i >= 0; i--) {
+            if (data[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -128,4 +128,17 @@ public class StringUtilTest {
         assertFalse(StringUtil.endsWith("abc ", "bc"));
         assertFalse(StringUtil.endsWith("abC", "bc"));
     }
+
+    @Test
+    public void contains_nullAndEmptySearch() {
+        assertFalse(StringUtil.contains(null, "a"));
+        assertFalse(StringUtil.contains("a", null));
+        assertFalse(StringUtil.contains(null, null));
+        assertTrue(StringUtil.contains("", ""));
+        assertTrue(StringUtil.contains("abc", ""));
+        assertTrue(StringUtil.contains("abc", "b"));
+        assertFalse(StringUtil.contains("abc", "B"));
+        assertFalse(StringUtil.contains("abc", " b"));
+        assertFalse(StringUtil.contains("ab c", "bc"));
+    }
 }

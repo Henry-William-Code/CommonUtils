@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -120,5 +121,21 @@ public class CollectionUtilTest {
         assertTrue(CollectionUtil.contains(Collections.singletonList(null), null));
         assertTrue(CollectionUtil.contains(Arrays.asList("a", "b"), "b"));
         assertFalse(CollectionUtil.contains(Arrays.asList("a", "b"), "c"));
+    }
+
+    @Test
+    public void containsKey_nullMapAndNullKeyFollowTheMap() {
+        assertFalse(CollectionUtil.containsKey(null, "a"));
+        assertFalse(CollectionUtil.containsKey(null, null));
+        Map<String, String> data = new HashMap<String, String>();
+        data.put(null, "null-key");
+        data.put("a", "b");
+        assertTrue(CollectionUtil.containsKey(data, null));
+        assertTrue(CollectionUtil.containsKey(data, "a"));
+        assertFalse(CollectionUtil.containsKey(data, "missing"));
+        Hashtable<String, String> table = new Hashtable<String, String>();
+        table.put("a", "b");
+        assertFalse(CollectionUtil.containsKey(table, null));
+        assertTrue(CollectionUtil.containsKey(table, "a"));
     }
 }

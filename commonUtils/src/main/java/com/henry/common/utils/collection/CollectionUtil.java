@@ -185,4 +185,29 @@ public class CollectionUtil {
         }
         return data.contains(value);
     }
+
+    /**
+     * 判断 Map 是否包含指定键。
+     * map 为 null 时返回 false。不修改 map。
+     * key 为 null 时交给 Map 自己判断：支持 null 键则返回真实结果；Map 因 null 键抛出 {@link NullPointerException} 时返回 false。
+     * key 不是 null 时不吞掉 Map 抛出的异常。
+     * 不修改 {@link #contains(java.util.Collection, Object)}。
+     *
+     * @param map 允许为 null
+     * @param key 允许为 null
+     * @return 包含该键时返回 true
+     */
+    public static boolean containsKey(Map<?, ?> map, Object key) {
+        if (map == null) {
+            return false;
+        }
+        try {
+            return map.containsKey(key);
+        } catch (NullPointerException ex) {
+            if (key == null) {
+                return false;
+            }
+            throw ex;
+        }
+    }
 }

@@ -137,4 +137,31 @@ public class ArrayUtil {
         }
         return -1;
     }
+
+    /**
+     * 拼接两个 int 数组，返回新数组。
+     * 任一侧为 null 时按空数组处理。不修改传入的数组。
+     * 两侧都是 null 时返回长度为 0 的新数组，不返回 null。
+     * 两段长度之和超出 int 时抛出 {@link IllegalArgumentException}。
+     * 不修改 {@link #isEmpty(int[])}。
+     *
+     * @param left  左段，允许为 null
+     * @param right 右段，允许为 null
+     * @return 新的拼接结果
+     */
+    public static int[] concat(int[] left, int[] right) {
+        int leftLength = left == null ? 0 : left.length;
+        int rightLength = right == null ? 0 : right.length;
+        if (leftLength > Integer.MAX_VALUE - rightLength) {
+            throw new IllegalArgumentException("concat length overflows");
+        }
+        int[] out = new int[leftLength + rightLength];
+        if (leftLength > 0) {
+            System.arraycopy(left, 0, out, 0, leftLength);
+        }
+        if (rightLength > 0) {
+            System.arraycopy(right, 0, out, leftLength, rightLength);
+        }
+        return out;
+    }
 }

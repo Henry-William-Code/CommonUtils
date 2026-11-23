@@ -43,4 +43,16 @@ public class BytesUtilTest {
         assertEquals(0, BytesUtil.indexOf(new byte[] {(byte) 0xff}, (byte) -1));
         assertArrayEquals(new byte[] {1, 2, 1}, data);
     }
+
+    @Test
+    public void lastIndexOf_returnsLastByteAndDoesNotMutate() {
+        assertEquals(-1, BytesUtil.lastIndexOf(null, (byte) 1));
+        assertEquals(-1, BytesUtil.lastIndexOf(new byte[0], (byte) 0));
+        byte[] data = new byte[] {1, 2, 1};
+        assertEquals(2, BytesUtil.lastIndexOf(data, (byte) 1));
+        assertEquals(0, BytesUtil.indexOf(data, (byte) 1));
+        assertEquals(-1, BytesUtil.lastIndexOf(data, (byte) 3));
+        assertEquals(0, BytesUtil.lastIndexOf(new byte[] {(byte) 0xff}, (byte) -1));
+        assertArrayEquals(new byte[] {1, 2, 1}, data);
+    }
 }
