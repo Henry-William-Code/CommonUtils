@@ -88,4 +88,18 @@ public class BytesUtil {
         }
         return -1;
     }
+
+    /**
+     * 判断 byte 数组是否包含指定字节。
+     * data 为 null 时返回 false。不修改 data。
+     * 比较的是 8 位值，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。
+     * 查找使用 {@link #indexOf(byte[], byte)}，不修改 {@link #indexOf(byte[], byte)} 和 {@link #lastIndexOf(byte[], byte)}。
+     *
+     * @param data  允许为 null
+     * @param value 要查找的字节
+     * @return 找到时返回 true
+     */
+    public static boolean contains(byte[] data, byte value) {
+        return indexOf(data, value) >= 0;
+    }
 }

@@ -164,4 +164,32 @@ public class ArrayUtil {
         }
         return out;
     }
+
+    /**
+     * 拼接两个对象数组，返回新的 {@code Object[]}。
+     * 任一侧为 null 时按空数组处理。两侧都是 null 时返回长度为 0 的新数组，不返回 null。
+     * 不修改传入的数组。长度之和超出 int 时抛出 {@link IllegalArgumentException}。
+     * 结果始终是 {@code Object[]}，不按元素的运行时类型再包装成 {@code String[]} 或其他数组类型。
+     * 两个参数都是 null 时，本方法与 {@link #concat(int[], int[])} 都匹配，调用处需要强制转换。
+     * 不修改 {@link #concat(int[], int[])}。
+     *
+     * @param left  左段，允许为 null
+     * @param right 右段，允许为 null
+     * @return 新的 Object[]
+     */
+    public static Object[] concat(Object[] left, Object[] right) {
+        int leftLength = left == null ? 0 : left.length;
+        int rightLength = right == null ? 0 : right.length;
+        if (leftLength > Integer.MAX_VALUE - rightLength) {
+            throw new IllegalArgumentException("concat length overflows");
+        }
+        Object[] out = new Object[leftLength + rightLength];
+        if (leftLength > 0) {
+            System.arraycopy(left, 0, out, 0, leftLength);
+        }
+        if (rightLength > 0) {
+            System.arraycopy(right, 0, out, leftLength, rightLength);
+        }
+        return out;
+    }
 }

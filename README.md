@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.8`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。
+工具按类组织。当前发布版本是 `1.0.8`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。最新 main 上还有尚未发布的 `XmlEscapeUtil` 和 `QueryStringUtil`，以及 `StringUtil`、`ArrayUtil`、`BytesUtil`、`CollectionUtil`、`NamingUtil`、`ConvertUtil`、`RegexUtil` 的新方法。这些只在最新 main 源码里，不能通过 JitPack `1.0.8` 调用。
 
 ## 版本说明
 
@@ -15,8 +15,9 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
 | 已发布 `1.0.7` | JitPack `CommonUtils:1.0.7` | 包含 `1.0.6` 的全部方法，以及「1.0.7 新增」一节 |
 | 已发布 `1.0.8` | JitPack `CommonUtils:1.0.8` | 包含 `1.0.7` 的全部方法，以及「1.0.8 新增」一节 |
+| main 上尚未发布 | 只在最新 main 源码里，不能用 JitPack `CommonUtils:1.0.8` | `XmlEscapeUtil`、`QueryStringUtil`，以及「main 上尚未发布」里的已有类新方法 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.8` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.8` 沿用该包结构，没有修改此前已发布方法的签名和返回值。最新 main 上的未发布改动也没有修改这些已发布方法的签名和返回值。
 
 ## 依赖 1.0.8
 
@@ -38,7 +39,7 @@ dependencies {
 }
 ```
 
-`1.0.8` 包含到「1.0.8 新增」为止的全部已发布方法。仍使用 `1.0.7` 的工程不能调用「1.0.8 新增」。
+`1.0.8` 包含到「1.0.8 新增」为止的全部已发布方法。仍使用 `1.0.7` 的工程不能调用「1.0.8 新增」。「main 上尚未发布」中的类和方法不在 `CommonUtils:1.0.8` 里，不能用这个坐标调用。
 
 ## 已发布 1.0.2 的工具类
 
@@ -2124,4 +2125,247 @@ FileUtil.changeExtension("a/b/c", null);     // "a/b/c"
 ```java
 TimeUtil.weeksBetween(0L, 604800000L); // 1
 TimeUtil.weeksBetween(0L, 604799999L); // 0
+```
+
+## main 上尚未发布
+
+下面的类和方法只在最新 main 源码里。已发布的 `1.0.8` 和 JitPack `com.github.Henry-William-Code:CommonUtils:1.0.8` 都不包含它们，不能通过这个坐标调用。已发布方法的签名和返回值没有改。
+
+这一节的目录：
+
+- 新类 `XmlEscapeUtil`：`escape`、`unescape`
+- 新类 `QueryStringUtil`：`parse`、`build`
+- `StringUtil.containsIgnoreCase`
+- `ArrayUtil.concat(Object[], Object[])`
+- `BytesUtil.contains`
+- `CollectionUtil.containsValue`
+- `NamingUtil.toKebabCase`
+- `ConvertUtil.isDouble`
+- `RegexUtil.split`
+
+### 新类 XmlEscapeUtil
+
+包名 `com.henry.common.utils.xml`。只处理 XML 1.0 的 5 个预定义实体和数字字符引用，不加外层标签或引号。规则与 `HtmlEscapeUtil`、`JsonEscapeUtil` 不同，不复用 HTML 转义。类不能实例化。`1.0.8` 没有这个类。
+
+#### `String escape(String text)`
+
+转义 `& < > " '`。
+
+- `text`：允许为 null。null 时返回空串。
+- 先转义 `&`，再转义 `<`、`>`、`"`、`'`，分别得到 `&amp;`、`&lt;`、`&gt;`、`&quot;`、`&apos;`。
+- 替换只作用在原文字符上，写出的实体不会被再次转义。因此 `&lt;` 得到 `&amp;lt;`。
+- 其余字符（包括非 ASCII）原样保留。没有这些字符时返回原字符串。不修改入参，也不加外层标签或引号。
+- 单引号写成 `&apos;`。`HtmlEscapeUtil.escape` 把单引号写成 `&#39;`，两者不同。
+
+```java
+XmlEscapeUtil.escape(null);          // ""
+XmlEscapeUtil.escape("a<b>&\"'");    // "a&lt;b&gt;&amp;&quot;&apos;"
+XmlEscapeUtil.escape("中文");        // "中文"
+XmlEscapeUtil.escape("'");           // "&apos;"
+```
+
+#### `String unescape(String text)`
+
+还原上述 5 个命名实体，以及十进制 `&#...;` 和十六进制 `&#x...;`。
+
+- `text`：允许为 null。null 时返回空串。没有 `&` 时返回原字符串。
+- 命名实体只接受 `amp`、`lt`、`gt`、`quot`、`apos`，区分大小写。`&AMP;`、`&nbsp;` 都抛出 `IllegalArgumentException`。
+- 十六进制引用的 `x` 必须是小写，所以 `&#X41;` 非法。十六进制数字本身不区分大小写，`&#x4A;` 和 `&#x4a;` 都是 `J`。允许前导零。
+- 数字引用接受 Unicode 标量值：U+0000 到 U+10FFFF，不包括代理项 U+D800 到 U+DFFF。U+0000 和非字符 U+FFFE 会保留。超出 U+10FFFF 的值拒绝。
+- 非法数字、空数字、未知命名实体、缺少分号或其他不完整引用抛出 `IllegalArgumentException`，不返回截断结果。
+- 只还原一层。`&amp;lt;` 得到 `&lt;`，不会再变成 `<`。
+- 对 `escape` 的结果，`unescape(escape(text))` 回到原文。text 为 null 时两边都是空串。
+- `HtmlEscapeUtil.unescape` 会原样留下 `&#60;` 和 `&nbsp;`。本方法把 `&#60;` 还原成 `<`，遇到 `&nbsp;` 则抛异常。
+
+```java
+XmlEscapeUtil.unescape("&amp;&lt;&gt;&quot;&apos;"); // "&<>\"'"
+XmlEscapeUtil.unescape("&amp;lt;");                 // "&lt;"
+XmlEscapeUtil.unescape("&#65;&#x41;");              // "AA"
+XmlEscapeUtil.unescape("&#x1F600;");                // "😀"
+XmlEscapeUtil.unescape(null);                       // ""
+XmlEscapeUtil.unescape(XmlEscapeUtil.escape("a<b>")); // "a<b>"
+```
+
+### 新类 QueryStringUtil
+
+包名 `com.henry.common.utils.query`。解析和拼接 `application/x-www-form-urlencoded` 查询串。编解码使用 `UrlCodecUtil`，因此是 UTF-8，空格与 `+` 按表单规则处理。入参是查询串，不是完整 URL，不会从 `http://...` 里抽取查询部分。类不能实例化。不修改 `UrlCodecUtil` 或 `WebUtil`。`1.0.8` 没有这个类。
+
+#### `Map<String, String> parse(String query)`
+
+把查询串解析成键值。
+
+- `query`：允许为 null。null、空串或只含 `?` 时返回新的空 `LinkedHashMap`。
+- 以 `?` 开头时只去掉开头的一个 `?`。`??a=1` 的键是 `?a`。中间的 `?` 留在键或值里，不会再按 URL 拆开。
+- 按 `&` 分段。空段（`&&`、首尾 `&`）跳过。
+- 没有 `=` 的段，值是空串。`=value` 的键是空串。一段里有多个 `=` 时，只按第一个分开，其余属于值。
+- 键和值都用 `UrlCodecUtil.decode` 解码，不去掉空白。`+` 解成空格。
+- 重复键保留最后一次的值，插入顺序以键首次出现为准。
+- 返回的 Map 可以修改。每次调用都是新的 `LinkedHashMap`，不是内部共享实例。
+- 解码失败时把 `UrlCodecUtil.decode` 的异常原样抛出，不返回已解析的部分。
+- `http://example.com?a=1` 会被当成一条查询，键是 `http://example.com?a`，值是 `1`。
+
+```java
+QueryStringUtil.parse(null);                         // 空 LinkedHashMap
+QueryStringUtil.parse("?b=1&a=2&b=3").get("b");      // "3"
+QueryStringUtil.parse("a+b=c+d").get("a b");         // "c d"
+QueryStringUtil.parse("a");                          // 键 "a"，值 ""
+QueryStringUtil.parse("a=%");                        // 抛出 IllegalArgumentException
+```
+
+#### `String build(Map<String, String> params)`
+
+按 Map 的迭代顺序拼接查询串。
+
+- `params`：允许为 null。null 或空 Map 返回空串。
+- 按迭代顺序输出 `key=value`，用 `&` 连接。始终包含 `=`，不加前导 `?`。
+- 跳过 null 键。null 值按空串。键和值都用 `UrlCodecUtil.encode` 编码。空格编成 `+`。
+- 不修改入参 Map。
+- 键不为 null、值也不为 null 时，`parse(build(params))` 得到相同的键和值。空 Map 得到空 Map。
+- null 值会变成空串，解析回来是空串，不是 null。
+
+```java
+Map<String, String> params = new LinkedHashMap<String, String>();
+params.put("a b", "c&d");
+params.put("q", "你");
+QueryStringUtil.build(params); // "a+b=c%26d&q=%E4%BD%A0"
+QueryStringUtil.parse(QueryStringUtil.build(params)); // 与 params 的键值相同
+QueryStringUtil.build(null); // ""
+```
+
+### StringUtil 新增
+
+已有的 `contains` 没有变化，仍然区分大小写。
+
+#### `boolean containsIgnoreCase(String text, String search)`
+
+判断文本是否包含另一段文本，只忽略 ASCII 大小写。
+
+- `text` 或 `search` 为 null 时返回 false。
+- `search` 为空串且 `text` 不是 null 时返回 true，包括 `text` 也是空串。
+- 只把 `A-Z` 看成与 `a-z` 相同，不处理 Unicode 大小写。`İ` 不等于 `i`，`Ω` 不等于 `ω`。
+- 不 trim。`abc` 不包含 ` b`。
+
+```java
+StringUtil.containsIgnoreCase("AbC", "bc"); // true
+StringUtil.containsIgnoreCase("abc", "B");  // true
+StringUtil.containsIgnoreCase(null, "a");   // false
+StringUtil.containsIgnoreCase("abc", "");   // true
+StringUtil.contains("abc", "B");            // false
+```
+
+### ArrayUtil 新增
+
+已有的 `concat(int[], int[])` 没有变化。
+
+#### `Object[] concat(Object[] left, Object[] right)`
+
+拼接两个对象数组，返回新的 `Object[]`。
+
+- 任一侧为 null 时按空数组处理。两侧都是 null 时返回长度为 0 的新数组，不返回 null。
+- 不修改传入的数组。长度之和超出 int 时抛出 `IllegalArgumentException`。
+- 结果始终是 `Object[]`。两个 `String[]` 拼出来也不是 `String[]`。
+- `concat(null, null)` 同时匹配本方法和已有的 `concat(int[], int[])`，调用时要强制转换。`ArrayUtil.concat((Object[]) null, (Object[]) null)` 走本方法。
+
+```java
+Object[] joined = ArrayUtil.concat(new String[] {"a"}, new String[] {"b"});
+// joined 的运行时类型是 Object[]，内容是 a、b
+ArrayUtil.concat((Object[]) null, (Object[]) null); // 长度为 0 的新 Object[]
+```
+
+### BytesUtil 新增
+
+已有的 `indexOf` 和 `lastIndexOf` 没有变化。
+
+#### `boolean contains(byte[] data, byte value)`
+
+判断 byte 数组是否包含指定字节。
+
+- `data` 为 null 时返回 false。不修改 `data`。
+- 比较的是 8 位值，`(byte) 0xff` 与 `(byte) -1` 相同。
+- 查找使用已有的 `indexOf`。
+
+```java
+BytesUtil.contains(null, (byte) 1);                         // false
+BytesUtil.contains(new byte[] {(byte) 0xff}, (byte) -1);    // true
+```
+
+### CollectionUtil 新增
+
+已有的 `containsKey` 没有变化。
+
+#### `boolean containsValue(Map<?, ?> map, Object value)`
+
+判断 Map 是否包含指定值。
+
+- `map` 为 null 时返回 false。不修改 map。
+- `value` 为 null 时交给 Map 自己判断。支持 null 值则返回真实结果；Map 因不支持 null 值而抛出 `NullPointerException` 时返回 false。
+- `value` 不是 null 时不吞掉 Map 的异常。`value` 为 null 时也只吞掉 `NullPointerException`，其他异常仍向外抛出。
+
+```java
+CollectionUtil.containsValue(null, "a"); // false
+```
+
+### NamingUtil 新增
+
+已有的 `toSnakeCase` 和 `toCamelCase` 没有变化。
+
+#### `String toKebabCase(String text)`
+
+把标识符转成小写连字符形式。分段规则与 `toSnakeCase` 完全相同，只用 `-` 连接。
+
+- `HelloWorld` 和 `helloWorld` 得到 `hello-world`。
+- `XMLParser` 得到 `xmlparser`。`getHTTPResponse` 得到 `get-httpresponse`。
+- 连字符、下划线和空白都是分隔符。连续分隔符合并为一个 `-`，并去掉首尾分隔符。
+- `text` 为 null，或去掉分隔后没有内容时返回空串。只把 `A-Z` 转成小写。
+
+```java
+NamingUtil.toKebabCase("HelloWorld");      // "hello-world"
+NamingUtil.toKebabCase("helloWorld");      // "hello-world"
+NamingUtil.toKebabCase("XMLParser");       // "xmlparser"
+NamingUtil.toKebabCase("getHTTPResponse"); // "get-httpresponse"
+NamingUtil.toKebabCase(null);              // ""
+NamingUtil.toSnakeCase("HelloWorld");      // "hello_world"
+```
+
+### ConvertUtil 新增
+
+已有的 `parseDouble`、`isInt` 和 `isLong` 没有变化。
+
+#### `boolean isDouble(String text)`
+
+判断文本能否按 `parseDouble(String, double)` 的规则解析成有限 double。
+
+- null、空白、非法格式、NaN 或无穷大时返回 false，不抛异常。
+- 去掉首尾空白。允许 ASCII 正负号、小数点和标准十进制指数，例如 `1.5e2`。
+- 不接受千分位、全角数字、逗号小数或十六进制浮点。
+- 下溢成 0 的有限结果返回 true。返回值不依赖默认值。
+- `1.5` 在这里返回 true，`isInt("1.5")` 和 `isLong("1.5")` 仍然返回 false。
+
+```java
+ConvertUtil.isDouble(" 1.5e2 "); // true
+ConvertUtil.isDouble("1e-400");  // true
+ConvertUtil.isDouble("NaN");     // false
+ConvertUtil.isDouble("1e309");   // false
+ConvertUtil.isDouble(null);      // false
+ConvertUtil.parseDouble("NaN", 9); // 9
+```
+
+### RegexUtil 新增
+
+已有的 `matches`、`findFirst`、`replaceFirst` 和 `replaceAll` 没有变化。
+
+#### `String[] split(String text, String regex)`
+
+按正则拆分，保留尾部空段。语义与 `String.split(regex, -1)` 相同。
+
+- `text` 或 `regex` 为 null 时返回 null，不编译正则。这与 `findFirst`、`replaceAll` 对 null 的处理一致。
+- 空正则是合法模式，与 `matches` 一样交给 `Pattern` 处理。`abc` 按空正则拆分得到 `a`、`b`、`c` 和尾部空串。
+- 正则语法错误时抛出 `PatternSyntaxException`。`text` 为 null 时即使正则非法也不编译、不抛异常。
+- `String.split(String)` 默认会丢掉尾部空段。本方法保留它们，所以 `a,` 按逗号拆分得到 `a` 和空串。
+
+```java
+RegexUtil.split("a,,b,", ","); // {"a", "", "b", ""}
+RegexUtil.split("a,", ",");    // {"a", ""}
+RegexUtil.split(null, ",");    // null
+RegexUtil.split("abc", "[");   // 抛出 PatternSyntaxException
 ```

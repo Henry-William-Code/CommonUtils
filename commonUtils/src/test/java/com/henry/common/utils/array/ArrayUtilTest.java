@@ -73,7 +73,7 @@ public class ArrayUtilTest {
 
     @Test
     public void concat_intArrayTreatsNullAsEmptyAndDoesNotMutate() {
-        assertEquals(0, ArrayUtil.concat(null, null).length);
+        assertEquals(0, ArrayUtil.concat((int[]) null, (int[]) null).length);
         int[] left = new int[] {1, 2};
         int[] right = new int[] {3};
         int[] joined = ArrayUtil.concat(left, right);
@@ -86,5 +86,27 @@ public class ArrayUtilTest {
         assertEquals(3, right[0]);
         assertEquals(1, ArrayUtil.concat(new int[] {1}, null)[0]);
         assertEquals(2, ArrayUtil.concat(null, new int[] {2})[0]);
+    }
+
+    @Test
+    public void concat_objectArrayAlwaysReturnsObjectArray() {
+        assertEquals(0, ArrayUtil.concat((Object[]) null, (Object[]) null).length);
+        assertEquals(Object[].class, ArrayUtil.concat((Object[]) null, (Object[]) null).getClass());
+        Object[] empty = new Object[0];
+        Object[] joinedEmpty = ArrayUtil.concat(empty, null);
+        assertTrue(joinedEmpty != empty);
+        assertEquals(0, joinedEmpty.length);
+        String[] left = new String[] {"a", null};
+        Integer[] right = new Integer[] {1};
+        Object[] joined = ArrayUtil.concat(left, right);
+        assertEquals(Object[].class, joined.getClass());
+        assertEquals("a", joined[0]);
+        assertEquals(null, joined[1]);
+        assertEquals(1, joined[2]);
+        joined[0] = "changed";
+        assertEquals("a", left[0]);
+        assertEquals(Integer.valueOf(1), right[0]);
+        assertEquals(3, ArrayUtil.concat(new int[] {1, 2}, new int[] {3}).length);
+        assertEquals(int[].class, ArrayUtil.concat(new int[] {1}, null).getClass());
     }
 }

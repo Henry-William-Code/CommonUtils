@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.regex.PatternSyntaxException;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -71,5 +72,33 @@ public class RegexUtilTest {
     @Test(expected = IllegalArgumentException.class)
     public void replaceAll_rejectsIllegalReplacement() {
         RegexUtil.replaceAll("a", "a", "$");
+    }
+
+    @Test
+    public void split_keepsTrailingEmptyAndTreatsNullLikeOtherLookups() {
+        assertNull(RegexUtil.split(null, ","));
+        assertNull(RegexUtil.split("a", null));
+        assertNull(RegexUtil.split(null, null));
+        assertNull(RegexUtil.split(null, "["));
+        assertArrayEquals(new String[] {""}, RegexUtil.split("", ","));
+        assertArrayEquals(new String[] {""}, RegexUtil.split("", ""));
+        assertArrayEquals(new String[] {"a", "", "b", ""}, RegexUtil.split("a,,b,", ","));
+        assertArrayEquals(new String[] {"a", ""}, RegexUtil.split("a,", ","));
+        assertArrayEquals(new String[] {"a"}, "a,".split(","));
+        assertArrayEquals(new String[] {"", "a"}, RegexUtil.split(",a", ","));
+        assertArrayEquals(new String[] {"", "", "", ""}, RegexUtil.split(",,,", ","));
+        assertArrayEquals(new String[] {"abc"}, RegexUtil.split("abc", "z"));
+        assertArrayEquals(new String[] {"a", "b", "c", ""}, RegexUtil.split("abc", ""));
+        assertArrayEquals(new String[] {"", "a", ""}, RegexUtil.split("你a你", "你"));
+        assertArrayEquals(new String[] {"", "", "", ""}, RegexUtil.split("aaa", "a"));
+        assertArrayEquals("a1b2".split("\\d", -1), RegexUtil.split("a1b2", "\\d"));
+        assertTrue(RegexUtil.matches("abc", "a.c"));
+        assertEquals("", RegexUtil.findFirst("abc", ""));
+        assertEquals("xbcxbc", RegexUtil.replaceAll("abcabc", "a", "x"));
+    }
+
+    @Test(expected = PatternSyntaxException.class)
+    public void split_rejectsIllegalPattern() {
+        RegexUtil.split("abc", "[");
     }
 }

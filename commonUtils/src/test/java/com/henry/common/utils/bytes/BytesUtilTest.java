@@ -55,4 +55,18 @@ public class BytesUtilTest {
         assertEquals(0, BytesUtil.lastIndexOf(new byte[] {(byte) 0xff}, (byte) -1));
         assertArrayEquals(new byte[] {1, 2, 1}, data);
     }
+
+    @Test
+    public void contains_usesByteEqualityAndDoesNotChangeIndexOf() {
+        assertFalse(BytesUtil.contains(null, (byte) 1));
+        assertFalse(BytesUtil.contains(new byte[0], (byte) 0));
+        byte[] data = new byte[] {1, 2, 1};
+        assertTrue(BytesUtil.contains(data, (byte) 2));
+        assertFalse(BytesUtil.contains(data, (byte) 3));
+        assertTrue(BytesUtil.contains(new byte[] {(byte) 0xff}, (byte) -1));
+        assertTrue(BytesUtil.contains(new byte[] {(byte) -1}, (byte) 0xff));
+        assertEquals(1, BytesUtil.indexOf(data, (byte) 2));
+        assertEquals(2, BytesUtil.lastIndexOf(data, (byte) 1));
+        assertArrayEquals(new byte[] {1, 2, 1}, data);
+    }
 }

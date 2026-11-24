@@ -88,4 +88,24 @@ public class RegexUtil {
         }
         return Pattern.compile(regex).matcher(text).replaceAll(replacement);
     }
+
+    /**
+     * 按正则拆分文本，保留尾部空段。语义与 {@code String.split(regex, -1)} 相同。
+     * text 或 regex 为 null 时返回 null，不编译正则。这与 {@link #findFirst(String, String)}、
+     * {@link #replaceAll(String, String, String)} 对 null 的处理一致。
+     * 空正则是合法模式，与 {@link #matches(String, String)} 一样交给 {@link Pattern} 处理。
+     * 正则语法错误时抛出 {@link PatternSyntaxException}。
+     * {@code String.split(String)} 默认会丢掉尾部空段；本方法使用 limit 为 -1，因此 {@code "a,"} 按逗号拆开会得到 {@code "a"} 和空串。
+     * 不修改已有的正则方法。
+     *
+     * @param text  待拆分文本，允许为 null
+     * @param regex 正则，允许为 null
+     * @return 拆分结果，包含尾部空段；任一参数为 null 时返回 null
+     */
+    public static String[] split(String text, String regex) {
+        if (text == null || regex == null) {
+            return null;
+        }
+        return Pattern.compile(regex).split(text, -1);
+    }
 }

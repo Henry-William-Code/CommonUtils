@@ -166,6 +166,33 @@ public class ConvertUtil {
     }
 
     /**
+     * 判断文本能否按 {@link #parseDouble(String, double)} 的规则解析成有限 double。
+     * null、空白、非法格式、NaN 或无穷大时返回 false，不抛异常。
+     * 去掉首尾空白。允许 ASCII 正负号、小数点和标准十进制指数。
+     * 不接受千分位、全角数字、逗号小数或十六进制浮点。
+     * 下溢成 0 的有限结果返回 true。返回值不依赖默认值。
+     * 不修改 {@link #parseDouble(String, double)}、{@link #isInt(String)} 和 {@link #isLong(String)}。
+     *
+     * @param text 十进制文本，允许为 null
+     * @return 能解析成有限 double 时返回 true
+     */
+    public static boolean isDouble(String text) {
+        if (StringUtil.isBlank(text)) {
+            return false;
+        }
+        String trimmed = trimWhitespace(text);
+        if (trimmed.length() == 0 || isRejectedFloatText(trimmed)) {
+            return false;
+        }
+        try {
+            double value = Double.parseDouble(trimmed);
+            return !Double.isNaN(value) && !Double.isInfinite(value);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    /**
      * @return 解析成功时返回对应 long；空白、格式错误或溢出时返回 null
      */
     private static Long parseDecimal(String text) {

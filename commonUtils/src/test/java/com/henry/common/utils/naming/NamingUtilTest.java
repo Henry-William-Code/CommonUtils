@@ -41,4 +41,32 @@ public class NamingUtilTest {
         assertEquals("hello", NamingUtil.toCamelCase("_Hello_"));
         assertEquals("hello2world", NamingUtil.toCamelCase("hello_2world"));
     }
+
+    @Test
+    public void toKebabCase_usesSnakeSegmentsWithHyphen() {
+        assertEquals("", NamingUtil.toKebabCase(null));
+        assertEquals("", NamingUtil.toKebabCase(""));
+        assertEquals("", NamingUtil.toKebabCase("---"));
+        assertEquals("", NamingUtil.toKebabCase(" _- "));
+        assertEquals("hello-world", NamingUtil.toKebabCase("HelloWorld"));
+        assertEquals("hello-world", NamingUtil.toKebabCase("helloWorld"));
+        assertEquals("hello-world", NamingUtil.toKebabCase("hello_world"));
+        assertEquals("hello-world", NamingUtil.toKebabCase("hello-world"));
+        assertEquals("hello-world", NamingUtil.toKebabCase("hello world"));
+        assertEquals("hello-world", NamingUtil.toKebabCase("__hello__world__"));
+        assertEquals("xmlparser", NamingUtil.toKebabCase("XMLParser"));
+        assertEquals("get-httpresponse", NamingUtil.toKebabCase("getHTTPResponse"));
+        assertEquals("hello2-world", NamingUtil.toKebabCase("hello2World"));
+        assertEquals("a1-b", NamingUtil.toKebabCase("A1B"));
+        String[] samples = new String[] {
+                null, "", "HelloWorld", "helloWorld", "XMLParser", "getHTTPResponse",
+                "hello-world", "__hello__world__", "  Hello  World  ", "A1B"
+        };
+        for (int i = 0; i < samples.length; i++) {
+            String snake = NamingUtil.toSnakeCase(samples[i]);
+            assertEquals(snake.replace('_', '-'), NamingUtil.toKebabCase(samples[i]));
+        }
+        assertEquals("hello_world", NamingUtil.toSnakeCase("HelloWorld"));
+        assertEquals("helloWorld", NamingUtil.toCamelCase("hello-world"));
+    }
 }

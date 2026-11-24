@@ -210,4 +210,29 @@ public class CollectionUtil {
             throw ex;
         }
     }
+
+    /**
+     * 判断 Map 是否包含指定值。
+     * map 为 null 时返回 false。不修改 map。
+     * value 为 null 时交给 Map 自己判断：支持 null 值则返回真实结果；Map 因 null 值抛出 {@link NullPointerException} 时返回 false。
+     * value 不是 null 时不吞掉 Map 抛出的异常。value 为 null 时也只吞掉 {@link NullPointerException}，其他异常仍向外抛出。
+     * 不修改 {@link #containsKey(Map, Object)}。
+     *
+     * @param map   允许为 null
+     * @param value 允许为 null
+     * @return 包含该值时返回 true
+     */
+    public static boolean containsValue(Map<?, ?> map, Object value) {
+        if (map == null) {
+            return false;
+        }
+        try {
+            return map.containsValue(value);
+        } catch (NullPointerException ex) {
+            if (value == null) {
+                return false;
+            }
+            throw ex;
+        }
+    }
 }

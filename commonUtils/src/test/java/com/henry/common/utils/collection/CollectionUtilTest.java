@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class CollectionUtilTest {
 
@@ -137,5 +138,51 @@ public class CollectionUtilTest {
         table.put("a", "b");
         assertFalse(CollectionUtil.containsKey(table, null));
         assertTrue(CollectionUtil.containsKey(table, "a"));
+    }
+
+    @Test
+    public void containsValue_nullMapAndNullValueFollowTheMap() {
+        assertFalse(CollectionUtil.containsValue(null, "a"));
+        assertFalse(CollectionUtil.containsValue(null, null));
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("a", null);
+        data.put("b", "kept");
+        assertTrue(CollectionUtil.containsValue(data, null));
+        assertTrue(CollectionUtil.containsValue(data, "kept"));
+        assertFalse(CollectionUtil.containsValue(data, "missing"));
+        assertEquals("kept", data.get("b"));
+        assertTrue(CollectionUtil.containsKey(data, "a"));
+        Hashtable<String, String> table = new Hashtable<String, String>();
+        table.put("a", "b");
+        assertFalse(CollectionUtil.containsValue(table, null));
+        assertTrue(CollectionUtil.containsValue(table, "b"));
+        assertEquals("b", table.get("a"));
+        Map<String, String> npe = new HashMap<String, String>() {
+            @Override
+            public boolean containsValue(Object value) {
+                throw new NullPointerException("nope");
+            }
+        };
+        npe.put("a", "b");
+        assertFalse(CollectionUtil.containsValue(npe, null));
+        try {
+            CollectionUtil.containsValue(npe, "b");
+            fail("non-null value should propagate NullPointerException");
+        } catch (NullPointerException expected) {
+            assertEquals("nope", expected.getMessage());
+        }
+        assertEquals("b", npe.get("a"));
+        Map<String, String> boom = new HashMap<String, String>() {
+            @Override
+            public boolean containsValue(Object value) {
+                throw new IllegalStateException("boom");
+            }
+        };
+        try {
+            CollectionUtil.containsValue(boom, null);
+            fail("null value should not swallow IllegalStateException");
+        } catch (IllegalStateException expected) {
+            assertEquals("boom", expected.getMessage());
+        }
     }
 }

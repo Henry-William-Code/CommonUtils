@@ -137,4 +137,41 @@ public class ConvertUtilTest {
         assertFalse(ConvertUtil.isLong("0x10"));
         assertFalse(ConvertUtil.isLong("+"));
     }
+
+    @Test
+    public void isDouble_matchesParseDoubleRulesWithoutDefault() {
+        assertFalse(ConvertUtil.isDouble(null));
+        assertFalse(ConvertUtil.isDouble(""));
+        assertFalse(ConvertUtil.isDouble(" \t"));
+        assertTrue(ConvertUtil.isDouble("  +12\t"));
+        assertTrue(ConvertUtil.isDouble("-12"));
+        assertTrue(ConvertUtil.isDouble("12.5"));
+        assertTrue(ConvertUtil.isDouble(" +1.25 "));
+        assertTrue(ConvertUtil.isDouble("-.5"));
+        assertTrue(ConvertUtil.isDouble("1.5e2"));
+        assertTrue(ConvertUtil.isDouble("1.5E-2"));
+        assertTrue(ConvertUtil.isDouble("1e+2"));
+        assertTrue(ConvertUtil.isDouble("  -0.0 "));
+        assertTrue(ConvertUtil.isDouble("1e-400"));
+        assertFalse(ConvertUtil.isDouble("NaN"));
+        assertFalse(ConvertUtil.isDouble("+Infinity"));
+        assertFalse(ConvertUtil.isDouble("-infinity"));
+        assertFalse(ConvertUtil.isDouble("Infinity"));
+        assertFalse(ConvertUtil.isDouble("1e309"));
+        assertFalse(ConvertUtil.isDouble("1,5"));
+        assertFalse(ConvertUtil.isDouble("1,000"));
+        assertFalse(ConvertUtil.isDouble("1.2.3"));
+        assertFalse(ConvertUtil.isDouble("0x1.0p1"));
+        assertFalse(ConvertUtil.isDouble("１.５"));
+        assertFalse(ConvertUtil.isDouble("1 .5"));
+        assertFalse(ConvertUtil.isDouble("."));
+        assertFalse(ConvertUtil.isDouble("+"));
+        assertFalse(ConvertUtil.isDouble("1e"));
+        assertFalse(ConvertUtil.isInt("1.5"));
+        assertFalse(ConvertUtil.isLong("1.5"));
+        assertTrue(ConvertUtil.isDouble("1.5"));
+        assertEquals(9, ConvertUtil.parseDouble("NaN", 9), 0);
+        assertEquals(150, ConvertUtil.parseDouble("1.5e2", -1), 0);
+        assertEquals(0, ConvertUtil.parseDouble("1e-400", 9), 0);
+    }
 }

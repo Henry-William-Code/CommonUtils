@@ -59,6 +59,33 @@ public class NamingUtil {
         return out.toString();
     }
 
+    /**
+     * 把标识符转成小写连字符形式。
+     * 分段规则与 {@link #toSnakeCase(String)} 完全相同，只是用 {@code -} 连接。
+     * {@code HelloWorld} 和 {@code helloWorld} 得到 {@code hello-world}。
+     * 连字符、下划线和空白都是分隔符。连续分隔符合并为一个 {@code -}，并去掉首尾分隔符。
+     * 连续大写留在同一段，例如 {@code XMLParser} 得到 {@code xmlparser}，{@code getHTTPResponse} 得到 {@code get-httpresponse}。
+     * null，或去掉分隔后没有内容时返回空串。只把 {@code A-Z} 转成小写。
+     * 不修改 {@link #toSnakeCase(String)} 和 {@link #toCamelCase(String)}。
+     *
+     * @param text 标识符，允许为 null
+     * @return 小写连字符形式；没有内容时返回空串
+     */
+    public static String toKebabCase(String text) {
+        String[] parts = split(text);
+        if (parts.length == 0) {
+            return "";
+        }
+        StringBuilder out = new StringBuilder(text.length() + parts.length);
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) {
+                out.append('-');
+            }
+            appendLower(out, parts[i]);
+        }
+        return out.toString();
+    }
+
     private static String[] split(String text) {
         if (text == null || text.length() == 0) {
             return new String[0];

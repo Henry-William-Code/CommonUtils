@@ -133,6 +133,33 @@ public class StringUtil {
     }
 
     /**
+     * 判断 text 是否包含 search，只忽略 ASCII 大小写。
+     * text 或 search 为 null 时返回 false。search 为空串且 text 不是 null 时返回 true，包括 text 也是空串。
+     * 只把 {@code A-Z} 看成与 {@code a-z} 相同，不处理 Unicode 大小写，也不去掉空白。
+     * 已有的 {@link #contains(String, String)} 仍然区分大小写。
+     *
+     * @param text   原文，允许为 null
+     * @param search 要查找的文本，允许为 null
+     * @return 忽略 ASCII 大小写后包含时返回 true
+     */
+    public static boolean containsIgnoreCase(String text, String search) {
+        if (text == null || search == null) {
+            return false;
+        }
+        int window = search.length();
+        if (window == 0) {
+            return true;
+        }
+        int limit = text.length() - window;
+        for (int i = 0; i <= limit; i++) {
+            if (regionEqualsAsciiIgnoreCase(text, i, search)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 比较两个字符串的内容是否相同。
      * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
      * 区分大小写，不去掉首尾空白。
@@ -253,6 +280,23 @@ public class StringUtil {
             }
         }
         return builder.toString();
+    }
+
+    private static boolean regionEqualsAsciiIgnoreCase(String text, int offset, String search) {
+        for (int i = 0; i < search.length(); i++) {
+            char first = text.charAt(offset + i);
+            char second = search.charAt(i);
+            if (first >= 'A' && first <= 'Z') {
+                first = (char) (first + ('a' - 'A'));
+            }
+            if (second >= 'A' && second <= 'Z') {
+                second = (char) (second + ('a' - 'A'));
+            }
+            if (first != second) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
