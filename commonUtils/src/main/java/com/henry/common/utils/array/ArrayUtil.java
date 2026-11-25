@@ -192,4 +192,29 @@ public class ArrayUtil {
         }
         return out;
     }
+
+    /**
+     * 返回 int 数组的一段，结果是新数组。
+     * data 为 null 时返回 null。不修改 data。
+     * 要求 {@code 0 <= startInclusive <= endExclusive <= data.length}，否则抛出 {@link IndexOutOfBoundsException}。
+     * 起止相等时返回长度为 0 的新数组。endExclusive 超过长度时不补 0。
+     *
+     * @param data           原数组，允许为 null
+     * @param startInclusive 起始下标，包含
+     * @param endExclusive   结束下标，不包含
+     * @return 新数组；data 为 null 时返回 null
+     */
+    public static int[] subarray(int[] data, int startInclusive, int endExclusive) {
+        if (data == null) {
+            return null;
+        }
+        if (startInclusive < 0 || endExclusive < startInclusive || endExclusive > data.length) {
+            throw new IndexOutOfBoundsException("subarray range is invalid");
+        }
+        int[] out = new int[endExclusive - startInclusive];
+        if (out.length > 0) {
+            System.arraycopy(data, startInclusive, out, 0, out.length);
+        }
+        return out;
+    }
 }

@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.8`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。最新 main 上还有尚未发布的 `XmlEscapeUtil` 和 `QueryStringUtil`，以及 `StringUtil`、`ArrayUtil`、`BytesUtil`、`CollectionUtil`、`NamingUtil`、`ConvertUtil`、`RegexUtil` 的新方法。这些只在最新 main 源码里，不能通过 JitPack `1.0.8` 调用。
+工具按类组织。当前发布版本是 `1.0.9`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。`1.0.9` 增加 `XmlEscapeUtil`、`QueryStringUtil`、`CsvUtil` 和 `ByteSizeUtil`，并给已有类追加了方法。
 
 ## 版本说明
 
@@ -15,11 +15,11 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.6` | JitPack `CommonUtils:1.0.6` | 包含 `1.0.5` 的全部方法，以及「1.0.6 新增」一节 |
 | 已发布 `1.0.7` | JitPack `CommonUtils:1.0.7` | 包含 `1.0.6` 的全部方法，以及「1.0.7 新增」一节 |
 | 已发布 `1.0.8` | JitPack `CommonUtils:1.0.8` | 包含 `1.0.7` 的全部方法，以及「1.0.8 新增」一节 |
-| main 上尚未发布 | 只在最新 main 源码里，不能用 JitPack `CommonUtils:1.0.8` | `XmlEscapeUtil`、`QueryStringUtil`，以及「main 上尚未发布」里的已有类新方法 |
+| 已发布 `1.0.9` | JitPack `CommonUtils:1.0.9` | 包含 `1.0.8` 的全部方法，以及「1.0.9 新增」一节 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.8` 沿用该包结构，没有修改此前已发布方法的签名和返回值。最新 main 上的未发布改动也没有修改这些已发布方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.9` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
-## 依赖 1.0.8
+## 依赖 1.0.9
 
 在工程的 `build.gradle` 中加入：
 
@@ -35,11 +35,11 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.8'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.9'
 }
 ```
 
-`1.0.8` 包含到「1.0.8 新增」为止的全部已发布方法。仍使用 `1.0.7` 的工程不能调用「1.0.8 新增」。「main 上尚未发布」中的类和方法不在 `CommonUtils:1.0.8` 里，不能用这个坐标调用。
+`1.0.9` 包含到「1.0.9 新增」为止的全部已发布方法。仍使用 `1.0.8` 的工程不能调用「1.0.9 新增」。
 
 ## 已发布 1.0.2 的工具类
 
@@ -2127,9 +2127,9 @@ TimeUtil.weeksBetween(0L, 604800000L); // 1
 TimeUtil.weeksBetween(0L, 604799999L); // 0
 ```
 
-## main 上尚未发布
+## 1.0.9 新增
 
-下面的类和方法只在最新 main 源码里。已发布的 `1.0.8` 和 JitPack `com.github.Henry-William-Code:CommonUtils:1.0.8` 都不包含它们，不能通过这个坐标调用。已发布方法的签名和返回值没有改。
+下面的类和方法从 `1.0.9` 起可以通过 JitPack 使用。`1.0.8` 没有它们，不能通过 `CommonUtils:1.0.8` 调用。`1.0.8` 已有方法的签名和返回值没有改。
 
 这一节的目录：
 
@@ -2142,6 +2142,15 @@ TimeUtil.weeksBetween(0L, 604799999L); // 0
 - `NamingUtil.toKebabCase`
 - `ConvertUtil.isDouble`
 - `RegexUtil.split`
+- 新类 `CsvUtil`：`joinLine`、`splitLine`
+- 新类 `ByteSizeUtil`：`format`、`parse`
+- `StringUtil.startsWithIgnoreCase`
+- `ArrayUtil.subarray`
+- `BytesUtil.startsWith`
+- `CollectionUtil.firstOrDefault`
+- `FileUtil.hasExtension(String, String)`
+- `TimeUtil.startOfUtcHour`
+- `IpUtil.isLoopback`
 
 ### 新类 XmlEscapeUtil
 
@@ -2368,4 +2377,204 @@ RegexUtil.split("a,,b,", ","); // {"a", "", "b", ""}
 RegexUtil.split("a,", ",");    // {"a", ""}
 RegexUtil.split(null, ",");    // null
 RegexUtil.split("abc", "[");   // 抛出 PatternSyntaxException
+```
+
+### 新类 CsvUtil
+
+包名 `com.henry.common.utils.csv`。处理单行 CSV 记录，分隔符是逗号，引号是 `"`。不加文件级元数据，也不加 BOM。类不能实例化。`1.0.8` 没有这个类。
+
+#### `String joinLine(String... fields)`
+
+把字段转义后用逗号连接，不加前后换行。
+
+- `fields` 为 null 或长度为 0 时返回 `""`。单个字段为 null 时按空字段处理。
+- 字段里出现逗号、双引号、`\r` 或 `\n` 时用双引号包裹，内部的 `"` 写成 `""`。其他字段原样输出，不 trim。
+- 全部字段都非 null 时，`splitLine(joinLine(fields))` 得到相同内容。空记录有一个歧义：`joinLine()` 和 `joinLine("")` 都输出 `""`，而 `splitLine("")` 一律得到 `[""]`。
+
+```java
+CsvUtil.joinLine("a", "b");          // "a,b"
+CsvUtil.joinLine("a,b");             // "\"a,b\""
+CsvUtil.joinLine("say \"hi\"");      // "\"say \"\"hi\"\"\""
+CsvUtil.joinLine();                   // ""
+```
+
+#### `String[] splitLine(String line)`
+
+解析一条记录，返回新数组。
+
+- `line` 为 null 时返回长度为 0 的新数组。
+- 末尾恰好是 `\r\n`、`\n` 或 `\r` 时，只去掉这一个记录结束符，不再 trim 其他空白。
+- `""`，以及去掉结束符后变成空串的文本，解析为 `[""]`。
+- 引号字段内的逗号、换行，以及 `""` 表示的字面 `"`，都属于字段内容。未加引号字段两侧的空格保留。
+- 未闭合引号、未加引号字段中出现单独 `"`、关闭引号之后在逗号或结尾之前还有内容，都抛出 `IllegalArgumentException`，不返回截断结果。
+
+```java
+CsvUtil.splitLine("a,b\r\n");     // {"a", "b"}
+CsvUtil.splitLine("\"a,b\"");     // {"a,b"}
+CsvUtil.splitLine("");            // {""}
+CsvUtil.splitLine(null);          // 长度为 0
+CsvUtil.splitLine(" a ,b");       // {" a ", "b"}
+```
+
+### 新类 ByteSizeUtil
+
+包名 `com.henry.common.utils.size`。按 1024 进制格式化和解析字节大小。单位是 B、KB、MB、GB、TB、PB、EB，不是 KiB。类不能实例化。`1.0.8` 没有这个类。
+
+#### `String format(long bytes)`
+
+把字节数格式化成可读文本。除 `Long.MIN_VALUE` 外，`parse(format(n))` 等于 n。
+
+- `0` 返回 `"0 B"`。`Long.MIN_VALUE` 抛出 `ArithmeticException`。
+- 负数先格式化绝对值，再加 `-`。数字和单位之间有一个空格。
+- 从 EB 到 KB 选择能用整数或恰好一位小数精确表示、且数值绝对值大于等于 1 的最大单位。一位小数必须精确，不四舍五入。对 1024 进制，精确的一位小数只有 `.5`。
+- 没有这样的单位时用整数字节加 ` B`。整数写成 `1 KB`，不写成 `1.0 KB`。
+
+```java
+ByteSizeUtil.format(1023L);    // "1023 B"
+ByteSizeUtil.format(1024L);    // "1 KB"
+ByteSizeUtil.format(1536L);    // "1.5 KB"
+ByteSizeUtil.format(1537L);    // "1537 B"
+ByteSizeUtil.format(1048576L); // "1 MB"
+ByteSizeUtil.format(-1536L);   // "-1.5 KB"
+```
+
+#### `long parse(String text)`
+
+把大小文本解析成字节数。
+
+- 允许首尾空白。允许可选的 `+` 或 `-`。数字是整数，或恰好一位小数。
+- 单位不区分大小写，只接受 B、KB、MB、GB、TB、PB、EB。数字和单位之间可以有一个空格，也可以没有，`1.5KB` 合法。
+- 不带单位时只有整数按字节解析，`"1536"` 是 1536，`"1.5"` 非法。
+- 结果必须是能放进 long 的整数字节。`1.1 KB` 不是整数字节。非法格式、空串、null、未知单位或溢出都抛出 `IllegalArgumentException`，不截断。
+- `format` 产出的文本都能被还原。
+
+```java
+ByteSizeUtil.parse("1.5 KB"); // 1536
+ByteSizeUtil.parse("1.5KB");  // 1536
+ByteSizeUtil.parse("1536");   // 1536
+ByteSizeUtil.parse("1.1 KB"); // 抛出 IllegalArgumentException
+```
+
+### StringUtil 新增
+
+已有的 `startsWith` 没有变化，仍然区分大小写。
+
+#### `boolean startsWithIgnoreCase(String text, String prefix)`
+
+判断文本是否以前缀开头，只忽略 ASCII 大小写。
+
+- `text` 或 `prefix` 为 null 时返回 false。
+- `prefix` 为空串且 `text` 不是 null 时返回 true，包括 `text` 也是空串。
+- 只把 `A-Z` 看成与 `a-z` 相同。不 trim。
+
+```java
+StringUtil.startsWithIgnoreCase("AbC", "ab"); // true
+StringUtil.startsWithIgnoreCase(null, "a");   // false
+StringUtil.startsWith("Abc", "ab");           // false
+```
+
+### ArrayUtil 新增
+
+已有的 `concat` 没有变化。
+
+#### `int[] subarray(int[] data, int startInclusive, int endExclusive)`
+
+返回新的 int 数组，不修改入参。
+
+- `data` 为 null 时返回 null。
+- 要求 `0 <= startInclusive <= endExclusive <= data.length`，否则抛出 `IndexOutOfBoundsException`。
+- 起止相等时返回长度为 0 的新数组。结束下标超过长度时不补 0。
+
+```java
+ArrayUtil.subarray(new int[] {1, 2, 3, 4}, 1, 3); // {2, 3}
+ArrayUtil.subarray(new int[] {1, 2}, 1, 1);       // 长度为 0
+ArrayUtil.subarray(null, 0, 0);                   // null
+```
+
+### BytesUtil 新增
+
+已有的 `contains` 没有变化。
+
+#### `boolean startsWith(byte[] data, byte[] prefix)`
+
+判断 data 是否以 prefix 开头。
+
+- `data` 或 `prefix` 为 null 时返回 false。
+- 空前缀对非 null 的 data 返回 true，包括空数组。前缀更长则返回 false。
+- 不修改入参。`(byte) 0xff` 与 `(byte) -1` 相同。
+
+```java
+BytesUtil.startsWith(new byte[] {1, 2, 3}, new byte[] {1, 2}); // true
+BytesUtil.startsWith(null, new byte[] {1});                    // false
+BytesUtil.startsWith(new byte[0], new byte[0]);                // true
+```
+
+### CollectionUtil 新增
+
+已有的 `firstOrNull` 没有变化。
+
+#### `<T> T firstOrDefault(List<T> list, T defaultValue)`
+
+返回列表的第一个元素；列表为 null 或空时返回默认值。
+
+- `defaultValue` 可以为 null。
+- 第一个元素本身是 null 时返回 null，不用 defaultValue 代替。
+
+```java
+CollectionUtil.firstOrDefault(null, "fallback");                 // "fallback"
+CollectionUtil.firstOrDefault(Collections.singletonList(null), "fallback"); // null
+```
+
+### FileUtil 新增
+
+已有的 `hasExtension(String)` 没有变化。
+
+#### `boolean hasExtension(String pathOrName, String extension)`
+
+判断扩展名是不是指定文本。路径分段和“有没有扩展名”的规则与 `getExtension`、`hasExtension(String)` 相同。
+
+- `.gitignore`、`file.` 和空白路径视为没有扩展名，返回 false。
+- `extension` 可以带或不带开头的点，`txt` 与 `.txt` 相同。比较时忽略 ASCII 大小写。
+- `pathOrName` 或 `extension` 为 null，或去掉点之后为空白，返回 false。不访问磁盘，也不 trim 非空白文本。
+
+```java
+FileUtil.hasExtension("dir/a.TXT", "txt"); // true
+FileUtil.hasExtension("dir/a.TXT", ".txt"); // true
+FileUtil.hasExtension(".gitignore", "gitignore"); // false
+```
+
+### TimeUtil 新增
+
+已有的 `startOfUtcDay` 没有变化。
+
+#### `long startOfUtcHour(long millis)`
+
+返回所在 UTC 小时的起点。
+
+- 小时界是 `floor(millis / 3600000)`，不是向 0 截断，也不使用设备时区。
+- 结果是 3600000 的整数倍，并且与原时间戳落在同一个 UTC 小时。负数也按 floor，所以 `-1` 的起点是 `-3600000`。
+- 结果无法用 long 表示时抛出 `ArithmeticException`，例如 `Long.MIN_VALUE`。
+
+```java
+TimeUtil.startOfUtcHour(3600001L); // 3600000
+TimeUtil.startOfUtcHour(-1L);      // -3600000
+```
+
+### IpUtil 新增
+
+已有的 `isIpv4`、`toLong` 和 `fromLong` 没有变化。
+
+#### `boolean isLoopback(String text)`
+
+判断是不是 127.0.0.0/8。
+
+- 必须先满足 `isIpv4`：无前导零，不 trim。非法文本返回 false，不抛异常。
+- 第一段必须是 127，后三段是 0 到 255。
+- `127.0.0.1` 和 `127.255.255.255` 为 true。`0.0.0.0`、`126.0.0.1`、`128.0.0.1`、`::1`、null 和空白为 false。
+
+```java
+IpUtil.isLoopback("127.0.0.1");       // true
+IpUtil.isLoopback("127.255.255.255"); // true
+IpUtil.isLoopback("128.0.0.1");       // false
+IpUtil.isLoopback(" 127.0.0.1");      // false
 ```

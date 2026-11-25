@@ -23,6 +23,20 @@ public class IpUtil {
     }
 
     /**
+     * 判断文本是不是 127.0.0.0/8 里的 IPv4。
+     * 必须先通过 {@link #isIpv4(String)} 的规则：无前导零，不 trim，非法文本返回 false，不抛异常。
+     * 第一段必须是 127，后三段仍是 0 到 255。
+     * 不修改 {@link #isIpv4(String)}、{@link #toLong(String)} 和 {@link #fromLong(long)}。
+     *
+     * @param text 允许为 null
+     * @return 回环地址时返回 true
+     */
+    public static boolean isLoopback(String text) {
+        int[] parts = parse(text);
+        return parts != null && parts[0] == 127;
+    }
+
+    /**
      * 把合法 IPv4 转成无符号 32 位整数，用 long 返回。
      * 结果范围是 0 到 4294967295。{@code 0.0.0.0} 为 0，{@code 255.255.255.255} 为 4294967295。
      * {@link #isIpv4(String)} 为 false 时抛出 {@link IllegalArgumentException}。

@@ -64,4 +64,22 @@ public class IpUtilTest {
     public void fromLong_rejectsAboveUnsigned32() {
         IpUtil.fromLong(4294967296L);
     }
+
+    @Test
+    public void isLoopback_requiresFirstOctet127UnderIpv4Rules() {
+        assertTrue(IpUtil.isLoopback("127.0.0.1"));
+        assertTrue(IpUtil.isLoopback("127.0.0.0"));
+        assertTrue(IpUtil.isLoopback("127.255.255.255"));
+        assertFalse(IpUtil.isLoopback("0.0.0.0"));
+        assertFalse(IpUtil.isLoopback("126.0.0.1"));
+        assertFalse(IpUtil.isLoopback("128.0.0.1"));
+        assertFalse(IpUtil.isLoopback("::1"));
+        assertFalse(IpUtil.isLoopback(null));
+        assertFalse(IpUtil.isLoopback(""));
+        assertFalse(IpUtil.isLoopback(" \t"));
+        assertFalse(IpUtil.isLoopback(" 127.0.0.1"));
+        assertFalse(IpUtil.isLoopback("127.00.0.1"));
+        assertTrue(IpUtil.isIpv4("127.0.0.1"));
+        assertEquals(2130706433L, IpUtil.toLong("127.0.0.1"));
+    }
 }

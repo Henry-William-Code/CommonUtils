@@ -271,6 +271,27 @@ public class TimeUtilTest {
         TimeUtil.weeksBetween(Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
+    @Test
+    public void startOfUtcHour_usesFloorAndStaysInTheSameHour() {
+        assertEquals(0L, TimeUtil.startOfUtcHour(0L));
+        assertEquals(0L, TimeUtil.startOfUtcHour(3599999L));
+        assertEquals(3600000L, TimeUtil.startOfUtcHour(3600000L));
+        assertEquals(3600000L, TimeUtil.startOfUtcHour(3600001L));
+        assertEquals(-3600000L, TimeUtil.startOfUtcHour(-1L));
+        assertEquals(-3600000L, TimeUtil.startOfUtcHour(-3600000L));
+        assertEquals(0L, TimeUtil.startOfUtcHour(-1L) % 3600000L);
+        long sample = -3600001L;
+        long start = TimeUtil.startOfUtcHour(sample);
+        assertTrue(start <= sample);
+        assertTrue(sample < start + 3600000L);
+        assertEquals(TimeUtil.startOfUtcDay(0L), 0L);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void startOfUtcHour_rejectsMinValue() {
+        TimeUtil.startOfUtcHour(Long.MIN_VALUE);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

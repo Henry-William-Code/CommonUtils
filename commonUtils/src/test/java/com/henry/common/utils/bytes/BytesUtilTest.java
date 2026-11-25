@@ -69,4 +69,19 @@ public class BytesUtilTest {
         assertEquals(2, BytesUtil.lastIndexOf(data, (byte) 1));
         assertArrayEquals(new byte[] {1, 2, 1}, data);
     }
+
+    @Test
+    public void startsWith_nullEmptyAndByteEquality() {
+        assertFalse(BytesUtil.startsWith(null, new byte[] {1}));
+        assertFalse(BytesUtil.startsWith(new byte[] {1}, null));
+        assertFalse(BytesUtil.startsWith(null, null));
+        assertTrue(BytesUtil.startsWith(new byte[0], new byte[0]));
+        assertTrue(BytesUtil.startsWith(new byte[] {1}, new byte[0]));
+        byte[] data = new byte[] {1, 2, 3};
+        assertTrue(BytesUtil.startsWith(data, new byte[] {1, 2}));
+        assertFalse(BytesUtil.startsWith(data, new byte[] {1, 3}));
+        assertFalse(BytesUtil.startsWith(data, new byte[] {1, 2, 3, 4}));
+        assertTrue(BytesUtil.startsWith(new byte[] {(byte) 0xff}, new byte[] {(byte) -1}));
+        assertArrayEquals(new byte[] {1, 2, 3}, data);
+    }
 }

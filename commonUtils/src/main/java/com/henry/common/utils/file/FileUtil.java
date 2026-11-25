@@ -64,6 +64,28 @@ public class FileUtil {
     }
 
     /**
+     * 判断路径或文件名的扩展名是不是指定文本。
+     * 扩展名判定与 {@link #getExtension(String)} 和 {@link #hasExtension(String)} 相同。
+     * pathOrName 或 extension 为 null，或去掉开头的点之后为空白时返回 false。
+     * extension 可以带或不带开头的点，{@code txt} 与 {@code .txt} 相同。比较时忽略 ASCII 大小写。
+     * 非空白文本不 trim。不访问磁盘。不修改 {@link #hasExtension(String)}。
+     *
+     * @param pathOrName 路径或文件名，允许为 null
+     * @param extension  期望的扩展名，允许为 null
+     * @return 扩展名匹配时返回 true
+     */
+    public static boolean hasExtension(String pathOrName, String extension) {
+        if (pathOrName == null || extension == null) {
+            return false;
+        }
+        String expected = stripLeadingDots(extension);
+        if (expected == null || StringUtil.isBlank(expected)) {
+            return false;
+        }
+        return equalsIgnoreAsciiCase(getExtension(pathOrName), expected);
+    }
+
+    /**
      * 替换路径或文件名最后一段扩展名。
      * 扩展名判定与 {@link #getExtension(String)} 相同。只改文件名，目录分隔符原样保留。
      * pathOrName 为 null、空串或只含空白时返回空串。其余文本不 trim。
@@ -113,6 +135,26 @@ public class FileUtil {
             return extension;
         }
         return extension.substring(start);
+    }
+
+    private static boolean equalsIgnoreAsciiCase(String left, String right) {
+        if (left.length() != right.length()) {
+            return false;
+        }
+        for (int i = 0; i < left.length(); i++) {
+            char first = left.charAt(i);
+            char second = right.charAt(i);
+            if (first >= 'A' && first <= 'Z') {
+                first = (char) (first + ('a' - 'A'));
+            }
+            if (second >= 'A' && second <= 'Z') {
+                second = (char) (second + ('a' - 'A'));
+            }
+            if (first != second) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

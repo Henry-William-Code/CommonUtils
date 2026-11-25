@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ArrayUtilTest {
 
@@ -108,5 +110,37 @@ public class ArrayUtilTest {
         assertEquals(Integer.valueOf(1), right[0]);
         assertEquals(3, ArrayUtil.concat(new int[] {1, 2}, new int[] {3}).length);
         assertEquals(int[].class, ArrayUtil.concat(new int[] {1}, null).getClass());
+    }
+
+    @Test
+    public void subarray_returnsNewRangeAndRejectsOutOfBounds() {
+        assertNull(ArrayUtil.subarray(null, 0, 0));
+        int[] data = new int[] {1, 2, 3, 4};
+        int[] middle = ArrayUtil.subarray(data, 1, 3);
+        assertEquals(2, middle.length);
+        assertEquals(2, middle[0]);
+        assertEquals(3, middle[1]);
+        middle[0] = 9;
+        assertEquals(2, data[1]);
+        assertEquals(0, ArrayUtil.subarray(data, 2, 2).length);
+        assertEquals(4, ArrayUtil.subarray(data, 0, 4).length);
+        try {
+            ArrayUtil.subarray(data, 0, 5);
+            fail("expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException expected) {
+            assertEquals(1, data[0]);
+        }
+        try {
+            ArrayUtil.subarray(data, 3, 2);
+            fail("expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException expected) {
+            // 结束不能小于开始。
+        }
+        try {
+            ArrayUtil.subarray(data, -1, 1);
+            fail("expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException expected) {
+            // 起始不能为负。
+        }
     }
 }

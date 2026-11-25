@@ -185,4 +185,14 @@ public class CollectionUtilTest {
             assertEquals("boom", expected.getMessage());
         }
     }
+
+    @Test
+    public void firstOrDefault_keepsNullElement() {
+        assertEquals("fallback", CollectionUtil.firstOrDefault(null, "fallback"));
+        assertNull(CollectionUtil.firstOrDefault(null, null));
+        assertEquals("fallback", CollectionUtil.firstOrDefault(Collections.emptyList(), "fallback"));
+        assertNull(CollectionUtil.firstOrDefault(Collections.singletonList(null), "fallback"));
+        assertEquals("a", CollectionUtil.firstOrDefault(Collections.singletonList("a"), "fallback"));
+        assertNull(CollectionUtil.firstOrNull(Collections.emptyList()));
+    }
 }

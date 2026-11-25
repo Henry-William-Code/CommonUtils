@@ -223,6 +223,24 @@ public class FileUtilTest {
         assertEquals("gz", FileUtil.getExtension("archive.tar.gz"));
     }
 
+    @Test
+    public void hasExtension_matchesAsciiCaseAndExistingRules() {
+        assertFalse(FileUtil.hasExtension(null, "txt"));
+        assertFalse(FileUtil.hasExtension("a.txt", null));
+        assertFalse(FileUtil.hasExtension("a.txt", ""));
+        assertFalse(FileUtil.hasExtension("a.txt", " "));
+        assertFalse(FileUtil.hasExtension("a.txt", "."));
+        assertFalse(FileUtil.hasExtension(" \t", "txt"));
+        assertFalse(FileUtil.hasExtension(".gitignore", "gitignore"));
+        assertFalse(FileUtil.hasExtension("file.", "txt"));
+        assertFalse(FileUtil.hasExtension("dir/file", "txt"));
+        assertTrue(FileUtil.hasExtension("dir/a.TXT", "txt"));
+        assertTrue(FileUtil.hasExtension("dir/a.TXT", ".txt"));
+        assertTrue(FileUtil.hasExtension("archive.tar.gz", "GZ"));
+        assertFalse(FileUtil.hasExtension("archive.tar.gz", "tar"));
+        assertTrue(FileUtil.hasExtension("dir/a.TXT"));
+    }
+
     private static File newTempDir() {
         File dir = new File(System.getProperty("java.io.tmpdir"), "fileutil-" + System.nanoTime());
         assertTrue(dir.mkdir());

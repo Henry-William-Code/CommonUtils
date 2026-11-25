@@ -102,4 +102,30 @@ public class BytesUtil {
     public static boolean contains(byte[] data, byte value) {
         return indexOf(data, value) >= 0;
     }
+
+    /**
+     * 判断 data 是否以 prefix 开头。
+     * data 或 prefix 为 null 时返回 false。prefix 为空数组且 data 不是 null 时返回 true，包括 data 也是空数组。
+     * prefix 比 data 长时返回 false。不修改入参。
+     * 比较的是 8 位值，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。
+     * 不修改 {@link #indexOf(byte[], byte)}。
+     *
+     * @param data   原数组，允许为 null
+     * @param prefix 前缀，允许为 null
+     * @return 以前缀开头时返回 true
+     */
+    public static boolean startsWith(byte[] data, byte[] prefix) {
+        if (data == null || prefix == null) {
+            return false;
+        }
+        if (prefix.length > data.length) {
+            return false;
+        }
+        for (int i = 0; i < prefix.length; i++) {
+            if (data[i] != prefix[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
