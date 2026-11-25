@@ -2,7 +2,7 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.9`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。`1.0.9` 增加 `XmlEscapeUtil`、`QueryStringUtil`、`CsvUtil` 和 `ByteSizeUtil`，并给已有类追加了方法。
+工具按类组织。当前发布版本是 `1.0.9`。`1.0.9` 增加 `XmlEscapeUtil`、`QueryStringUtil`、`CsvUtil` 和 `ByteSizeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。
 
 ## 版本说明
 
