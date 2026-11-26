@@ -1,7 +1,7 @@
 package com.henry.common.utils.naming;
 
 /**
- * 标识符的蛇形和驼峰转换。
+ * 标识符的蛇形、驼峰和 PascalCase 转换。
  * 已发布的 1.0.7 没有这个类。不使用 Android API。
  * 只在 ASCII 小写字母或数字后面紧跟 ASCII 大写字母时分段，连续大写不拆开。
  */
@@ -82,6 +82,30 @@ public class NamingUtil {
                 out.append('-');
             }
             appendLower(out, parts[i]);
+        }
+        return out.toString();
+    }
+
+    /**
+     * 把标识符转成 PascalCase。
+     * 分段规则与 {@link #toCamelCase(String)}、{@link #toSnakeCase(String)} 完全相同，
+     * 但每一段（含第一段）都是首字母大写、其余小写。
+     * {@code hello_world}、{@code hello-world} 和 {@code HelloWorld} 都得到 {@code HelloWorld}。
+     * 连续大写不拆开，因此 {@code XMLParser} 得到 {@code Xmlparser}，{@code getHTTPResponse} 得到 {@code GetHttpresponse}。
+     * null，或去掉分隔后没有内容时返回空串。只处理 ASCII 大小写。
+     * 不修改 {@link #toSnakeCase(String)}、{@link #toCamelCase(String)} 和 {@link #toKebabCase(String)}。
+     *
+     * @param text 标识符，允许为 null
+     * @return PascalCase；没有内容时返回空串
+     */
+    public static String toPascalCase(String text) {
+        String[] parts = split(text);
+        if (parts.length == 0) {
+            return "";
+        }
+        StringBuilder out = new StringBuilder(text.length());
+        for (int i = 0; i < parts.length; i++) {
+            appendCapitalized(out, parts[i]);
         }
         return out.toString();
     }

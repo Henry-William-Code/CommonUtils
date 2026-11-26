@@ -292,6 +292,33 @@ public class TimeUtilTest {
         TimeUtil.startOfUtcHour(Long.MIN_VALUE);
     }
 
+    @Test
+    public void endOfUtcHour_isLastMillisecondOfTheSameUtcHour() {
+        assertEquals(3599999L, TimeUtil.endOfUtcHour(0L));
+        assertEquals(3599999L, TimeUtil.endOfUtcHour(3599999L));
+        assertEquals(7199999L, TimeUtil.endOfUtcHour(3600000L));
+        assertEquals(7199999L, TimeUtil.endOfUtcHour(3600001L));
+        assertEquals(-1L, TimeUtil.endOfUtcHour(-1L));
+        assertEquals(-1L, TimeUtil.endOfUtcHour(-3600000L));
+        assertEquals(-3600001L, TimeUtil.endOfUtcHour(-3600001L));
+        long sample = 3600000L * 3 + 20L;
+        assertEquals(TimeUtil.startOfUtcHour(sample) + 3599999L, TimeUtil.endOfUtcHour(sample));
+        long overflowStart = TimeUtil.startOfUtcHour(Long.MAX_VALUE);
+        assertEquals(overflowStart - 1L, TimeUtil.endOfUtcHour(overflowStart - 1L));
+        assertEquals(0L, TimeUtil.startOfUtcHour(0L));
+        assertEquals(86399999L, TimeUtil.endOfUtcDay(0L));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void endOfUtcHour_rejectsMaxValueBecauseEndDoesNotFit() {
+        TimeUtil.endOfUtcHour(Long.MAX_VALUE);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void endOfUtcHour_rejectsMinValueBecauseStartDoesNotFit() {
+        TimeUtil.endOfUtcHour(Long.MIN_VALUE);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

@@ -84,4 +84,24 @@ public class BytesUtilTest {
         assertTrue(BytesUtil.startsWith(new byte[] {(byte) 0xff}, new byte[] {(byte) -1}));
         assertArrayEquals(new byte[] {1, 2, 3}, data);
     }
+
+    @Test
+    public void endsWith_nullEmptyAndByteEquality() {
+        assertFalse(BytesUtil.endsWith(null, new byte[] {1}));
+        assertFalse(BytesUtil.endsWith(new byte[] {1}, null));
+        assertFalse(BytesUtil.endsWith(null, null));
+        assertTrue(BytesUtil.endsWith(new byte[0], new byte[0]));
+        assertTrue(BytesUtil.endsWith(new byte[] {1}, new byte[0]));
+        byte[] data = new byte[] {1, 2, 3};
+        byte[] suffix = new byte[] {2, 3};
+        assertTrue(BytesUtil.endsWith(data, suffix));
+        assertFalse(BytesUtil.endsWith(data, new byte[] {1, 2}));
+        assertFalse(BytesUtil.endsWith(data, new byte[] {1, 2, 3, 4}));
+        assertTrue(BytesUtil.endsWith(new byte[] {(byte) 0xff}, new byte[] {(byte) -1}));
+        assertTrue(BytesUtil.endsWith(new byte[] {(byte) -1}, new byte[] {(byte) 0xff}));
+        suffix[0] = 9;
+        assertArrayEquals(new byte[] {1, 2, 3}, data);
+        assertTrue(BytesUtil.startsWith(data, new byte[] {1, 2}));
+        assertFalse(BytesUtil.endsWith(data, new byte[] {9, 3}));
+    }
 }

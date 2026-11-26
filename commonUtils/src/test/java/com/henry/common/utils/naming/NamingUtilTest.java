@@ -69,4 +69,42 @@ public class NamingUtilTest {
         assertEquals("hello_world", NamingUtil.toSnakeCase("HelloWorld"));
         assertEquals("helloWorld", NamingUtil.toCamelCase("hello-world"));
     }
+
+    @Test
+    public void toPascalCase_capitalizesEverySegment() {
+        assertEquals("", NamingUtil.toPascalCase(null));
+        assertEquals("", NamingUtil.toPascalCase(""));
+        assertEquals("", NamingUtil.toPascalCase("---"));
+        assertEquals("", NamingUtil.toPascalCase(" _- "));
+        assertEquals("HelloWorld", NamingUtil.toPascalCase("hello_world"));
+        assertEquals("HelloWorld", NamingUtil.toPascalCase("hello-world"));
+        assertEquals("HelloWorld", NamingUtil.toPascalCase("HelloWorld"));
+        assertEquals("HelloWorld", NamingUtil.toPascalCase("helloWorld"));
+        assertEquals("HelloWorld", NamingUtil.toPascalCase("hello world"));
+        assertEquals("Xmlparser", NamingUtil.toPascalCase("XMLParser"));
+        assertEquals("GetHttpresponse", NamingUtil.toPascalCase("getHTTPResponse"));
+        assertEquals("Hello", NamingUtil.toPascalCase("_Hello_"));
+        assertEquals("Hello2world", NamingUtil.toPascalCase("hello_2world"));
+        assertEquals("A1B", NamingUtil.toPascalCase("A1B"));
+        String[] samples = new String[] {
+                null, "", "HelloWorld", "helloWorld", "XMLParser", "getHTTPResponse",
+                "hello-world", "hello_world", "__hello__world__", "  Hello  World  ", "A1B", "hello_2world"
+        };
+        for (int i = 0; i < samples.length; i++) {
+            String camel = NamingUtil.toCamelCase(samples[i]);
+            String pascal = NamingUtil.toPascalCase(samples[i]);
+            if (camel.length() == 0) {
+                assertEquals("", pascal);
+                continue;
+            }
+            char first = camel.charAt(0);
+            if (first >= 'a' && first <= 'z') {
+                first = (char) (first - ('a' - 'A'));
+            }
+            assertEquals(first + camel.substring(1), pascal);
+        }
+        assertEquals("helloWorld", NamingUtil.toCamelCase("hello_world"));
+        assertEquals("hello_world", NamingUtil.toSnakeCase("HelloWorld"));
+        assertEquals("hello-world", NamingUtil.toKebabCase("HelloWorld"));
+    }
 }

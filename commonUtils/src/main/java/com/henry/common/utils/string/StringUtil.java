@@ -137,6 +137,27 @@ public class StringUtil {
     }
 
     /**
+     * 判断 text 是否以 suffix 结尾，只忽略 ASCII 大小写。
+     * 规则与 {@link #startsWithIgnoreCase(String, String)} 对称。
+     * text 或 suffix 为 null 时返回 false。suffix 为空串且 text 不是 null 时返回 true，包括 text 也是空串。
+     * 只把 {@code A-Z} 看成与 {@code a-z} 相同，不处理 Unicode 大小写，也不去掉空白。
+     * 不修改 {@link #endsWith(String, String)} 和 {@link #startsWithIgnoreCase(String, String)}。
+     *
+     * @param text   原文，允许为 null
+     * @param suffix 后缀，允许为 null
+     * @return 忽略 ASCII 大小写后以后缀结尾时返回 true
+     */
+    public static boolean endsWithIgnoreCase(String text, String suffix) {
+        if (text == null || suffix == null) {
+            return false;
+        }
+        if (suffix.length() > text.length()) {
+            return false;
+        }
+        return regionEqualsAsciiIgnoreCase(text, text.length() - suffix.length(), suffix);
+    }
+
+    /**
      * 判断 text 是否包含 search。
      * text 或 search 为 null 时返回 false。search 为空串且 text 不是 null 时返回 true，包括 text 也是空串。
      * 区分大小写，不去掉空白。不修改 {@link #startsWith(String, String)} 和 {@link #endsWith(String, String)}。

@@ -180,4 +180,26 @@ public class StringUtilTest {
         assertFalse(StringUtil.startsWithIgnoreCase("İstanbul", "i"));
         assertFalse(StringUtil.startsWith("Abc", "ab"));
     }
+
+    @Test
+    public void endsWithIgnoreCase_onlyFoldsAsciiAndDoesNotTrim() {
+        assertFalse(StringUtil.endsWithIgnoreCase(null, "a"));
+        assertFalse(StringUtil.endsWithIgnoreCase("a", null));
+        assertFalse(StringUtil.endsWithIgnoreCase(null, null));
+        assertFalse(StringUtil.endsWithIgnoreCase(null, ""));
+        assertTrue(StringUtil.endsWithIgnoreCase("", ""));
+        assertTrue(StringUtil.endsWithIgnoreCase("abc", ""));
+        assertTrue(StringUtil.endsWithIgnoreCase("AbC", "bc"));
+        assertTrue(StringUtil.endsWithIgnoreCase("abc", "BC"));
+        assertFalse(StringUtil.endsWithIgnoreCase("abc", " bc"));
+        assertFalse(StringUtil.endsWithIgnoreCase("abc ", "bc"));
+        assertFalse(StringUtil.endsWithIgnoreCase("abc", "abcd"));
+        assertFalse(StringUtil.endsWithIgnoreCase("abcİ", "i"));
+        assertTrue(StringUtil.endsWithIgnoreCase("abcİ", "İ"));
+        assertTrue(StringUtil.endsWithIgnoreCase("abcI", "i"));
+        assertFalse(StringUtil.endsWithIgnoreCase("Ω", "ω"));
+        assertFalse(StringUtil.endsWith("abC", "bc"));
+        assertTrue(StringUtil.endsWith("abc", "bc"));
+        assertFalse(StringUtil.startsWithIgnoreCase("Abc", "bc"));
+    }
 }

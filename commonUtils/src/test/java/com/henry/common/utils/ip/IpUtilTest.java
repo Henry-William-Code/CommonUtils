@@ -82,4 +82,43 @@ public class IpUtilTest {
         assertTrue(IpUtil.isIpv4("127.0.0.1"));
         assertEquals(2130706433L, IpUtil.toLong("127.0.0.1"));
     }
+
+    @Test
+    public void isPrivate_acceptsOnlyRfc1918() {
+        assertTrue(IpUtil.isPrivate("10.0.0.0"));
+        assertTrue(IpUtil.isPrivate("10.255.255.255"));
+        assertTrue(IpUtil.isPrivate("10.1.2.3"));
+        assertTrue(IpUtil.isPrivate("172.16.0.0"));
+        assertTrue(IpUtil.isPrivate("172.16.0.1"));
+        assertTrue(IpUtil.isPrivate("172.31.255.255"));
+        assertTrue(IpUtil.isPrivate("172.24.1.1"));
+        assertTrue(IpUtil.isPrivate("192.168.0.0"));
+        assertTrue(IpUtil.isPrivate("192.168.1.1"));
+        assertTrue(IpUtil.isPrivate("192.168.255.255"));
+        assertFalse(IpUtil.isPrivate("9.255.255.255"));
+        assertFalse(IpUtil.isPrivate("11.0.0.0"));
+        assertFalse(IpUtil.isPrivate("172.15.255.255"));
+        assertFalse(IpUtil.isPrivate("172.32.0.0"));
+        assertFalse(IpUtil.isPrivate("192.167.255.255"));
+        assertFalse(IpUtil.isPrivate("192.169.0.1"));
+        assertFalse(IpUtil.isPrivate("127.0.0.1"));
+        assertFalse(IpUtil.isPrivate("169.254.0.1"));
+        assertFalse(IpUtil.isPrivate("0.0.0.0"));
+        assertFalse(IpUtil.isPrivate("192.0.2.1"));
+        assertFalse(IpUtil.isPrivate("8.8.8.8"));
+        assertFalse(IpUtil.isPrivate("::1"));
+        assertFalse(IpUtil.isPrivate(null));
+        assertFalse(IpUtil.isPrivate(""));
+        assertFalse(IpUtil.isPrivate(" \t"));
+        assertFalse(IpUtil.isPrivate(" 10.0.0.1"));
+        assertFalse(IpUtil.isPrivate("10.0.0.1 "));
+        assertFalse(IpUtil.isPrivate("010.0.0.1"));
+        assertFalse(IpUtil.isPrivate("10.00.0.1"));
+        assertFalse(IpUtil.isPrivate("10.0.0.1/8"));
+        assertTrue(IpUtil.isIpv4("10.0.0.1"));
+        assertTrue(IpUtil.isLoopback("127.0.0.1"));
+        assertFalse(IpUtil.isPrivate("127.0.0.1"));
+        assertEquals(3232235777L, IpUtil.toLong("192.168.1.1"));
+        assertEquals("10.0.0.1", IpUtil.fromLong(IpUtil.toLong("10.0.0.1")));
+    }
 }

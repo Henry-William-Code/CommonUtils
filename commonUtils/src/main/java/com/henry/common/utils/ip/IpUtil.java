@@ -37,6 +37,30 @@ public class IpUtil {
     }
 
     /**
+     * 判断文本是不是 RFC 1918 私网 IPv4。
+     * 只认 {@code 10.0.0.0/8}、{@code 172.16.0.0/12}（第二段 16 到 31）和 {@code 192.168.0.0/16}。
+     * 必须先通过 {@link #isIpv4(String)} 的规则：无前导零，不 trim，非法文本返回 false，不抛异常。
+     * {@code 127.0.0.1}、{@code 169.254.0.1}、{@code 0.0.0.0}、{@code 192.0.2.1}、IPv6 和前后空格都返回 false。
+     * 不修改 {@link #isIpv4(String)}、{@link #isLoopback(String)}、{@link #toLong(String)} 和 {@link #fromLong(long)}。
+     *
+     * @param text 允许为 null
+     * @return RFC 1918 地址时返回 true
+     */
+    public static boolean isPrivate(String text) {
+        int[] parts = parse(text);
+        if (parts == null) {
+            return false;
+        }
+        if (parts[0] == 10) {
+            return true;
+        }
+        if (parts[0] == 172 && parts[1] >= 16 && parts[1] <= 31) {
+            return true;
+        }
+        return parts[0] == 192 && parts[1] == 168;
+    }
+
+    /**
      * 把合法 IPv4 转成无符号 32 位整数，用 long 返回。
      * 结果范围是 0 到 4294967295。{@code 0.0.0.0} 为 0，{@code 255.255.255.255} 为 4294967295。
      * {@link #isIpv4(String)} 为 false 时抛出 {@link IllegalArgumentException}。

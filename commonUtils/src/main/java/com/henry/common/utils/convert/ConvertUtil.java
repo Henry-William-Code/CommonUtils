@@ -193,6 +193,34 @@ public class ConvertUtil {
     }
 
     /**
+     * 判断文本能否按 {@link #parseFloat(String, float)} 的规则解析成有限 float。
+     * 与 {@link #isDouble(String)} 对称，但范围对齐 float。
+     * null、空白、非法格式、NaN、无穷大，或超出 float 范围变成无穷的值，都返回 false，不抛异常。
+     * 去掉首尾空白。允许 ASCII 正负号、小数点和标准十进制指数。
+     * 不接受千分位、全角数字、逗号小数或十六进制浮点。
+     * 下溢成 0 的有限 float 返回 true。返回值不依赖默认值。
+     * 不修改 {@link #parseFloat(String, float)} 和 {@link #isDouble(String)}。
+     *
+     * @param text 十进制文本，允许为 null
+     * @return 能解析成有限 float 时返回 true
+     */
+    public static boolean isFloat(String text) {
+        if (StringUtil.isBlank(text)) {
+            return false;
+        }
+        String trimmed = trimWhitespace(text);
+        if (trimmed.length() == 0 || isRejectedFloatText(trimmed)) {
+            return false;
+        }
+        try {
+            float value = Float.parseFloat(trimmed);
+            return !Float.isNaN(value) && !Float.isInfinite(value);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    /**
      * @return 解析成功时返回对应 long；空白、格式错误或溢出时返回 null
      */
     private static Long parseDecimal(String text) {

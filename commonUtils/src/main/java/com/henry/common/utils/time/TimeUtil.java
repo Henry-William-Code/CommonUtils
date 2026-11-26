@@ -403,6 +403,27 @@ public class TimeUtil {
         return end;
     }
 
+    /**
+     * 返回 millis 所在 UTC 小时的最后一毫秒。
+     * 小时界与 {@link #startOfUtcHour(long)} 相同，不使用设备时区。
+     * 结果等于该小时起点再加 3599999 毫秒。
+     * {@link #startOfUtcHour(long)} 在 {@link Long#MIN_VALUE} 时抛出 {@link ArithmeticException}；
+     * 小时终点无法用 long 表示时同样抛出 {@link ArithmeticException}。
+     * 不修改 {@link #startOfUtcHour(long)} 和 {@link #endOfUtcDay(long)}。
+     *
+     * @param millis 毫秒时间戳
+     * @return 该 UTC 小时最后一毫秒
+     */
+    public static long endOfUtcHour(long millis) {
+        long start = startOfUtcHour(millis);
+        long delta = 3599999L;
+        long end = start + delta;
+        if (((start ^ end) & (delta ^ end)) < 0) {
+            throw new ArithmeticException("long overflow");
+        }
+        return end;
+    }
+
     private static long utcDayIndex(long millis) {
         long day = millis / 86400000L;
         if (millis < 0 && millis % 86400000L != 0) {

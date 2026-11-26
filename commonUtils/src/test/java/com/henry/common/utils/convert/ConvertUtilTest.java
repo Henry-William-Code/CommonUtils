@@ -174,4 +174,48 @@ public class ConvertUtilTest {
         assertEquals(150, ConvertUtil.parseDouble("1.5e2", -1), 0);
         assertEquals(0, ConvertUtil.parseDouble("1e-400", 9), 0);
     }
+
+    @Test
+    public void isFloat_matchesParseFloatRulesWithoutDefault() {
+        assertFalse(ConvertUtil.isFloat(null));
+        assertFalse(ConvertUtil.isFloat(""));
+        assertFalse(ConvertUtil.isFloat(" \t"));
+        assertTrue(ConvertUtil.isFloat("  +12\t"));
+        assertTrue(ConvertUtil.isFloat("-12"));
+        assertTrue(ConvertUtil.isFloat("12.5"));
+        assertTrue(ConvertUtil.isFloat(" +1.25 "));
+        assertTrue(ConvertUtil.isFloat("-.5"));
+        assertTrue(ConvertUtil.isFloat("1.5e2"));
+        assertTrue(ConvertUtil.isFloat("1.5E-2"));
+        assertTrue(ConvertUtil.isFloat("1e+2"));
+        assertTrue(ConvertUtil.isFloat("  -0.0 "));
+        assertTrue(ConvertUtil.isFloat("1e-50"));
+        assertTrue(ConvertUtil.isFloat("1e-400"));
+        assertTrue(ConvertUtil.isFloat(String.valueOf(Float.MAX_VALUE)));
+        assertTrue(ConvertUtil.isFloat(String.valueOf(-Float.MAX_VALUE)));
+        assertTrue(ConvertUtil.isFloat("1e38"));
+        assertFalse(ConvertUtil.isFloat("NaN"));
+        assertFalse(ConvertUtil.isFloat("+Infinity"));
+        assertFalse(ConvertUtil.isFloat("-infinity"));
+        assertFalse(ConvertUtil.isFloat("Infinity"));
+        assertFalse(ConvertUtil.isFloat("1e39"));
+        assertFalse(ConvertUtil.isFloat("-1e39"));
+        assertFalse(ConvertUtil.isFloat("1e+39"));
+        assertFalse(ConvertUtil.isFloat("1e309"));
+        assertFalse(ConvertUtil.isFloat("1,5"));
+        assertFalse(ConvertUtil.isFloat("1,000"));
+        assertFalse(ConvertUtil.isFloat("1.2.3"));
+        assertFalse(ConvertUtil.isFloat("0x1.0p1"));
+        assertFalse(ConvertUtil.isFloat("１.５"));
+        assertFalse(ConvertUtil.isFloat("1 .5"));
+        assertFalse(ConvertUtil.isFloat("."));
+        assertFalse(ConvertUtil.isFloat("+"));
+        assertFalse(ConvertUtil.isFloat("1e"));
+        assertTrue(ConvertUtil.isDouble("1e39"));
+        assertFalse(ConvertUtil.isFloat("1e39"));
+        assertEquals(-1f, ConvertUtil.parseFloat("1e39", -1f), 0f);
+        assertEquals(-1f, ConvertUtil.parseFloat("NaN", -1f), 0f);
+        assertEquals(0f, ConvertUtil.parseFloat("1e-50", -1f), 0f);
+        assertTrue(ConvertUtil.isDouble("1.5"));
+    }
 }

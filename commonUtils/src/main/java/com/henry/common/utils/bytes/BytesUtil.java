@@ -128,4 +128,32 @@ public class BytesUtil {
         }
         return true;
     }
+
+    /**
+     * 判断 data 是否以 suffix 结尾。
+     * 规则与 {@link #startsWith(byte[], byte[])} 对称。
+     * data 或 suffix 为 null 时返回 false。suffix 为空数组且 data 不是 null 时返回 true，包括 data 也是空数组。
+     * suffix 比 data 长时返回 false。不修改入参。
+     * 比较的是 8 位值，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。
+     * 不修改 {@link #startsWith(byte[], byte[])}。
+     *
+     * @param data   原数组，允许为 null
+     * @param suffix 后缀，允许为 null
+     * @return 以后缀结尾时返回 true
+     */
+    public static boolean endsWith(byte[] data, byte[] suffix) {
+        if (data == null || suffix == null) {
+            return false;
+        }
+        if (suffix.length > data.length) {
+            return false;
+        }
+        int offset = data.length - suffix.length;
+        for (int i = 0; i < suffix.length; i++) {
+            if (data[offset + i] != suffix[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -217,4 +217,32 @@ public class ArrayUtil {
         }
         return out;
     }
+
+    /**
+     * 返回对象数组的一段，结果是新的 {@code Object[]}。
+     * 规则与 {@link #subarray(int[], int, int)} 相同。
+     * data 为 null 时返回 null。不修改 data，也不补 null。
+     * 要求 {@code 0 <= startInclusive <= endExclusive <= data.length}，否则抛出 {@link IndexOutOfBoundsException}。
+     * 起止相等时返回长度为 0 的新数组。结果的运行时类型始终是 {@code Object[]}，即使入参是 {@code String[]}。
+     * 传入 {@code null} 字面量时与 {@code int[]} 重载存在歧义，调用处需要强制转换。这与 {@link #isEmpty(Object[])} 相同。
+     * 不修改 {@link #subarray(int[], int, int)}。
+     *
+     * @param data           原数组，允许为 null
+     * @param startInclusive 起始下标，包含
+     * @param endExclusive   结束下标，不包含
+     * @return 新的 {@code Object[]}；data 为 null 时返回 null
+     */
+    public static Object[] subarray(Object[] data, int startInclusive, int endExclusive) {
+        if (data == null) {
+            return null;
+        }
+        if (startInclusive < 0 || endExclusive < startInclusive || endExclusive > data.length) {
+            throw new IndexOutOfBoundsException("subarray range is invalid");
+        }
+        Object[] out = new Object[endExclusive - startInclusive];
+        if (out.length > 0) {
+            System.arraycopy(data, startInclusive, out, 0, out.length);
+        }
+        return out;
+    }
 }

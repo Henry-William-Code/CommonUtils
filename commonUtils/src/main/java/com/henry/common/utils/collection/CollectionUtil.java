@@ -169,6 +169,24 @@ public class CollectionUtil {
     }
 
     /**
+     * 返回列表的最后一个元素；列表为 null 或空时返回默认值。
+     * 规则与 {@link #firstOrDefault(List, Object)} 对称。
+     * 最后一个元素本身是 null 时返回 null，不用 defaultValue 代替。
+     * defaultValue 允许为 null。不修改 list，也不修改 {@link #lastOrNull(List)} 和 {@link #firstOrDefault(List, Object)}。
+     *
+     * @param list         允许为 null
+     * @param defaultValue 列表没有元素时返回的值，允许为 null
+     * @param <T>          元素类型
+     * @return 最后一个元素或 defaultValue
+     */
+    public static <T> T lastOrDefault(List<T> list, T defaultValue) {
+        if (list == null || list.isEmpty()) {
+            return defaultValue;
+        }
+        return list.get(list.size() - 1);
+    }
+
+    /**
      * 读取 Map 中的值；键不存在或 Map 为 null 时返回默认值。
      * 键存在且对应值为 null 时返回 null，不返回 defaultValue。
      * 判断键是否存在使用 {@link Map#containsKey(Object)}，不用 {@link Map#get(Object)} 单独判断。

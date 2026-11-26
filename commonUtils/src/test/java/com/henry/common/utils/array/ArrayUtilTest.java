@@ -114,7 +114,7 @@ public class ArrayUtilTest {
 
     @Test
     public void subarray_returnsNewRangeAndRejectsOutOfBounds() {
-        assertNull(ArrayUtil.subarray(null, 0, 0));
+        assertNull(ArrayUtil.subarray((int[]) null, 0, 0));
         int[] data = new int[] {1, 2, 3, 4};
         int[] middle = ArrayUtil.subarray(data, 1, 3);
         assertEquals(2, middle.length);
@@ -142,5 +142,41 @@ public class ArrayUtilTest {
         } catch (IndexOutOfBoundsException expected) {
             // 起始不能为负。
         }
+    }
+
+    @Test
+    public void subarrayObject_returnsNewRangeAndRejectsOutOfBounds() {
+        assertNull(ArrayUtil.subarray((Object[]) null, 0, 0));
+        String[] data = new String[] {"a", null, "c", "d"};
+        Object[] middle = ArrayUtil.subarray(data, 1, 3);
+        assertEquals(Object[].class, middle.getClass());
+        assertEquals(2, middle.length);
+        assertNull(middle[0]);
+        assertEquals("c", middle[1]);
+        middle[1] = "changed";
+        assertEquals("c", data[2]);
+        assertEquals(0, ArrayUtil.subarray(data, 2, 2).length);
+        assertEquals(4, ArrayUtil.subarray(data, 0, 4).length);
+        assertEquals("a", ArrayUtil.subarray(data, 0, 4)[0]);
+        try {
+            ArrayUtil.subarray(data, 0, 5);
+            fail("expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException expected) {
+            assertEquals("a", data[0]);
+        }
+        try {
+            ArrayUtil.subarray(data, 3, 2);
+            fail("expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException expected) {
+            // 结束不能小于开始。
+        }
+        try {
+            ArrayUtil.subarray(data, -1, 1);
+            fail("expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException expected) {
+            // 起始不能为负。
+        }
+        assertEquals(2, ArrayUtil.subarray(new int[] {1, 2, 3}, 0, 2)[1]);
+        assertNull(ArrayUtil.subarray((int[]) null, 0, 0));
     }
 }
