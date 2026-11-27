@@ -245,4 +245,30 @@ public class ArrayUtil {
         }
         return out;
     }
+
+    /**
+     * 判断 int 数组是否以 prefix 开头。
+     * 规则与 {@code BytesUtil.startsWith(byte[], byte[])} 对称。
+     * data 或 prefix 为 null 时返回 false。prefix 为空数组且 data 不是 null 时返回 true，包括 data 也是空数组。
+     * prefix 比 data 长时返回 false。不修改入参。
+     * 目前只有 {@code int[]} 这一个重载，{@code null} 字面量不会和 {@code Object[]} 冲突。
+     *
+     * @param data   原数组，允许为 null
+     * @param prefix 前缀，允许为 null
+     * @return 以前缀开头时返回 true
+     */
+    public static boolean startsWith(int[] data, int[] prefix) {
+        if (data == null || prefix == null) {
+            return false;
+        }
+        if (prefix.length > data.length) {
+            return false;
+        }
+        for (int i = 0; i < prefix.length; i++) {
+            if (data[i] != prefix[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

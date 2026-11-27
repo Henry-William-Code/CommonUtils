@@ -218,4 +218,36 @@ public class ConvertUtilTest {
         assertEquals(0f, ConvertUtil.parseFloat("1e-50", -1f), 0f);
         assertTrue(ConvertUtil.isDouble("1.5"));
     }
+
+    @Test
+    public void isBoolean_matchesParseBooleanWordsOnly() {
+        assertFalse(ConvertUtil.isBoolean(null));
+        assertFalse(ConvertUtil.isBoolean(""));
+        assertFalse(ConvertUtil.isBoolean(" \t"));
+        assertFalse(ConvertUtil.isBoolean("\n"));
+        assertTrue(ConvertUtil.isBoolean("true"));
+        assertTrue(ConvertUtil.isBoolean("TRUE"));
+        assertTrue(ConvertUtil.isBoolean("False"));
+        assertTrue(ConvertUtil.isBoolean("FaLsE"));
+        assertTrue(ConvertUtil.isBoolean(" false "));
+        assertTrue(ConvertUtil.isBoolean("true "));
+        assertTrue(ConvertUtil.isBoolean("\tTRUE\n"));
+        assertFalse(ConvertUtil.isBoolean("1"));
+        assertFalse(ConvertUtil.isBoolean("0"));
+        assertFalse(ConvertUtil.isBoolean("yes"));
+        assertFalse(ConvertUtil.isBoolean("no"));
+        assertFalse(ConvertUtil.isBoolean("YES"));
+        assertFalse(ConvertUtil.isBoolean("truee"));
+        assertFalse(ConvertUtil.isBoolean("tr ue"));
+        assertFalse(ConvertUtil.isBoolean("真"));
+        assertFalse(ConvertUtil.isBoolean("\u00A0true"));
+        assertFalse(ConvertUtil.isBoolean("\u00A0"));
+        assertTrue(ConvertUtil.parseBoolean(" TRUE ", false));
+        assertTrue(ConvertUtil.parseBoolean("yes", true));
+        assertFalse(ConvertUtil.parseBoolean("1", false));
+        assertTrue(ConvertUtil.parseBoolean("0", true));
+        assertFalse(ConvertUtil.parseBoolean("0", false));
+        assertTrue(ConvertUtil.parseBoolean(null, true));
+        assertFalse(ConvertUtil.isBoolean("yes"));
+    }
 }

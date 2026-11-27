@@ -61,6 +61,21 @@ public class IpUtil {
     }
 
     /**
+     * 判断文本是不是 169.254.0.0/16 里的 IPv4 链路本地地址。
+     * 必须先通过 {@link #isIpv4(String)} 的规则：无前导零，不 trim，非法文本返回 false，不抛异常。
+     * 含 {@code 169.254.0.0} 和 {@code 169.254.255.255}。
+     * {@code 127.0.0.1}、{@code 192.168.0.1}、{@code 10.0.0.1}、{@code 169.253.0.1}、IPv6、前导零和前后空格都返回 false。
+     * 不修改 {@link #isPrivate(String)}、{@link #isLoopback(String)} 和 {@link #isIpv4(String)}。
+     *
+     * @param text 允许为 null
+     * @return 链路本地地址时返回 true
+     */
+    public static boolean isLinkLocal(String text) {
+        int[] parts = parse(text);
+        return parts != null && parts[0] == 169 && parts[1] == 254;
+    }
+
+    /**
      * 把合法 IPv4 转成无符号 32 位整数，用 long 返回。
      * 结果范围是 0 到 4294967295。{@code 0.0.0.0} 为 0，{@code 255.255.255.255} 为 4294967295。
      * {@link #isIpv4(String)} 为 false 时抛出 {@link IllegalArgumentException}。

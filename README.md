@@ -2,13 +2,13 @@
 
 Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，库模块 `minSdkVersion` 为 23。
 
-工具按类组织。当前发布版本是 `1.0.9`。最新 main 上还有尚未发布的 `ColorUtil`、`WildcardUtil`，以及 `StringUtil.endsWithIgnoreCase`、`ArrayUtil.subarray(Object[], int, int)`、`BytesUtil.endsWith`、`CollectionUtil.lastOrDefault`、`NamingUtil.toPascalCase`、`ConvertUtil.isFloat`、`TimeUtil.endOfUtcHour`、`IpUtil.isPrivate`。这些只能用最新 main 源码，不能通过 JitPack `1.0.9` 调用。`1.0.9` 增加 `XmlEscapeUtil`、`QueryStringUtil`、`CsvUtil` 和 `ByteSizeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。
+工具按类组织。当前发布版本是 `1.0.10`。`1.0.10` 增加 `LuhnUtil`、`Base32Util`、`ColorUtil` 和 `WildcardUtil`，并给已有类追加了方法。`1.0.9` 增加 `XmlEscapeUtil`、`QueryStringUtil`、`CsvUtil` 和 `ByteSizeUtil`，并给已有类追加了方法。`1.0.8` 增加 `IpUtil`、`JsonEscapeUtil`、`MacUtil` 和 `NamingUtil`，并给已有类追加了方法。`1.0.7` 增加 `UuidUtil`、`VersionUtil`、`BytesUtil` 和 `HtmlEscapeUtil`，并给已有类追加了方法。`1.0.6` 增加 `GzipUtil`、`UrlCodecUtil`、`RegexUtil` 和 `Crc32Util`，并给已有类追加了方法。`1.0.5` 增加 `HexUtil` 和 `ArrayUtil`。`1.0.4` 再增加 `IoUtil` 和 `ObjectUtil`。`1.0.3` 增加了 `CollectionUtil`、`ConvertUtil`、`Sha256Util` 和 `FileUtil`。`1.0.2` 有 8 个工具类，放在 6 个包里，并不是 8 个包。`calculate` 包同时包含 `DecimalUtil` 和 `MathematicsUtil`。
 
 ## 版本说明
 
 | 范围 | 怎么用 | 包含什么 |
 | --- | --- | --- |
-| main 上尚未发布 | 只在最新 main 源码里，不能用 JitPack `CommonUtils:1.0.9` | `ColorUtil`、`WildcardUtil`，以及「main 上尚未发布」里的已有类新方法 |
+| 已发布 `1.0.10` | JitPack `CommonUtils:1.0.10` | 包含 `1.0.9` 的全部方法，以及「1.0.10 新增」一节 |
 | 已发布 `1.0.9` | JitPack `CommonUtils:1.0.9` | 包含 `1.0.8` 的全部方法，以及「1.0.9 新增」一节 |
 | 已发布 `1.0.8` | JitPack `CommonUtils:1.0.8` | 包含 `1.0.7` 的全部方法，以及「1.0.8 新增」一节 |
 | 已发布 `1.0.7` | JitPack `CommonUtils:1.0.7` | 包含 `1.0.6` 的全部方法，以及「1.0.7 新增」一节 |
@@ -18,9 +18,9 @@ Android 里可直接静态调用的 Java 工具库。源码语言是 Java 8，�
 | 已发布 `1.0.3` | JitPack `CommonUtils:1.0.3` | 包含 `1.0.2` 的全部方法，以及「1.0.3 新增」一节 |
 | 已发布 `1.0.2` | JitPack `CommonUtils:1.0.2` | 只包含「已发布 1.0.2 的工具类」一节里的方法 |
 
-`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.9` 沿用该包结构，没有修改此前已发布方法的签名和返回值。最新 main 上的未发布改动也没有修改这些已发布方法的签名和返回值。
+`1.0.1` 的类还在 `com.henry.common.utils` 根包下。`1.0.2` 起改为下面的子包。`1.0.1` 与 `1.0.2` 的类名位置不同，不能混用。`1.0.3` 至 `1.0.10` 沿用该包结构，没有修改此前已发布方法的签名和返回值。
 
-## 依赖 1.0.9
+## 依赖 1.0.10
 
 在工程的 `build.gradle` 中加入：
 
@@ -36,15 +36,15 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.9'
+    implementation 'com.github.Henry-William-Code:CommonUtils:1.0.10'
 }
 ```
 
-`1.0.9` 包含到「1.0.9 新增」为止的全部已发布方法。仍使用 `1.0.8` 的工程不能调用「1.0.9 新增」。`1.0.9` 不包含「main 上尚未发布」中的类和方法，不能用 `CommonUtils:1.0.9` 调用它们。
+`1.0.10` 包含到「1.0.10 新增」为止的全部已发布方法。仍使用 `1.0.9` 的工程不能调用「1.0.10 新增」。
 
-## main 上尚未发布
+## 1.0.10 新增
 
-下面的类和方法只在最新 main 源码里。已发布的 `1.0.9` 和 JitPack `com.github.Henry-William-Code:CommonUtils:1.0.9` 都不包含它们，不能通过这个坐标调用。已发布方法的签名和返回值没有改。`versionName` 仍是 `1.0.9`。
+下面的类和方法从 `1.0.10` 起可以通过 JitPack 使用。`1.0.9` 没有它们，不能通过 `CommonUtils:1.0.9` 调用。`1.0.9` 已有方法的签名和返回值没有改。
 
 这一节的目录：
 
@@ -58,10 +58,20 @@ dependencies {
 - `ConvertUtil.isFloat`
 - `TimeUtil.endOfUtcHour`
 - `IpUtil.isPrivate`
+- 新类 `LuhnUtil`：`isValid`、`checkDigit`
+- 新类 `Base32Util`：`encode`、`decode`
+- `StringUtil.indexOfIgnoreCase`
+- `ArrayUtil.startsWith(int[], int[])`
+- `BytesUtil.indexOf(byte[], byte[])`
+- `CollectionUtil.frequency`
+- `NamingUtil.toConstantCase`
+- `ConvertUtil.isBoolean`
+- `TimeUtil.startOfUtcMinute`
+- `IpUtil.isLinkLocal`
 
 ### 新类 ColorUtil
 
-包名 `com.henry.common.utils.color`。只处理十六进制颜色，不识别 `red`、`black` 等颜色名，也不解析 `rgb()` 或 `argb()`。不加新依赖，不使用 Android API。类不能实例化。`1.0.9` 没有这个类，不能通过 `CommonUtils:1.0.9` 调用。
+包名 `com.henry.common.utils.color`。只处理十六进制颜色，不识别 `red`、`black` 等颜色名，也不解析 `rgb()` 或 `argb()`。不加新依赖，不使用 Android API。类不能实例化。`1.0.9` 没有这个类。
 
 #### `int parse(String text)`
 
@@ -101,7 +111,7 @@ ColorUtil.parse(ColorUtil.toHex(0x80FF00FF)); // 0x80FF00FF
 
 ### 新类 WildcardUtil
 
-包名 `com.henry.common.utils.wildcard`。通用字符串通配，不是文件系统路径 glob，也不是正则。`*` 匹配任意长度（含空串，也含 `/`），`?` 恰好匹配一个 Java `char`（任意字符，含 `/`，也含换行；一个代理项的一半算一个字符）。大小写敏感，不 trim。不调用 `Pattern`。类不能实例化。`1.0.9` 没有这个类，不能通过 `CommonUtils:1.0.9` 调用。
+包名 `com.henry.common.utils.wildcard`。通用字符串通配，不是文件系统路径 glob，也不是正则。`*` 匹配任意长度（含空串，也含 `/`），`?` 恰好匹配一个 Java `char`（任意字符，含 `/`，也含换行；一个代理项的一半算一个字符）。大小写敏感，不 trim。不调用 `Pattern`。类不能实例化。`1.0.9` 没有这个类。
 
 #### `boolean matches(String text, String pattern)`
 
@@ -143,7 +153,7 @@ WildcardUtil.matches("ab", WildcardUtil.escape("a*b"));  // false
 
 ### StringUtil 新增
 
-已有的 `endsWith` 仍然区分大小写。`startsWithIgnoreCase` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `endsWith` 仍然区分大小写。`startsWithIgnoreCase` 没有变化。
 
 #### `boolean endsWithIgnoreCase(String text, String suffix)`
 
@@ -165,7 +175,7 @@ StringUtil.endsWith("abC", "bc");           // false
 
 ### ArrayUtil 新增
 
-已有的 `subarray(int[], int, int)` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `subarray(int[], int, int)` 没有变化。
 
 #### `Object[] subarray(Object[] data, int startInclusive, int endExclusive)`
 
@@ -187,7 +197,7 @@ ArrayUtil.subarray(data, 0, 4);             // 抛出 IndexOutOfBoundsException
 
 ### BytesUtil 新增
 
-已有的 `startsWith` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `startsWith` 没有变化。
 
 #### `boolean endsWith(byte[] data, byte[] suffix)`
 
@@ -207,7 +217,7 @@ BytesUtil.endsWith(new byte[] {(byte) 0xff}, new byte[] {(byte) -1}); // true
 
 ### CollectionUtil 新增
 
-已有的 `lastOrNull` 和 `firstOrDefault` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `lastOrNull` 和 `firstOrDefault` 没有变化。
 
 #### `<T> T lastOrDefault(List<T> list, T defaultValue)`
 
@@ -226,7 +236,7 @@ CollectionUtil.lastOrDefault(Collections.singletonList(null), "fallback"); // nu
 
 ### NamingUtil 新增
 
-已有的 `toSnakeCase`、`toCamelCase` 和 `toKebabCase` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `toSnakeCase`、`toCamelCase` 和 `toKebabCase` 没有变化。
 
 #### `String toPascalCase(String text)`
 
@@ -249,7 +259,7 @@ NamingUtil.toCamelCase("hello_world");       // "helloWorld"
 
 ### ConvertUtil 新增
 
-已有的 `parseFloat` 和 `isDouble` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `parseFloat` 和 `isDouble` 没有变化。
 
 #### `boolean isFloat(String text)`
 
@@ -274,7 +284,7 @@ ConvertUtil.parseFloat("1e39", -1f); // -1f
 
 ### TimeUtil 新增
 
-已有的 `startOfUtcHour` 和 `endOfUtcDay` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `startOfUtcHour` 和 `endOfUtcDay` 没有变化。
 
 #### `long endOfUtcHour(long millis)`
 
@@ -295,7 +305,7 @@ TimeUtil.endOfUtcHour(Long.MIN_VALUE); // 抛出 ArithmeticException
 
 ### IpUtil 新增
 
-已有的 `isIpv4`、`isLoopback`、`toLong` 和 `fromLong` 没有变化。不能通过 `CommonUtils:1.0.9` 调用下面这个方法。
+已有的 `isIpv4`、`isLoopback`、`toLong` 和 `fromLong` 没有变化。
 
 #### `boolean isPrivate(String text)`
 
@@ -315,6 +325,268 @@ IpUtil.isPrivate("0.0.0.0");        // false
 IpUtil.isPrivate("192.0.2.1");      // false
 IpUtil.isPrivate(" 10.0.0.1");      // false
 IpUtil.isPrivate(null);             // false
+```
+
+### 新类 LuhnUtil
+
+包名 `com.henry.common.utils.luhn`。标准 Luhn 校验：从右往左，偶数位（从右数第 2、4、… 位）乘 2，乘积大于 9 则减 9，再把所有位相加，和能被 10 整除才通过。只校验十进制数字串，不是 CRC，也不放进 `Crc32Util`。不加新依赖，不使用 Android API。类不能实例化。`1.0.9` 没有这个类。
+
+#### `boolean isValid(String digits)`
+
+判断数字串是否通过 Luhn 校验。
+
+- 只接受十进制数字字符。null、空串、长度小于 2，或含任何非数字（空格、连字符、字母、全角数字等）都返回 false。
+- 不抛异常，也不 trim。长度至少为 2 才可能返回 true。
+- `00`、`18`、`79927398713` 为 true。单个数字 `0` 为 false。
+
+```java
+LuhnUtil.isValid("79927398713"); // true
+LuhnUtil.isValid("79927398714"); // false
+LuhnUtil.isValid("00");          // true
+LuhnUtil.isValid("0");           // false
+LuhnUtil.isValid(null);          // false
+LuhnUtil.isValid("");            // false
+LuhnUtil.isValid("12-3");        // false
+LuhnUtil.isValid(" 00");         // false
+```
+
+#### `int checkDigit(String payload)`
+
+计算使 `isValid(payload + 该数字)` 为 true 的校验位，返回 0 到 9。
+
+- 对任意仅含数字且非空的 payload，`isValid(payload + String.valueOf(checkDigit(payload)))` 为 true。
+- payload 为 null、空串，或含非数字时抛出 `IllegalArgumentException`。不 trim。
+- `checkDigit("7992739871")` 是 3。`checkDigit("0")` 是 0，因为 `00` 通过校验。
+
+```java
+LuhnUtil.checkDigit("7992739871"); // 3
+LuhnUtil.isValid("7992739871" + LuhnUtil.checkDigit("7992739871")); // true
+LuhnUtil.checkDigit("0");          // 0
+LuhnUtil.checkDigit(null);         // 抛出 IllegalArgumentException
+LuhnUtil.checkDigit("");           // 抛出 IllegalArgumentException
+LuhnUtil.checkDigit("12a");        // 抛出 IllegalArgumentException
+```
+
+### 新类 Base32Util
+
+包名 `com.henry.common.utils.base32`。RFC 4648 Base32，字母表是 `A-Z` 和 `2-7`，填充字符是 `=`。不是 Base32hex，也不是 Base64。不修改 `Base64Util`、`HexUtil`、`UrlCodecUtil`。不加新依赖，不使用 Android API。类不能实例化。`1.0.9` 没有这个类。
+
+#### `String encode(byte[] data)`
+
+把字节编成大写 Base32，并按 RFC 4648 补齐 `=`。
+
+- data 为 null 或长度为 0 时返回 `""`。
+- 输出只用大写字母和 `2-7`，长度是 8 的倍数。1 字节补 6 个 `=`，2 字节补 4 个，3 字节补 3 个，4 字节补 1 个，5 字节不补。
+- 对任意非 null 的 data，`decode(encode(data))` 的内容与 data 相同。
+
+```java
+Base32Util.encode(null);                         // ""
+Base32Util.encode(new byte[0]);                  // ""
+Base32Util.encode(new byte[] {'f'});             // "MY======"
+Base32Util.encode(new byte[] {'f', 'o', 'o'});   // "MZXW6==="
+Base32Util.encode(new byte[] {'f', 'o', 'o', 'b', 'a', 'r'}); // "MZXW6YTBOI======"
+```
+
+#### `byte[] decode(String text)`
+
+把 Base32 解回字节。字母不区分大小写。
+
+- text 为 null、空串，或只含空白时返回长度为 0 的新数组。空白规则与 `StringUtil.isBlank` 相同，因此空格、制表符、换行算空白，不间断空格 `\u00A0` 不算。
+- 不接受空白夹在非空白文本中间，也不接受前后带空白的非空文本。这些字符在字母表外。
+- 不接受字母表外字符（含 `0`、`1`、`8`、`9`），不接受错误或缺失的填充，也不接受末组里非 0 的多余位。长度不是 8 的倍数时同样非法。
+- 上述非法情况抛出 `IllegalArgumentException`，不返回截断结果。
+
+```java
+Base32Util.decode(null);                  // 长度为 0 的新数组
+Base32Util.decode(" \t\n");               // 长度为 0 的新数组
+Base32Util.decode("my======");            // {'f'}
+Base32Util.decode("MZXW6YTBOI======");    // "foobar" 的字节
+Base32Util.decode("MY");                  // 抛出 IllegalArgumentException
+Base32Util.decode("MY====== ");           // 抛出 IllegalArgumentException
+Base32Util.decode("MZ======");            // 抛出 IllegalArgumentException，多余位不是 0
+Base32Util.decode("0");                   // 抛出 IllegalArgumentException
+```
+
+### StringUtil 新增
+
+已有的 `containsIgnoreCase` 和 `startsWithIgnoreCase` 没有变化。
+
+#### `int indexOfIgnoreCase(String text, String search)`
+
+返回 search 在 text 中首次出现的下标，只忽略 ASCII 大小写。
+
+- text 或 search 为 null 时返回 -1。
+- search 为空串且 text 不是 null 时返回 0，包括 text 也是空串。
+- 只把 `A-Z` 看成与 `a-z` 相同，不处理 Unicode 大小写。`İ` 不等于 `i`。
+- 不 trim。找不到时返回 -1。
+
+```java
+StringUtil.indexOfIgnoreCase("AbC", "bc"); // 1
+StringUtil.indexOfIgnoreCase("abc", "BC"); // 1
+StringUtil.indexOfIgnoreCase("aAaA", "aa"); // 0
+StringUtil.indexOfIgnoreCase(null, "a");   // -1
+StringUtil.indexOfIgnoreCase("abc", "");   // 0
+StringUtil.indexOfIgnoreCase(null, "");    // -1
+StringUtil.indexOfIgnoreCase("İ", "i");    // -1
+StringUtil.indexOfIgnoreCase("I", "i");    // 0
+StringUtil.indexOfIgnoreCase(" abc", "ab"); // 1
+```
+
+### ArrayUtil 新增
+
+已有的 `subarray` 没有变化。本方法只有 `int[]` 重载，`null` 字面量不会和 `Object[]` 冲突。
+
+#### `boolean startsWith(int[] data, int[] prefix)`
+
+判断 int 数组是否以前缀开头。规则与 `BytesUtil.startsWith` 对称。
+
+- data 或 prefix 为 null 时返回 false。
+- prefix 为空数组且 data 不是 null 时返回 true，包括 data 也是空数组。
+- prefix 比 data 长时返回 false。不修改入参。
+
+```java
+ArrayUtil.startsWith((int[]) null, new int[] {1});     // false
+ArrayUtil.startsWith(new int[] {1, 2, 3}, new int[0]); // true
+ArrayUtil.startsWith(new int[0], new int[0]);          // true
+ArrayUtil.startsWith(new int[] {1, 2, 3}, new int[] {1, 2}); // true
+ArrayUtil.startsWith(new int[] {1, 2}, new int[] {1, 2, 3}); // false
+```
+
+### BytesUtil 新增
+
+已有的单字节 `indexOf(byte[], byte)` 没有变化。`indexOf(null, null)` 走本方法，因为另一个重载的第二个参数是基本类型 `byte`。
+
+#### `int indexOf(byte[] data, byte[] pattern)`
+
+返回 pattern 首次出现的起始下标。找不到时返回 -1。
+
+- data 或 pattern 为 null 时返回 -1。
+- pattern 为空数组且 data 不是 null 时返回 0，包括 data 也是空数组。
+- pattern 比 data 长时返回 -1。不修改入参。
+- 比较的是 8 位值，`(byte) 0xff` 与 `(byte) -1` 相同。
+
+```java
+BytesUtil.indexOf(null, new byte[] {1});                         // -1
+BytesUtil.indexOf(new byte[] {1, 2, 3, 2, 3}, new byte[] {2, 3}); // 1
+BytesUtil.indexOf(new byte[] {1}, new byte[0]);                  // 0
+BytesUtil.indexOf(new byte[0], new byte[0]);                     // 0
+BytesUtil.indexOf(new byte[] {(byte) 0xff}, new byte[] {(byte) -1}); // 0
+BytesUtil.indexOf(new byte[] {1, 2, 3}, (byte) 2);               // 1，仍是单字节重载
+```
+
+### CollectionUtil 新增
+
+已有的 `contains`、`lastOrDefault` 没有变化。
+
+#### `int frequency(Collection<?> data, Object value)`
+
+统计 value 出现的次数。value 允许为 null。
+
+- data 为 null 时返回 0。空集合返回 0。
+- null 元素按引用为空计数，其他元素用 `equals`。内容相同的不同字符串会计入同一次数。
+- 不修改集合。集合在迭代时抛出的异常不会被吞掉。
+
+```java
+CollectionUtil.frequency(null, "a");                          // 0
+CollectionUtil.frequency(Arrays.asList("a", null, "a"), "a"); // 2
+CollectionUtil.frequency(Arrays.asList("a", null, "a"), null); // 2
+CollectionUtil.frequency(Arrays.asList("a"), "b");            // 0
+```
+
+### NamingUtil 新增
+
+已有的 `toSnakeCase` 和 `toPascalCase` 没有变化。
+
+#### `String toConstantCase(String text)`
+
+把标识符转成 CONSTANT_CASE。分段规则与 `toSnakeCase`、`toCamelCase` 完全相同，然后把每段转成 ASCII 大写，用下划线连接。
+
+- `hello_world`、`hello-world`、`HelloWorld` 都得到 `HELLO_WORLD`。
+- 连续大写不拆开，因此 `XMLParser` 得到 `XMLPARSER`，`getHTTPResponse` 得到 `GET_HTTPRESPONSE`。
+- 连字符、下划线和空白都是分隔符。连续分隔符合并，并去掉首尾分隔符。
+- text 为 null，或去掉分隔后没有内容时返回空串。只把 `a-z` 转成大写。
+
+```java
+NamingUtil.toConstantCase("hello_world");     // "HELLO_WORLD"
+NamingUtil.toConstantCase("hello-world");     // "HELLO_WORLD"
+NamingUtil.toConstantCase("HelloWorld");      // "HELLO_WORLD"
+NamingUtil.toConstantCase("XMLParser");       // "XMLPARSER"
+NamingUtil.toConstantCase("getHTTPResponse"); // "GET_HTTPRESPONSE"
+NamingUtil.toConstantCase(null);              // ""
+NamingUtil.toSnakeCase("HelloWorld");         // "hello_world"
+NamingUtil.toPascalCase("XMLParser");         // "Xmlparser"
+```
+
+### ConvertUtil 新增
+
+已有的 `parseBoolean` 没有变化。
+
+#### `boolean isBoolean(String text)`
+
+判断文本是不是 `parseBoolean` 能识别的 `true` 或 `false`。
+
+- 先按 `parseBoolean` 处理空白：`StringUtil.isBlank` 时返回 false；否则去掉首尾空白，再用 ASCII 忽略大小写比较。
+- 只有恰好为 `true` 或 `false` 时返回 true。
+- null、空串、只含空白、`1`、`0`、`yes` 和其他文本都返回 false，不抛异常。
+- `parseBoolean` 遇到无法识别的文本仍返回调用方传入的默认值。`isBoolean` 不使用默认值。
+
+```java
+ConvertUtil.isBoolean(" true ");  // true
+ConvertUtil.isBoolean("FALSE");   // true
+ConvertUtil.isBoolean(null);      // false
+ConvertUtil.isBoolean(" \t");     // false
+ConvertUtil.isBoolean("1");       // false
+ConvertUtil.isBoolean("yes");     // false
+ConvertUtil.parseBoolean("yes", true); // true，仍返回默认值
+ConvertUtil.parseBoolean("1", false);  // false
+```
+
+### TimeUtil 新增
+
+已有的 `startOfUtcHour` 和 `startOfUtcDay` 没有变化。
+
+#### `long startOfUtcMinute(long millis)`
+
+返回 millis 所在 UTC 分钟的起始毫秒。按 floor 对齐到 60000，实现方式与 `startOfUtcHour` 对 3600000 的处理相同，包括负数方向。不使用设备时区。
+
+- 结果是 60000 的整数倍，并且与原时间戳落在同一个 UTC 分钟。
+- `startOfUtcMinute(0)` 是 0。`startOfUtcMinute(59999)` 是 0。`startOfUtcMinute(-1)` 是 -60000。
+- `Long.MIN_VALUE` 所在分钟的起点无法用 long 表示，抛出 `ArithmeticException`。
+
+```java
+TimeUtil.startOfUtcMinute(0L);          // 0
+TimeUtil.startOfUtcMinute(59999L);      // 0
+TimeUtil.startOfUtcMinute(60000L);      // 60000
+TimeUtil.startOfUtcMinute(-1L);         // -60000
+TimeUtil.startOfUtcMinute(-60001L);     // -120000
+TimeUtil.startOfUtcMinute(Long.MIN_VALUE); // 抛出 ArithmeticException
+TimeUtil.startOfUtcHour(0L);            // 0
+```
+
+### IpUtil 新增
+
+已有的 `isPrivate`、`isLoopback` 和 `isIpv4` 没有变化。
+
+#### `boolean isLinkLocal(String text)`
+
+判断文本是不是 `169.254.0.0/16` 里的 IPv4 链路本地地址。
+
+- 必须先通过现有 `isIpv4` 规则：无前导零，不 trim。非法文本返回 false，不抛异常。
+- 含 `169.254.0.0` 和 `169.254.255.255`。
+- `127.0.0.1`、`192.168.0.1`、`10.0.0.1`、`169.253.0.1`、IPv6、前导零和前后空格都是 false。
+
+```java
+IpUtil.isLinkLocal("169.254.0.0");     // true
+IpUtil.isLinkLocal("169.254.255.255"); // true
+IpUtil.isLinkLocal("169.254.1.1");     // true
+IpUtil.isLinkLocal("127.0.0.1");       // false
+IpUtil.isLinkLocal("192.168.0.1");     // false
+IpUtil.isLinkLocal("10.0.0.1");        // false
+IpUtil.isLinkLocal("169.253.0.1");     // false
+IpUtil.isLinkLocal("::1");             // false
+IpUtil.isLinkLocal(" 169.254.0.1");    // false
+IpUtil.isLinkLocal("169.254.00.1");    // false
+IpUtil.isPrivate("169.254.0.1");       // false
 ```
 
 ## 1.0.9 新增
@@ -681,7 +953,7 @@ ArrayUtil.subarray(new int[] {1, 2}, 1, 1);       // 长度为 0
 ArrayUtil.subarray((int[]) null, 0, 0);           // null
 ```
 
-`1.0.9` 只有 `int[]` 这一个 `subarray`。最新 main 上还有尚未发布的 `subarray(Object[], int, int)`，`null` 字面量需要强制转换才能选中本方法。这个新重载不在 `CommonUtils:1.0.9` 里。
+`1.0.9` 只有 `int[]` 这一个 `subarray`。`subarray(Object[], int, int)` 从 `1.0.10` 起可用，不在 `CommonUtils:1.0.9` 里。`null` 字面量需要强制转换才能选中本方法。
 
 ### BytesUtil 新增
 

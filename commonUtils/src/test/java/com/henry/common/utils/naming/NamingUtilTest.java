@@ -107,4 +107,45 @@ public class NamingUtilTest {
         assertEquals("hello_world", NamingUtil.toSnakeCase("HelloWorld"));
         assertEquals("hello-world", NamingUtil.toKebabCase("HelloWorld"));
     }
+
+    @Test
+    public void toConstantCase_uppercasesTheSameSegmentsAsSnakeCase() {
+        assertEquals("", NamingUtil.toConstantCase(null));
+        assertEquals("", NamingUtil.toConstantCase(""));
+        assertEquals("", NamingUtil.toConstantCase("---"));
+        assertEquals("", NamingUtil.toConstantCase(" _- "));
+        assertEquals("HELLO_WORLD", NamingUtil.toConstantCase("hello_world"));
+        assertEquals("HELLO_WORLD", NamingUtil.toConstantCase("hello-world"));
+        assertEquals("HELLO_WORLD", NamingUtil.toConstantCase("HelloWorld"));
+        assertEquals("HELLO_WORLD", NamingUtil.toConstantCase("helloWorld"));
+        assertEquals("HELLO_WORLD", NamingUtil.toConstantCase("hello world"));
+        assertEquals("XMLPARSER", NamingUtil.toConstantCase("XMLParser"));
+        assertEquals("GET_HTTPRESPONSE", NamingUtil.toConstantCase("getHTTPResponse"));
+        assertEquals("HELLO", NamingUtil.toConstantCase("_Hello_"));
+        assertEquals("HELLO_2WORLD", NamingUtil.toConstantCase("hello_2world"));
+        assertEquals("A1_B", NamingUtil.toConstantCase("A1B"));
+        String[] samples = new String[] {
+                null, "", "HelloWorld", "helloWorld", "XMLParser", "getHTTPResponse",
+                "hello-world", "hello_world", "__hello__world__", "  Hello  World  ",
+                "A1B", "hello_2world", "HELLO_WORLD"
+        };
+        for (int i = 0; i < samples.length; i++) {
+            assertEquals(toAsciiUpper(NamingUtil.toSnakeCase(samples[i])), NamingUtil.toConstantCase(samples[i]));
+        }
+        assertEquals("hello_world", NamingUtil.toSnakeCase("HelloWorld"));
+        assertEquals("HelloWorld", NamingUtil.toPascalCase("hello_world"));
+        assertEquals("Xmlparser", NamingUtil.toPascalCase("XMLParser"));
+    }
+
+    private static String toAsciiUpper(String text) {
+        StringBuilder out = new StringBuilder(text.length());
+        for (int i = 0; i < text.length(); i++) {
+            char current = text.charAt(i);
+            if (current >= 'a' && current <= 'z') {
+                current = (char) (current - ('a' - 'A'));
+            }
+            out.append(current);
+        }
+        return out.toString();
+    }
 }

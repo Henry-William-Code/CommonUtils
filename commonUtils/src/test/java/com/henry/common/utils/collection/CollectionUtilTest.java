@@ -2,9 +2,11 @@ package com.henry.common.utils.collection;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -208,5 +210,32 @@ public class CollectionUtilTest {
         assertNull(CollectionUtil.lastOrNull(Collections.singletonList(null)));
         assertNull(CollectionUtil.lastOrNull(Collections.emptyList()));
         assertEquals("a", CollectionUtil.firstOrDefault(Arrays.asList("a", "b"), "fallback"));
+    }
+
+    @Test
+    public void frequency_countsNullAndEqualsWithoutMutating() {
+        assertEquals(0, CollectionUtil.frequency(null, "a"));
+        assertEquals(0, CollectionUtil.frequency(null, null));
+        assertEquals(0, CollectionUtil.frequency(Collections.emptyList(), null));
+        assertEquals(0, CollectionUtil.frequency(Collections.emptyList(), "a"));
+        List<String> data = new ArrayList<String>();
+        data.add("a");
+        data.add(null);
+        data.add(new String("a"));
+        data.add("b");
+        data.add(null);
+        assertEquals(2, CollectionUtil.frequency(data, "a"));
+        assertEquals(2, CollectionUtil.frequency(data, new String("a")));
+        assertEquals(2, CollectionUtil.frequency(data, null));
+        assertEquals(1, CollectionUtil.frequency(data, "b"));
+        assertEquals(0, CollectionUtil.frequency(data, "c"));
+        assertEquals(5, data.size());
+        assertEquals("a", data.get(0));
+        assertNull(data.get(1));
+        assertEquals("a", data.get(2));
+        assertEquals("b", data.get(3));
+        assertNull(data.get(4));
+        assertNull(CollectionUtil.lastOrDefault(data, "fallback"));
+        assertEquals("a", CollectionUtil.firstOrDefault(data, "fallback"));
     }
 }

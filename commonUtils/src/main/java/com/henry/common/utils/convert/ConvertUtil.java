@@ -221,6 +221,25 @@ public class ConvertUtil {
     }
 
     /**
+     * 判断文本是不是 {@link #parseBoolean(String, boolean)} 能识别的 true 或 false。
+     * 先按 {@link #parseBoolean(String, boolean)} 处理空白：{@link StringUtil#isBlank(String)} 时返回 false；
+     * 否则去掉首尾空白后，用 ASCII 忽略大小写比较。
+     * 只有恰好为 {@code true} 或 {@code false} 时返回 true。
+     * null、空串、只含空白、{@code 1}、{@code 0}、{@code yes} 和其他文本都返回 false，不抛异常。
+     * 不修改 {@link #parseBoolean(String, boolean)}。
+     *
+     * @param text 文本，允许为 null
+     * @return 去掉首尾空白后恰好是 true 或 false 时返回 true
+     */
+    public static boolean isBoolean(String text) {
+        if (StringUtil.isBlank(text)) {
+            return false;
+        }
+        String trimmed = trimWhitespace(text);
+        return equalsIgnoreAsciiCase(trimmed, "true") || equalsIgnoreAsciiCase(trimmed, "false");
+    }
+
+    /**
      * @return 解析成功时返回对应 long；空白、格式错误或溢出时返回 null
      */
     private static Long parseDecimal(String text) {

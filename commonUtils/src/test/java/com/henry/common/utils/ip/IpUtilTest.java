@@ -121,4 +121,36 @@ public class IpUtilTest {
         assertEquals(3232235777L, IpUtil.toLong("192.168.1.1"));
         assertEquals("10.0.0.1", IpUtil.fromLong(IpUtil.toLong("10.0.0.1")));
     }
+
+    @Test
+    public void isLinkLocal_acceptsOnly169254() {
+        assertTrue(IpUtil.isLinkLocal("169.254.0.0"));
+        assertTrue(IpUtil.isLinkLocal("169.254.0.1"));
+        assertTrue(IpUtil.isLinkLocal("169.254.1.1"));
+        assertTrue(IpUtil.isLinkLocal("169.254.255.255"));
+        assertFalse(IpUtil.isLinkLocal("169.253.255.255"));
+        assertFalse(IpUtil.isLinkLocal("169.253.0.1"));
+        assertFalse(IpUtil.isLinkLocal("169.255.0.0"));
+        assertFalse(IpUtil.isLinkLocal("168.254.0.1"));
+        assertFalse(IpUtil.isLinkLocal("170.254.0.1"));
+        assertFalse(IpUtil.isLinkLocal("127.0.0.1"));
+        assertFalse(IpUtil.isLinkLocal("192.168.0.1"));
+        assertFalse(IpUtil.isLinkLocal("10.0.0.1"));
+        assertFalse(IpUtil.isLinkLocal("8.8.8.8"));
+        assertFalse(IpUtil.isLinkLocal("::1"));
+        assertFalse(IpUtil.isLinkLocal("fe80::1"));
+        assertFalse(IpUtil.isLinkLocal(null));
+        assertFalse(IpUtil.isLinkLocal(""));
+        assertFalse(IpUtil.isLinkLocal(" \t"));
+        assertFalse(IpUtil.isLinkLocal(" 169.254.0.1"));
+        assertFalse(IpUtil.isLinkLocal("169.254.0.1 "));
+        assertFalse(IpUtil.isLinkLocal("169.254.00.1"));
+        assertFalse(IpUtil.isLinkLocal("0169.254.0.1"));
+        assertTrue(IpUtil.isIpv4("169.254.0.1"));
+        assertFalse(IpUtil.isPrivate("169.254.0.1"));
+        assertTrue(IpUtil.isLoopback("127.0.0.1"));
+        assertFalse(IpUtil.isLinkLocal("127.0.0.1"));
+        assertTrue(IpUtil.isPrivate("192.168.0.1"));
+        assertTrue(IpUtil.isPrivate("10.0.0.1"));
+    }
 }

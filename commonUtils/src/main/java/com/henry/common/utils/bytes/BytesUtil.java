@@ -69,6 +69,43 @@ public class BytesUtil {
     }
 
     /**
+     * 查找 pattern 在 data 中首次出现的起始下标。
+     * 找不到时返回 -1。data 或 pattern 为 null 时返回 -1。
+     * pattern 为空数组且 data 不是 null 时返回 0，包括 data 也是空数组。
+     * 比较的是 8 位值，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。不修改入参。
+     * 不修改 {@link #indexOf(byte[], byte)}。
+     *
+     * @param data    原数组，允许为 null
+     * @param pattern 要查找的字节序列，允许为 null
+     * @return 首次出现的起始下标；未找到时返回 -1
+     */
+    public static int indexOf(byte[] data, byte[] pattern) {
+        if (data == null || pattern == null) {
+            return -1;
+        }
+        if (pattern.length == 0) {
+            return 0;
+        }
+        if (pattern.length > data.length) {
+            return -1;
+        }
+        int limit = data.length - pattern.length;
+        for (int i = 0; i <= limit; i++) {
+            boolean matched = true;
+            for (int j = 0; j < pattern.length; j++) {
+                if (data[i + j] != pattern[j]) {
+                    matched = false;
+                    break;
+                }
+            }
+            if (matched) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * 查找 byte 数组中最后一处等于 value 的下标。
      * data 为 null 或没有匹配时返回 -1。不修改 data。
      * 比较规则与 {@link #indexOf(byte[], byte)} 相同，{@code (byte) 0xff} 与 {@code (byte) -1} 相同。

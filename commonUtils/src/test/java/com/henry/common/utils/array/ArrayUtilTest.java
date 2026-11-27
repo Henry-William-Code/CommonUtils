@@ -179,4 +179,28 @@ public class ArrayUtilTest {
         assertEquals(2, ArrayUtil.subarray(new int[] {1, 2, 3}, 0, 2)[1]);
         assertNull(ArrayUtil.subarray((int[]) null, 0, 0));
     }
+
+    @Test
+    public void startsWith_nullEmptyAndDoesNotMutate() {
+        assertFalse(ArrayUtil.startsWith((int[]) null, new int[] {1}));
+        assertFalse(ArrayUtil.startsWith(new int[] {1}, (int[]) null));
+        assertFalse(ArrayUtil.startsWith((int[]) null, (int[]) null));
+        assertTrue(ArrayUtil.startsWith(new int[0], new int[0]));
+        assertTrue(ArrayUtil.startsWith(new int[] {1}, new int[0]));
+        assertFalse(ArrayUtil.startsWith(new int[0], new int[] {1}));
+        int[] data = new int[] {1, 2, 3};
+        int[] prefix = new int[] {1, 2};
+        assertTrue(ArrayUtil.startsWith(data, prefix));
+        assertTrue(ArrayUtil.startsWith(data, new int[] {1, 2, 3}));
+        assertFalse(ArrayUtil.startsWith(data, new int[] {1, 3}));
+        assertFalse(ArrayUtil.startsWith(data, new int[] {1, 2, 3, 4}));
+        assertFalse(ArrayUtil.startsWith(data, new int[] {2}));
+        prefix[0] = 9;
+        assertEquals(1, data[0]);
+        assertEquals(2, data[1]);
+        assertEquals(3, data[2]);
+        assertFalse(ArrayUtil.startsWith(data, prefix));
+        assertTrue(ArrayUtil.startsWith(data, new int[] {1, 2}));
+        assertEquals(2, ArrayUtil.subarray(new int[] {1, 2, 3}, 0, 2)[1]);
+    }
 }

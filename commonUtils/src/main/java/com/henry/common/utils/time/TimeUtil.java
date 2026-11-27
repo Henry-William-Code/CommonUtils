@@ -386,6 +386,28 @@ public class TimeUtil {
     }
 
     /**
+     * 返回 millis 所在 UTC 分钟的起始毫秒。
+     * 按 floor 对齐到 60000 毫秒，实现方式与 {@link #startOfUtcHour(long)} 对 3600000 的处理相同，包括负数方向。
+     * 结果是 60000 的整数倍，并且与原时间戳落在同一个 UTC 分钟。不使用设备时区。
+     * 结果无法用 long 表示时抛出 {@link ArithmeticException}。
+     * 不修改 {@link #startOfUtcHour(long)} 和 {@link #startOfUtcDay(long)}。
+     *
+     * @param millis 毫秒时间戳
+     * @return 该 UTC 分钟起点的毫秒值
+     */
+    public static long startOfUtcMinute(long millis) {
+        long minute = millis / 60000L;
+        if (millis < 0L && millis % 60000L != 0L) {
+            minute--;
+        }
+        long start = minute * 60000L;
+        if (minute != 0L && start / minute != 60000L) {
+            throw new ArithmeticException("long overflow");
+        }
+        return start;
+    }
+
+    /**
      * 返回 millis 所在 UTC 日的最后一毫秒。
      * 日界与 {@link #startOfUtcDay(long)} 相同。结果等于该日起点再加 86399999 毫秒。
      * {@link Long#MIN_VALUE} 的日起点无法表示，{@link Long#MAX_VALUE} 所在日的终点大于 long 最大值，这两种情况都抛出 {@link ArithmeticException}。

@@ -319,6 +319,33 @@ public class TimeUtilTest {
         TimeUtil.endOfUtcHour(Long.MIN_VALUE);
     }
 
+    @Test
+    public void startOfUtcMinute_usesFloorAndStaysInTheSameMinute() {
+        assertEquals(0L, TimeUtil.startOfUtcMinute(0L));
+        assertEquals(0L, TimeUtil.startOfUtcMinute(59999L));
+        assertEquals(60000L, TimeUtil.startOfUtcMinute(60000L));
+        assertEquals(60000L, TimeUtil.startOfUtcMinute(60001L));
+        assertEquals(-60000L, TimeUtil.startOfUtcMinute(-1L));
+        assertEquals(-60000L, TimeUtil.startOfUtcMinute(-60000L));
+        assertEquals(-120000L, TimeUtil.startOfUtcMinute(-60001L));
+        assertEquals(0L, TimeUtil.startOfUtcMinute(-1L) % 60000L);
+        long sample = -60001L;
+        long start = TimeUtil.startOfUtcMinute(sample);
+        assertTrue(start <= sample);
+        assertTrue(sample < start + 60000L);
+        long maxStart = TimeUtil.startOfUtcMinute(Long.MAX_VALUE);
+        assertEquals(0L, maxStart % 60000L);
+        assertTrue(maxStart <= Long.MAX_VALUE);
+        assertTrue(Long.MAX_VALUE - maxStart < 60000L);
+        assertEquals(0L, TimeUtil.startOfUtcHour(0L));
+        assertEquals(0L, TimeUtil.startOfUtcDay(0L));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void startOfUtcMinute_rejectsMinValue() {
+        TimeUtil.startOfUtcMinute(Long.MIN_VALUE);
+    }
+
     private static void assertUtcDayStart(long millis) {
         long start = TimeUtil.startOfUtcDay(millis);
         assertEquals(0L, start % 86400000L);

@@ -201,6 +201,33 @@ public class StringUtil {
     }
 
     /**
+     * 返回 search 在 text 中首次出现的下标，只忽略 ASCII 大小写。
+     * text 或 search 为 null 时返回 -1。search 为空串且 text 不是 null 时返回 0，包括 text 也是空串。
+     * 只把 {@code A-Z} 看成与 {@code a-z} 相同，不处理 Unicode 大小写，也不去掉空白。
+     * 不修改 {@link #containsIgnoreCase(String, String)} 和 {@link #startsWithIgnoreCase(String, String)}。
+     *
+     * @param text   原文，允许为 null
+     * @param search 要查找的文本，允许为 null
+     * @return 首次出现的下标；找不到时返回 -1
+     */
+    public static int indexOfIgnoreCase(String text, String search) {
+        if (text == null || search == null) {
+            return -1;
+        }
+        int window = search.length();
+        if (window == 0) {
+            return 0;
+        }
+        int limit = text.length() - window;
+        for (int i = 0; i <= limit; i++) {
+            if (regionEqualsAsciiIgnoreCase(text, i, search)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * 比较两个字符串的内容是否相同。
      * 两者都为 null 时返回 true，只有一方为 null 时返回 false。
      * 区分大小写，不去掉首尾空白。

@@ -202,4 +202,31 @@ public class StringUtilTest {
         assertTrue(StringUtil.endsWith("abc", "bc"));
         assertFalse(StringUtil.startsWithIgnoreCase("Abc", "bc"));
     }
+
+    @Test
+    public void indexOfIgnoreCase_returnsFirstAsciiMatchWithoutTrimming() {
+        assertEquals(-1, StringUtil.indexOfIgnoreCase(null, "a"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("a", null));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase(null, null));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase(null, ""));
+        assertEquals(0, StringUtil.indexOfIgnoreCase("", ""));
+        assertEquals(0, StringUtil.indexOfIgnoreCase("abc", ""));
+        assertEquals(1, StringUtil.indexOfIgnoreCase("AbC", "bc"));
+        assertEquals(1, StringUtil.indexOfIgnoreCase("abc", "BC"));
+        assertEquals(0, StringUtil.indexOfIgnoreCase("aAaA", "aa"));
+        assertEquals(1, StringUtil.indexOfIgnoreCase("xAa", "aa"));
+        assertEquals(2, StringUtil.indexOfIgnoreCase("xxAbCxxAbC", "abc"));
+        assertEquals(1, StringUtil.indexOfIgnoreCase(" abc", "ab"));
+        assertEquals(0, StringUtil.indexOfIgnoreCase(" abc", " ab"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("abc", "bc "));
+        assertEquals(1, StringUtil.indexOfIgnoreCase("abc ", "bc"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("abc", "abcd"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("İ", "i"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("i", "İ"));
+        assertEquals(0, StringUtil.indexOfIgnoreCase("I", "i"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("Ω", "ω"));
+        assertEquals(-1, StringUtil.indexOfIgnoreCase("ß", "ss"));
+        assertTrue(StringUtil.containsIgnoreCase("AbC", "bc"));
+        assertFalse(StringUtil.startsWithIgnoreCase("xAbC", "ab"));
+    }
 }

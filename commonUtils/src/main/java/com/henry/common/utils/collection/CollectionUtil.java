@@ -222,6 +222,28 @@ public class CollectionUtil {
     }
 
     /**
+     * 统计 value 在集合中出现的次数。
+     * value 允许为 null，null 元素按引用为空计数，其他元素用 {@link Object#equals(Object)}。
+     * data 为 null 时返回 0。不修改集合，也不吞掉集合迭代时抛出的异常。
+     *
+     * @param data  集合，允许为 null
+     * @param value 要统计的元素，允许为 null
+     * @return 出现次数；data 为 null 时返回 0
+     */
+    public static int frequency(Collection<?> data, Object value) {
+        if (data == null) {
+            return 0;
+        }
+        int count = 0;
+        for (Object item : data) {
+            if (value == null ? item == null : value.equals(item)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
      * 判断 Map 是否包含指定键。
      * map 为 null 时返回 false。不修改 map。
      * key 为 null 时交给 Map 自己判断：支持 null 键则返回真实结果；Map 因 null 键抛出 {@link NullPointerException} 时返回 false。

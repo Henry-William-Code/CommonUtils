@@ -104,4 +104,31 @@ public class BytesUtilTest {
         assertTrue(BytesUtil.startsWith(data, new byte[] {1, 2}));
         assertFalse(BytesUtil.endsWith(data, new byte[] {9, 3}));
     }
+
+    @Test
+    public void indexOfPattern_findsFirstSliceAndTreatsSignedBytesAsEqual() {
+        assertEquals(-1, BytesUtil.indexOf((byte[]) null, new byte[] {1}));
+        assertEquals(-1, BytesUtil.indexOf(new byte[] {1}, (byte[]) null));
+        assertEquals(-1, BytesUtil.indexOf((byte[]) null, (byte[]) null));
+        assertEquals(0, BytesUtil.indexOf(new byte[0], new byte[0]));
+        assertEquals(0, BytesUtil.indexOf(new byte[] {1}, new byte[0]));
+        assertEquals(-1, BytesUtil.indexOf(new byte[0], new byte[] {1}));
+        byte[] data = new byte[] {1, 2, 3, 2, 3};
+        byte[] pattern = new byte[] {2, 3};
+        assertEquals(1, BytesUtil.indexOf(data, pattern));
+        assertEquals(0, BytesUtil.indexOf(new byte[] {1, 2, 1, 2}, new byte[] {1, 2, 1}));
+        assertEquals(0, BytesUtil.indexOf(new byte[] {1, 2, 1, 2}, new byte[] {1, 2}));
+        assertEquals(1, BytesUtil.indexOf(new byte[] {0, 1, 1}, new byte[] {1, 1}));
+        assertEquals(-1, BytesUtil.indexOf(data, new byte[] {3, 4}));
+        assertEquals(-1, BytesUtil.indexOf(data, new byte[] {1, 2, 3, 2, 3, 4}));
+        assertEquals(0, BytesUtil.indexOf(new byte[] {(byte) 0xff, 1}, new byte[] {(byte) -1}));
+        assertEquals(1, BytesUtil.indexOf(new byte[] {0, (byte) -1}, new byte[] {(byte) 0xff}));
+        pattern[0] = 9;
+        assertArrayEquals(new byte[] {1, 2, 3, 2, 3}, data);
+        assertEquals(-1, BytesUtil.indexOf(data, pattern));
+        assertEquals(1, BytesUtil.indexOf(data, new byte[] {2, 3}));
+        assertEquals(0, BytesUtil.indexOf(data, (byte) 1));
+        assertEquals(1, BytesUtil.indexOf(data, (byte) 2));
+        assertEquals(3, BytesUtil.lastIndexOf(data, (byte) 2));
+    }
 }

@@ -1,7 +1,7 @@
 package com.henry.common.utils.naming;
 
 /**
- * 标识符的蛇形、驼峰和 PascalCase 转换。
+ * 标识符的蛇形、驼峰、PascalCase 和 CONSTANT_CASE 转换。
  * 已发布的 1.0.7 没有这个类。不使用 Android API。
  * 只在 ASCII 小写字母或数字后面紧跟 ASCII 大写字母时分段，连续大写不拆开。
  */
@@ -110,6 +110,33 @@ public class NamingUtil {
         return out.toString();
     }
 
+    /**
+     * 把标识符转成 CONSTANT_CASE。
+     * 分段规则与 {@link #toSnakeCase(String)}、{@link #toCamelCase(String)} 完全相同，
+     * 然后把每一段转成 ASCII 大写，再用下划线连接。
+     * {@code hello_world}、{@code hello-world} 和 {@code HelloWorld} 都得到 {@code HELLO_WORLD}。
+     * 连续大写不拆开，因此 {@code XMLParser} 得到 {@code XMLPARSER}，{@code getHTTPResponse} 得到 {@code GET_HTTPRESPONSE}。
+     * null，或去掉分隔后没有内容时返回空串。只把 {@code a-z} 转成大写。
+     * 不修改 {@link #toSnakeCase(String)} 和 {@link #toPascalCase(String)}。
+     *
+     * @param text 标识符，允许为 null
+     * @return CONSTANT_CASE；没有内容时返回空串
+     */
+    public static String toConstantCase(String text) {
+        String[] parts = split(text);
+        if (parts.length == 0) {
+            return "";
+        }
+        StringBuilder out = new StringBuilder(text.length() + parts.length);
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) {
+                out.append('_');
+            }
+            appendUpper(out, parts[i]);
+        }
+        return out.toString();
+    }
+
     private static String[] split(String text) {
         if (text == null || text.length() == 0) {
             return new String[0];
@@ -144,6 +171,12 @@ public class NamingUtil {
         String[] out = new String[count];
         System.arraycopy(parts, 0, out, 0, count);
         return out;
+    }
+
+    private static void appendUpper(StringBuilder out, String part) {
+        for (int i = 0; i < part.length(); i++) {
+            out.append(toUpper(part.charAt(i)));
+        }
     }
 
     private static void appendLower(StringBuilder out, String part) {
